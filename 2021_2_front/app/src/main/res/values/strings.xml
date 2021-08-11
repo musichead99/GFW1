@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CapstoneDesign</string>
+    <string name="kakao">카카오 연동하기</string>
+    <string name="naver">네이버 연동하기</string>
+    <string name="hint_id">아이디를 입력하세요</string>
+    <string name="hint_pw">패스워드를 입력하세요</string>
+    <string name="btn_login">로그인</string>
+    <string name="btn_back">뒤로가기</string>
+    <string name="register">회원가입</string>
+    <string name="id_search">아이디 찾기</string>
+    <string name="pw_search">비밀번호 찾기</string>
+    <string name="state">상태</string>
+    <string name="location">위치</string>
+    <string name="graph">분석</string>
+    <string name="feed">커뮤니티</string>
+    <string name="setting">설정</string>
+</resources>
