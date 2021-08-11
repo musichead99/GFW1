@@ -44,7 +44,7 @@
             android:layout_marginTop="15dip"
             android:backgroundTint="@color/pink"
             android:text="@string/kakao"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"/>
 
         <Button
             android:id="@+id/naver"
@@ -53,7 +53,7 @@
             android:layout_marginTop="15dip"
             android:backgroundTint="@color/pink"
             android:text="@string/naver"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"/>
 
         <Button
             android:id="@+id/btn_register"
@@ -62,6 +62,7 @@
             android:layout_marginTop="15dip"
             android:backgroundTint="@color/pink"
             android:text="@string/register"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:onClick="register" />
     </LinearLayout>
 </LinearLayout>

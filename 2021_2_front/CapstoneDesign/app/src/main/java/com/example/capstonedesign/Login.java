@@ -30,4 +30,10 @@ public class Login extends AppCompatActivity {
 
         finish();
     }
+    public void pwSearch(View view) {
+        Intent intent = new Intent(this, Email.class);
+        startActivity(intent);
+
+        finish();
+    }
 }
