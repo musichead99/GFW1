@@ -11,6 +11,7 @@ import com.example.capstonedesign.R;
 import com.google.android.material.tabs.TabLayout;
 
 public class FA extends Fragment {
+    // FA : Fragment analysis tab이란 의미.
     FA_frag1 fa_frag1;
     FA_frag2 fa_frag2;
     FA_frag3 fa_frag3;
