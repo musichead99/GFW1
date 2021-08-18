@@ -34,6 +34,9 @@ public class Home extends AppCompatActivity {
         fl = new FL();
         fs = new FS();
 
+        // Home 입장시 첫 화면 배치.
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,fa).commit();
+
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_menu);
 
         bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
