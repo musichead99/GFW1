@@ -19,12 +19,14 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.capstonedesign.Home;
 import com.example.capstonedesign.R;
+import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
 
 import java.util.ArrayList;
 
 public class FS_frag1 extends Fragment {
     //My 메뉴를 위한 ViewPager2
     ViewPager2 pager;
+    SpringDotsIndicator springDotsIndicator;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState) {
@@ -32,6 +34,9 @@ public class FS_frag1 extends Fragment {
 
         // 이 Fragment는 optionMenu를 가지고 있음을 알림.
         setHasOptionsMenu(true);
+
+        // bottom menu 만큼의 빈공간 여유를 두기 위함.
+        rootView.findViewById(R.id.space_bottom_menu).setMinimumHeight(getActivity().findViewById(R.id.bottom_menu).getHeight());
 
         pager = rootView.findViewById(R.id.fs_pager);
         pager.setOffscreenPageLimit(3);// 우선 테스트를 위해 3으로 생성.
@@ -48,6 +53,10 @@ public class FS_frag1 extends Fragment {
         adapter.addItem(page3);
 
         pager.setAdapter(adapter);
+
+        // ViewPager2를 위한 Indicator 세팅.
+        springDotsIndicator = (SpringDotsIndicator)rootView.findViewById(R.id.spring_dots_indicator);
+        springDotsIndicator.setViewPager2(pager);
 
         return rootView;
     }
