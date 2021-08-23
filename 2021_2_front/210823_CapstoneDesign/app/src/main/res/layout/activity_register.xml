@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/skyblue"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <EditText
+            android:id="@+id/register_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/sky"
+            android:textColor="@color/black"
+            android:inputType="textPersonName"
+            android:padding="10dp"
+            android:hint="@string/name"
+            android:textColorHint="@color/input_register_hint" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/register_email"
+                android:layout_width="245dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/sky"
+                android:textColor="@color/black"
+                android:inputType="textEmailAddress"
+                android:padding="10dp"
+                android:hint="@string/email"
+                android:textColorHint="@color/input_register_hint" />
+
+            <!-- 이메일 인증 버튼-->
+            <Button
+                android:id="@+id/validateButton"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:backgroundTint="@color/pink"
+                android:textColor="@color/black"
+                android:text="@string/check">
+            </Button>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/register_pw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@color/sky"
+            android:textColor="@color/black"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:hint="@string/pw"
+            android:textColorHint="@color/input_register_hint" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/register_pw_check"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@color/sky"
+                android:textColor="@color/black"
+                android:inputType="textPassword"
+                android:padding="10dp"
+                android:hint="@string/pw_check"
+                android:textColorHint="@color/input_register_hint" />
+
+            <ImageView
+                android:id="@+id/setImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:background="@color/sky"
+                android:layout_centerHorizontal="true"/>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/registerbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dip"
+            android:backgroundTint="@color/pink"
+            android:text="@string/register"
+            android:textColor="@color/black"/>
+
+        <Button
+            android:id="@+id/backbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dip"
+            android:backgroundTint="@color/pink"
+            android:text="@string/btn_back"
+            android:textColor="@color/black"
+            android:onClick="goMain" />
+    </LinearLayout>
+</LinearLayout>
