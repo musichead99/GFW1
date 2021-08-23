@@ -13,7 +13,7 @@ class imageTest(Resource):
 
     # 위 url로 http 'get'요청이 왔을 때 "coding.png"반환
     def get(self):
-        path = "C:/projects/2021_2_backEnd/backEnd/images/" # 이미지 경로
+        path = "C:/projects/GFW1/2021_2_backEnd/backEnd/images/" # 이미지 경로
         with open(path+"coding.png","rb") as f:
             data = f.read()
         data_io = io.BytesIO(data) # 바이트 스트림으로 이미지 파일 오픈
