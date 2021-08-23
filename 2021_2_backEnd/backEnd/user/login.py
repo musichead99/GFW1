@@ -2,7 +2,7 @@
 from flask import request
 from flask_restx import Namespace, Resource 
 from flask_jwt_extended import create_access_token
-from .. import database
+import database
 from flask_request_validator import *
 
 Login = Namespace('Login')
