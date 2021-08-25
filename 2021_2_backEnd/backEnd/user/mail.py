@@ -2,14 +2,15 @@ from flask import request
 from flask_restx import Namespace, Resource
 from flask_request_validator import *
 from flask_mail import Message, Mail
-import random, string
+import random, string, database
 
 mail = Mail()
 Email = Namespace('Email')
 
-# 이메일 인증 클래스
+# 이메일 클래스
 @Email.route('/email')
 class emailAuth(Resource):
+    # POST method로 요청을 보냈을 시에는 인증 메일을 발송시키고 클라이언트에게 인증 코드를 리턴한다.
     @validate_params(
         Param('email', JSON, str, rules=[Pattern(r'^[\w+-_.]+@[\w-]+\.[a-zA-Z-.]+$')])   # 이메일 형식 체크
         )
@@ -28,4 +29,19 @@ class emailAuth(Resource):
         mail.send(msg)
 
         # 생성된 인증코드 리턴
-        return {"message" : rndNum}
+        return {"status": "Success", "code" : rndNum}
+
+# 이메일이 현재 db에 존재하는지 확인해주는 클래스
+@Email.route('/email/<string:userEmail>')
+class emailAuth(Resource):
+        def get(self, userEmail):
+            db = database.DBClass()
+            query = '''
+                select * from users where email=%s
+            '''
+            data = db.executeOne(query,(userEmail,))
+
+            if data is None:
+                return {"status" : "Success"}, 200
+            else:
+                return {"status" : "Failed", "message" : "Email aleardy exists"}, 400
