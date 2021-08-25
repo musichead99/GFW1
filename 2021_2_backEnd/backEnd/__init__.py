@@ -15,7 +15,6 @@ import database, werkzeug.exceptions
 app = Flask(__name__)
 app.config.update(JWT_SECRET_KEY = "backendTest") # jwt encoding을 위한 secret key, 추후 수정 필요
 
-app.config['JWT_ERROR_MESSAGE_KEY'] = 'message'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'testforcapstone@gmail.com'

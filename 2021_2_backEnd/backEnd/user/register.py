@@ -15,8 +15,11 @@ RegisterFields = Register.model('input_json_model', {
     "password" : fields.String(description="your password", required=True, example="testpw"),
     "name" : fields.String(description="your name", required=True, example="testname")
     })
-FailedModel = Register.model('return failed json model', {"message" : fields.String(description="Success or Failed", example="Register Failed(Email Duplicated)")})
-SuccessModel = Register.model('return succeed json model', {"message" : fields.String(description="Success or Failed", example="Register Success")})
+FailedModel = Register.model('return failed json model', {
+    "status" : fields.String(description="Success or Failed", example="Failed"),
+    "message" : fields.String(description="message", example="Email Duplicated")
+    })
+SuccessModel = Register.model('return succeed json model', {"status" : fields.String(description="Success or Failed", example="Success")})
 
 # 일반 이메일 회원가입 클래스
 @Register.route('/register')
@@ -45,7 +48,7 @@ class register(Resource):
                 '''
             db.execute(query, data)
         except err.IntegrityError:
-            {"status": "Failed", "message" : "Email Duplicated" }, 400
+            {"status": "Failed", "message" : "Email Duplicated"}, 400
         finally:
             db.commit()
         return {"status": "Success" }, 201
