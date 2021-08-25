@@ -22,4 +22,4 @@ class userLogout(Resource):
         db.execute(query, (jti,))
         db.commit()
 
-        return {'message' : 'Logout Success'}
+        return {"status" : "Success"}

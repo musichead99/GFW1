@@ -27,9 +27,9 @@ class userLogin(Resource):
         # users 테이블에 일치하는 이메일과 비밀번호 한 쌍이 존재한다면 jwt토큰과 success메시지 반환
         if dbData is not None:
             return {
-                "message" : "Login Success",
+                "status" : "Success",
                 "access token" : create_access_token(identity = data['email'], expires_delta = False)
                 }, 200
         # 일치하는 이메일이 없을 경우에는 failed 메시지 반환
         else:
-            return {"message" : "Login Failed"}, 400
+            return {"status" : "Failed", "message" : "Cannot Login"}, 403

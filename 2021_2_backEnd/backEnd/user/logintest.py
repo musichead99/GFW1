@@ -20,4 +20,4 @@ class LGTest(Resource):
         if dbdata is None:
             return {"message":"user_only page, hello"}
         else:
-            return {"message" : "wrong token"}, 500
+            return {"message" : "wrong token"}, 403
