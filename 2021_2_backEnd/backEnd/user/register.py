@@ -48,7 +48,7 @@ class register(Resource):
                 '''
             db.execute(query, data)
         except err.IntegrityError:
-            {"status": "Failed", "message" : "Email Duplicated"}, 400
+            return {"status": "Failed", "message" : "Email Duplicated"}, 400
         finally:
             db.commit()
         return {"status": "Success" }, 201
