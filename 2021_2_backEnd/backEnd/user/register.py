@@ -10,16 +10,16 @@ Register = Namespace(
     description="회원가입을 위한 API"    
 )
 
-RegisterFields = Register.model('input_json_model', {
+RegisterFields = Register.model('Register request json model', {
     "email" : fields.String(description="your email", required=True, example="testemail@testdomain.com"),
     "password" : fields.String(description="your password", required=True, example="testpw"),
     "name" : fields.String(description="your name", required=True, example="testname")
     })
-FailedModel = Register.model('return failed json model', {
+FailedModel = Register.model('Register failed json model', {
     "status" : fields.String(description="Success or Failed", example="Failed"),
     "message" : fields.String(description="message", example="Email Duplicated")
     })
-SuccessModel = Register.model('return succeed json model', {"status" : fields.String(description="Success or Failed", example="Success")})
+SuccessModel = Register.model('Register success json model', {"status" : fields.String(description="Success or Failed", example="Success")})
 
 # 일반 이메일 회원가입 클래스
 @Register.route('/register')
