@@ -11,10 +11,10 @@ Logout = Namespace(
 # API문서 작성을 위한 것들
 parser = Logout.parser()
 parser.add_argument('Authorization', location='headers')
-SuccessModel = Logout.model('return succeed json model', {"status" : fields.String(description="Success or Failed", example="Success")})
-FailedModel = Logout.model('return succeed json model', {"status" : fields.String(description="Success or Failed", example="Failed")})
-NoAuthModel = Logout.inherit('return Failed json model', FailedModel, {"message" : fields.String(description="message", example="Missing Authorization Header")})
-RevokedTokenModel = Logout.inherit('return Failed json model', FailedModel, {"message" : fields.String(description="message", example="Token has been revoked")})
+SuccessModel = Logout.model('Logout success json model', {"status" : fields.String(description="Success or Failed", example="Success")})
+FailedModel = Logout.model('Logout Failed json model', {"status" : fields.String(description="Success or Failed", example="Failed")})
+NoAuthModel = Logout.inherit('Logout Authorization Failed json model', FailedModel, {"message" : fields.String(description="message", example="Missing Authorization Header")})
+RevokedTokenModel = Logout.inherit('Logout Revocked token json model', FailedModel, {"message" : fields.String(description="message", example="Token has been revoked")})
 
 
 # logout 클래스, 현재 발급되어 있는 jwt토큰을 폐기하고 블랙리스트에 등록한다.
