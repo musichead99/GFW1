@@ -11,10 +11,14 @@ Logout = Namespace(
 # API문서 작성을 위한 것들
 parser = Logout.parser()
 parser.add_argument('Authorization', location='headers')
-SuccessModel = Logout.model('Logout success json model', {"status" : fields.String(description="Success or Failed", example="Success")})
-FailedModel = Logout.model('Logout Failed json model', {"status" : fields.String(description="Success or Failed", example="Failed")})
-NoAuthModel = Logout.inherit('Logout Authorization Failed json model', FailedModel, {"message" : fields.String(description="message", example="Missing Authorization Header")})
-RevokedTokenModel = Logout.inherit('Logout Revocked token json model', FailedModel, {"message" : fields.String(description="message", example="Token has been revoked")})
+SuccessModel = Logout.model('3-1_Logout success json model', {"status" : fields.String(description="Success or Failed", example="Success")})
+# FailedModel = Logout.model('Logout Failed json model', {"status" : fields.String(description="Success or Failed", example="Failed")})
+NoAuthModel = Logout.inherit('3-2_Logout Authorization Failed json model', {
+    "status" : fields.String(description="Success or Failed", example="Failed"),
+    "message" : fields.String(description="message", example="Missing Authorization Header")})
+RevokedTokenModel = Logout.inherit('3-3_Logout Revocked token json model', {
+    "status" : fields.String(description="Success or Failed", example="Failed"),
+    "message" : fields.String(description="message", example="Token has been revoked")})
 
 
 # logout 클래스, 현재 발급되어 있는 jwt토큰을 폐기하고 블랙리스트에 등록한다.
@@ -23,9 +27,9 @@ class userLogout(Resource):
     # jwt 토큰이 header에 존재해야 접근 가능
     @jwt_required()
     @Logout.expect(parser)
-    @Logout.response(200, 'Success',SuccessModel)
-    @Logout.response(403, 'Failed ( header에 jwt토큰이 존재하지 않을 때 )', NoAuthModel)
     @Logout.response(400, 'Failed ( 이미 blocklist에 등록된 토큰일 때 )', RevokedTokenModel)
+    @Logout.response(403, 'Failed ( header에 jwt토큰이 존재하지 않을 때 )', NoAuthModel)
+    @Logout.response(200, 'Success',SuccessModel)
     # DELETE method로 url에 접근했을 때
     def delete(self):
         """header의 Authorization fields에 JWT토큰을 포함해서 요청하면 해당 토큰을 blocklist에 등록한다."""
