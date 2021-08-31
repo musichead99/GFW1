@@ -1,15 +1,21 @@
 #register.py
 from flask import request
+from flask_jwt_extended.utils import get_jwt_identity
 from flask_restx import Namespace, Resource, fields
 import database
 from pymysql import err
 from flask_request_validator import *
+from flask_jwt_extended import jwt_required
 
 Register = Namespace(
     name='Register',
-    description="회원가입을 위한 API"    
+    description="회원가입/탈퇴를 위한 API"    
 )
 
+
+# API문서 작성을 위한 것들
+parser = Register.parser()
+parser.add_argument('Authorization', location='headers')
 RegisterFields = Register.model('1-1 Register Request json model', {
     "email" : fields.String(description="your email", required=True, example="testemail@testdomain.com"),
     "password" : fields.String(description="your password", required=True, example="testpw"),
@@ -19,12 +25,18 @@ FailedModel = Register.model('1-2 Register Failed json model', {
     "status" : fields.String(description="Success or Failed", example="Failed"),
     "message" : fields.String(description="message", example="Email Duplicated")
     })
-SuccessModel = Register.model('1-3 Register Success json model', {"status" : fields.String(description="Success or Failed", example="Success")})
+SuccessModel = Register.model('1-3 Register/Delete Success json model', {
+    "status" : fields.String(description="Success or Failed", example="Success")
+    })
+DeleteFailedModel = Register.model('1-4 Delete Failed json model', {
+    "status" : fields.String(description="Success or Failed", example="Failed"),
+    "message" : fields.String(description="message", example="The email could not be found. It doesn't seem to be registered.")
+    })
 
-# 일반 이메일 회원가입 클래스
+# 일반 이메일 회원가입, 회원탈퇴 클래스
 @Register.route('/register')
-@Register.doc(params={"email" : "your email", "password" : "your password(영어+숫자+특수문자의 8자리 이상 20자리 미만)", "name" : "your name"})
 class register(Resource):
+    @Register.doc(params={"email" : "your email", "password" : "your password(영어+숫자+특수문자의 8자리 이상 20자리 미만)", "name" : "your name"})
     @Register.expect(RegisterFields)
     @Register.response(201, 'Success', SuccessModel)
     @Register.response(400, 'Failed', FailedModel)
@@ -34,7 +46,7 @@ class register(Resource):
         Param('name', JSON, str, rules=CompositeRule(Pattern(r'[a-zA-Z가-힣]'), MinLength(1))),   # 이름 형식 체크
         Param('password', JSON, str, rules=CompositeRule(Pattern(r'(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^\w\s]).*'), MinLength(8), MaxLength(20))),   # 비밀번호 형식 체크(영, 숫자, 특수문자 포함)
     )
-    # POST method로 'email', 'name', 'password' 필드를 가진 데이터를 body에 담아서 접근했을 때
+    # 회원 가입 API
     def post(self, *args):
         """json객체로 보내진 email, name, password로 회원가입"""
         # json형식으로 data parsing, mysql connection을 위한 객체 생성
@@ -52,3 +64,27 @@ class register(Resource):
         finally:
             db.commit()
         return {"status": "Success" }, 201
+
+    # 회원 탈퇴 API
+    @Register.expect(parser)
+    @jwt_required()
+    @Register.response(201, 'Success', SuccessModel)
+    @Register.response(400, 'Failed', DeleteFailedModel)
+    def delete(self, *args):
+        """Authorization header에 존재하는 jwt토큰에서 email을 분리하여 회원 탈퇴"""
+        userEmail = get_jwt_identity()
+        db = database.DBClass()
+        query = '''
+                select * from users WHERE email=(%s)
+            '''
+        dbdata = db.executeOne(query,(userEmail,))
+
+        if dbdata is None:
+            return {"status":"Failed", "message": "The email could not be found. It doesn't seem to be registered."}, 401
+        else:
+            query = '''
+                DELETE FROM users WHERE email=(%s);
+            '''
+            db.execute(query, (userEmail,))
+            db.commit()
+            return { "status" : "Success" }, 200
