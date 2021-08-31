@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme = "@style/Theme.AppCompat.Light">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/fs_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!--text관련 상세는 변경이 필요함.-->
+                <TextView
+                    android:id="@+id/fs_toolbar_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="My 메뉴"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="@color/black"
+                    android:textSize="30sp" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.AppBarLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/fs_pager"
+        android:layout_below="@id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
+        android:id="@+id/spring_dots_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/space_bottom_menu"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        app:dampingRatio="0.5"
+        app:dotsColor="@color/white"
+        app:dotsCornerRadius="2dp"
+        app:dotsSize="16dp"
+        app:dotsSpacing="6dp"
+        app:dotsStrokeColor="@color/teal_700"
+        app:dotsStrokeWidth="2dp"
+        app:stiffness="300" />
+
+    <Space
+        android:id="@+id/space_bottom_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="19dp" />
+
+</RelativeLayout>
