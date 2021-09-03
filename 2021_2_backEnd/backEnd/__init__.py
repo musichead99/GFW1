@@ -10,6 +10,7 @@ from user.login import Login
 from user.logintest import LoginTest
 from user.logout import Logout
 from user.mail import Email, mail
+from user.auth import Auth
 import database, werkzeug.exceptions
 
 app = Flask(__name__)
@@ -72,6 +73,7 @@ api.add_namespace(Login, '/user')
 api.add_namespace(LoginTest,'/user')
 api.add_namespace(Logout,'/user')
 api.add_namespace(Email,'/user')
+api.add_namespace(Auth,'/user')
 
 
 if __name__ == "__main__":
