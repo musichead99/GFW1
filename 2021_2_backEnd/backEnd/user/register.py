@@ -1,6 +1,6 @@
 #register.py
 from flask import request
-from flask_jwt_extended.utils import get_jwt_identity
+from flask_jwt_extended.utils import get_jwt_identity, get_jwt
 from flask_restx import Namespace, Resource, fields
 import database
 from pymysql import err
@@ -73,11 +73,20 @@ class register(Resource):
     def delete(self, *args):
         """Authorization header에 존재하는 jwt토큰에서 email을 분리하여 회원 탈퇴"""
         userEmail = get_jwt_identity()
+        jti = get_jwt()['jti']
         db = database.DBClass()
+
+        # API접근 시 사용된 토큰을 만료시킨다.
         query = '''
-                select * from users WHERE email=(%s)
+            insert into revoked_tokens(jti) values(%s);
+        '''
+        db.execute(query, (jti,))
+
+        query = '''
+                select email from users WHERE email=(%s)
             '''
         dbdata = db.executeOne(query,(userEmail,))
+        dbdata = dbdata['email']
 
         if dbdata is None:
             return {"status":"Failed", "message": "The email could not be found. It doesn't seem to be registered."}, 401
@@ -85,6 +94,6 @@ class register(Resource):
             query = '''
                 DELETE FROM users WHERE email=(%s);
             '''
-            db.execute(query, (userEmail,))
+            db.execute(query, (dbdata,))
             db.commit()
             return { "status" : "Success" }, 200

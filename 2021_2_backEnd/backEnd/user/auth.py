@@ -11,11 +11,36 @@ Auth = Namespace(
 
 parser = Auth.parser()
 parser.add_argument('Authorization', location='headers')
+LoginFields = Auth.model('2-1 Login Request json model', {
+    "email" : fields.String(description="your email", required=True, example="testemail@testdomain.com"),
+    "password" : fields.String(description="your password", required=True, example="testpw")
+})
+FailedModel = Auth.model('2-2 Failed json model', {
+    "status" : fields.String(description="Success or Failed", example="Failed")
+})
+SuccessModel = Auth.model('2-3 Success json model', {
+    "status" : fields.String(description="Success or Failed", example="Success"),
+})
+LoginFailedModel = Auth.inherit('2-5. Login Failed json model', FailedModel, {
+    "message" : fields.String(description="message", example="Cannot Login")
+})
+LoginSuccessModel = Auth.inherit('2-6. Login Success json model', SuccessModel,{
+    "access token" : fields.String(description="Token", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYzMDI4NzE3MiwianRpIjoiMjcwNjNjODctYWNhYS00NDJhLTk1M2UtMWM1MWQ3YmNjNTJkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Imp1bnZlcnkyQG5hdmVyLmNvbSIsIm5iZiI6MTYzMDI4NzE3Mn0.QnyKfFmjHWNg6ShGsgRRawCzgWzoSDT3YjUzTtg2_Yg"),
+})
+LogoutNoAuthModel = Auth.inherit('2-7. Logout Authorization Failed json model', FailedModel, {
+    "message" : fields.String(description="message", example="Missing Authorization Header")
+})
+LogoutRevokedTokenModel = Auth.inherit('2-8. Logout Revocked token json model', FailedModel, {
+    "message" : fields.String(description="message", example="Token has been revoked")
+})
 
 # userAuth 클래스, 로그인과 로그아웃기능을 함
 @Auth.route('/auth')
-@Auth.doc(params={'email' : "your email", "password": "your password"})
-class userAuth(Resource):    
+class userAuth(Resource): 
+    @Auth.doc(params={'email' : "your email", "password": "your password"})
+    @Auth.expect(LoginFields)
+    @Auth.response(201, 'Success', LoginSuccessModel)
+    @Auth.response(400, 'Failed', LoginFailedModel)   
     @validate_params(
         Param('email', JSON, str, rules=[Pattern(r'^[\w+-_.]+@[\w-]+\.[a-zA-Z-.]+$')]),   # 이메일 형식 체크
         Param('password', JSON, str, rules=CompositeRule(Pattern(r'(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^\w\s]).*'), MinLength(8), MaxLength(20))),   # 비밀번호 형식 체크(한, 영, 숫자, 특수문자 포함)
@@ -42,6 +67,9 @@ class userAuth(Resource):
 
     @jwt_required()
     @Auth.expect(parser)
+    @Auth.response(400, 'Failed ( 이미 blocklist에 등록된 토큰일 때 )', LogoutRevokedTokenModel)
+    @Auth.response(403, 'Failed ( header에 jwt토큰이 존재하지 않을 때 )', LogoutNoAuthModel)
+    @Auth.response(200, 'Success',SuccessModel)
     # DELETE method로 url에 접근했을 때
     def delete(self):
         """header의 Authorization fields에 JWT토큰을 포함해서 요청하면 해당 토큰을 blocklist에 등록한다."""
