@@ -7,18 +7,18 @@ import random, string, database
 mail = Mail()
 Email = Namespace(name = 'Email', description="메일 작업을 위한 API")
 
-EmailFields = Email.model('4-1 Email authentication json model', {
+EmailFields = Email.model('3-1. Email authentication json model', {
     "email" : fields.String(description="your email", required=True, example="testemail@testdomain.com"),
     })
-FailedModel = Email.model('4-2 Email Not_registed model ', {
+FailedModel = Email.model('3-2. Email Not_registed model ', {
     "status" : fields.String(description="Success or Failed", example="Failed"),
     "message" : fields.String(description="message", example="Email not registered")
     })
-SuccessModel_1 = Email.model('4-3 Email Success send code json model', {
+SuccessModel_1 = Email.model('3-3. Email Success send code json model', {
     "status" : fields.String(description="Success or Failed", example="Success"),
     "code" : fields.String(description="code", example="HJYD6K"),
     })
-SuccessModel_2 = Email.model('4-4 Email is in DB json model', {
+SuccessModel_2 = Email.model('3-4. Email is in DB json model', {
     "status" : fields.String(description="Success or Failed", example="Success"),
     "message" : fields.String(description="message", example="The email registered"),
     })

@@ -6,11 +6,9 @@ from flask_request_validator.error_formatter import demo_error_formatter
 from flask_request_validator.exceptions import InvalidRequestError 
 from test.test import Test
 from user.register import Register
-from user.login import Login
 from user.logintest import LoginTest
-from user.logout import Logout
 from user.mail import Email, mail
-from user.delete import Delete
+from user.auth import Auth
 import database, werkzeug.exceptions
 
 app = Flask(__name__)
@@ -69,11 +67,9 @@ def not_allowd_method(e):
 # namespace 등록
 api.add_namespace(Test,'/')
 api.add_namespace(Register,'/user')
-api.add_namespace(Login, '/user')
 api.add_namespace(LoginTest,'/user')
-api.add_namespace(Logout,'/user')
 api.add_namespace(Email,'/user')
-api.add_namespace(Delete,'/user')
+api.add_namespace(Auth,'/user')
 
 
 if __name__ == "__main__":
