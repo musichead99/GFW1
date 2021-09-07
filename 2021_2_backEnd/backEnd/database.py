@@ -34,3 +34,12 @@ class DBClass():
     # commit
     def commit(self):
         self.db.commit()
+
+    # 쿼리작성시 바로 commit 
+    def execute_and_commit(self, query, args={"a":"a"}):
+        try:
+            self.cursor.execute(query, args)
+        except:
+            return 0
+        self.db.commit()
+        return 1
