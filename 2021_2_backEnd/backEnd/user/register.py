@@ -32,6 +32,23 @@ DeleteFailedModel = Register.model('1-4 Delete Failed json model', {
     "status" : fields.String(description="Success or Failed", example="Failed"),
     "message" : fields.String(description="message", example="The email could not be found. It doesn't seem to be registered.")
     })
+ChangePW_Fileds = Register.model('1-2 ChangePW Request json model', {
+    "email" : fields.String(description="your email", required=True, example="testemail@testdomain.com"),
+    "new_password" : fields.String(description="your original password", required=True, example="testpw2!"),
+    "new_password_again" : fields.String(description="your new password ", required=True, example="testpw2!")
+    })
+ChangeSucessModel = Register.model('1-5 ChangePW Success json model', {
+    "status" : fields.String(description="Success or Failed", example="Success"),
+    "message" : fields.String(description="message", example="The password has changed.")
+    })
+ChangeFailedModel_1 = Register.model('1-7 ChangePW Failed_2 json model', {
+    "status" : fields.String(description="Success or Failed", example="Success"),
+    "message" : fields.String(description="message", example="Wrong email")
+    })
+ChangeFailedModel_2 = Register.model('1-6 ChangePW Failed_1 json model', {
+    "status" : fields.String(description="Success or Failed", example="Success"),
+    "message" : fields.String(description="message", example="The two passwords entered are different")
+    })
 
 # 일반 이메일 회원가입, 회원탈퇴 클래스
 @Register.route('/register')
@@ -96,4 +113,27 @@ class register(Resource):
             '''
             db.execute(query, (dbdata,))
             db.commit()
-            return { "status" : "Success" }, 200
+            return { "status" : "Success" }, 201
+    
+    # 비밀번호 변경 API
+    @Register.expect(ChangePW_Fileds)
+    @Register.response(201, 'Success', ChangeSucessModel)
+    @Register.response(401, 'Failed(입력한 비밀번호가 서로 다를때)', ChangeFailedModel_2)
+    @Register.response(400, 'Failed(입력한 email이 틀렸을 때)', ChangeFailedModel_1)
+    def put(self, *args):
+        """json객체로 보내진 email, password"""
+        data = request.json
+
+        db = database.DBClass()
+        query_list = [
+            "select * from users where email = %(email)s;",
+            "update users set password =%(new_password)s where email = %(email)s;"
+            ]
+        if request.json['new_password'] != request.json['new_password_again']:
+            return {"status":"Failed", "message": "The two passwords entered are different"}, 401
+
+        if db.executeOne(query_list[0], data):
+            db.execute_and_commit(query_list[1], data)
+            return {"status":"Success", "message":"The password has changed"},201
+        else:
+             return {"status":"Failed", "message": "Wrong email"}, 400
