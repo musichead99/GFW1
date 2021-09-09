@@ -134,6 +134,6 @@ class register(Resource):
 
         if db.executeOne(query_list[0], data):
             db.execute_and_commit(query_list[1], data)
-            return {"status":"Success", "message":"The password has changed"},201
+            return {"status":"Success", "message":"The password has changed"},200
         else:
-             return {"status":"Failed", "message": "Wrong email"}, 400
+            return {"status":"Failed", "message": "Wrong email"}, 400
