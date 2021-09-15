@@ -26,6 +26,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
 }
 
 dependencies {
@@ -42,4 +45,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.google.code.gson:gson:2.8.5'
+    // Mpchart dependency
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    //Dependency to use indicator for viewPager2
+    implementation 'com.tbuonomo:dotsindicator:4.2'
 }

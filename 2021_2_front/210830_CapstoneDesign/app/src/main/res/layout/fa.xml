@@ -7,29 +7,59 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabs"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/background_light"
-                android:elevation="1dp"
-                app:tabGravity="fill"
-                app:tabMode="fixed"
-                app:tabSelectedTextColor="@color/design_default_color_error"
-                app:tabTextColor="@color/design_default_color_primary"/>
-        </com.google.android.material.appbar.AppBarLayout>
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <FrameLayout
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        </FrameLayout>
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/background_light"
+                    android:elevation="1dp"
+                    app:tabGravity="fill"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="@color/design_default_color_error"
+                    app:tabTextColor="@color/design_default_color_primary" />
+            </com.google.android.material.appbar.AppBarLayout>
 
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/fa_viewPager2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/appbarLayout"
+                android:layout_above="@id/spring_dots_indicator"/>
+
+            <com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator
+                android:id="@+id/spring_dots_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/space_bottom_menu"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                app:dampingRatio="0.5"
+                app:dotsColor="@color/white"
+                app:dotsCornerRadius="2dp"
+                app:dotsSize="16dp"
+                app:dotsSpacing="6dp"
+                app:dotsStrokeColor="@color/teal_700"
+                app:dotsStrokeWidth="2dp"
+                app:stiffness="300" />
+
+            <Space
+                android:id="@+id/space_bottom_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                />
+        </RelativeLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </RelativeLayout>

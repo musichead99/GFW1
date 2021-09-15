@@ -1,6 +1,5 @@
 package com.example.capstonedesign;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,6 +32,9 @@ public class Home extends AppCompatActivity {
         fc = new FC();
         fl = new FL();
         fs = new FS();
+
+        // Home 입장시 첫 화면 배치
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,fs).commit();
 
         BottomNavigationView bottomNavigation = findViewById(R.id.bottom_menu);
 
