@@ -1,5 +1,5 @@
 # __init__.py
-from flask import Flask, jsonify
+from flask import Flask
 from flask_restx import Api
 from flask_jwt_extended import JWTManager, exceptions
 from flask_request_validator.error_formatter import demo_error_formatter
@@ -9,7 +9,8 @@ from user.register import Register
 from user.logintest import LoginTest
 from user.mail import Email, mail
 from user.auth import Auth
-import database, werkzeug.exceptions
+from user.kakao import Kakao
+import database, werkzeug.exceptions, datetime
 
 app = Flask(__name__)
 app.config.update(JWT_SECRET_KEY = "backendTest") # jwt encoding을 위한 secret key, 추후 수정 필요
@@ -20,6 +21,7 @@ app.config['MAIL_USERNAME'] = 'testforcapstone@gmail.com'
 app.config['MAIL_PASSWORD'] = 'kklikhaaedpkyurm'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=10) # access token의 유효 기간 (10일)
 jwt = JWTManager(app)
 mail.init_app(app)
 api = Api(
@@ -43,7 +45,7 @@ def data_error(e):
 def unauthorized_token(e):
     return {"status" : "Failed", "message" : str(e)}, 403
 
-# jwt_required에 blcoklist checking기능 추가
+# jwt_required에 blocklist checking기능 추가
 @jwt.token_in_blocklist_loader
 def check_if_token_revoked(jwt_header, jwt_payload):
     jti = jwt_payload["jti"]
@@ -54,7 +56,12 @@ def check_if_token_revoked(jwt_header, jwt_payload):
     token = db.executeOne(query, (jti,))
     return token is not None
 
-# 만료된 토큰으로 접근 시 반환할 메시지 처리(추후 문제생길 가능성 있음;;)
+# 만료된 토큰으로 접근 시 반환할 메시지 처리
+@jwt.expired_token_loader
+def check_if_token_expired(jwt_header, jwt_payload):
+    return {"status" : "Failed"}, 403
+
+# 파기된 토큰으로 접근 시 반환할 메시지 처리(추후 문제생길 가능성 있음;;)
 @api.errorhandler(exceptions.RevokedTokenError)
 def revoked_token_response(e):
     return {"status" : "Failed", "message" : str(e)}, 400
@@ -70,7 +77,7 @@ api.add_namespace(Register,'/user')
 api.add_namespace(LoginTest,'/user')
 api.add_namespace(Email,'/user')
 api.add_namespace(Auth,'/user')
-
+api.add_namespace(Kakao,'/user/kakao')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug="true")
