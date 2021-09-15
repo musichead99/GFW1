@@ -1,4 +1,4 @@
-#register.py
+# register.py
 from flask import request
 from flask_jwt_extended.utils import get_jwt_identity, get_jwt
 from flask_restx import Namespace, Resource, fields
@@ -80,7 +80,7 @@ class register(Resource):
             return {"status": "Failed", "message" : "Email Duplicated"}, 400
         finally:
             db.commit()
-        return {"status": "Success" }, 201
+        return {"status": "Success"}, 201
 
     # 회원 탈퇴 API
     @Register.expect(parser)
@@ -134,6 +134,6 @@ class register(Resource):
 
         if db.executeOne(query_list[0], data):
             db.execute_and_commit(query_list[1], data)
-            return {"status":"Success", "message":"The password has changed"},201
+            return {"status":"Success", "message":"The password has changed"},200
         else:
-             return {"status":"Failed", "message": "Wrong email"}, 400
+            return {"status":"Failed", "message": "Wrong email"}, 400

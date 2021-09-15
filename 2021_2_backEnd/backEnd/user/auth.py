@@ -1,3 +1,4 @@
+# auth.py
 from flask import request
 from flask_restx import Namespace, Resource, fields
 from flask_request_validator import *
@@ -59,7 +60,7 @@ class userAuth(Resource):
         if dbData is not None:
             return {
                 "status" : "Success",
-                "access token" : create_access_token(identity = data['email'], expires_delta = False)
+                "access token" : create_access_token(identity = data['email'])
                 }, 200
         # 일치하는 이메일이 없을 경우에는 failed 메시지 반환
         else:
