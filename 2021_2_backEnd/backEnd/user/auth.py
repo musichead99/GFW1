@@ -3,7 +3,7 @@ from flask import request
 from flask_restx import Namespace, Resource, fields
 from flask_request_validator import *
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt
-import database
+import database, swaggerModel
 
 Auth = Namespace(
     name = 'Auth',
@@ -11,7 +11,7 @@ Auth = Namespace(
 )
 
 parser = Auth.parser()
-parser.add_argument('Authorization', location='headers')
+parser.add_argument('Authorization Header', location='headers')
 LoginFields = Auth.model('2-1 Login Request json model', {
     "email" : fields.String(description="your email", required=True, example="testemail@testdomain.com"),
     "password" : fields.String(description="your password", required=True, example="testpw")

@@ -81,4 +81,3 @@ class KakaoAuthCallback(Resource):
             return {"status" : "Success", "access token" : create_access_token(identity = dbdata['email'])}
 
         return {"status" : "Success", "access token" : create_access_token(identity = kakaoUserEmail)}
-
