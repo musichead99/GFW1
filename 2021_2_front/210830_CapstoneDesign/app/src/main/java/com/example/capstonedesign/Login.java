@@ -55,7 +55,15 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
-
+        Button test_btn = findViewById(R.id.test_btn);
+        test_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),Home.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     public void LoginResponse() {

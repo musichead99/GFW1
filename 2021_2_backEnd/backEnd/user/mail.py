@@ -1,3 +1,5 @@
+# mail.py
+
 from flask import request
 from flask_restx import Namespace, Resource, fields
 from flask_request_validator import *
