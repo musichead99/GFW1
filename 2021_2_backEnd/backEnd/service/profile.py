@@ -17,7 +17,7 @@ ProfileGetFailedModel = Profile.inherit('5-2. Profile get failed model', swagger
 )
 
 # 프로필 관련 요청을 처리하는 userProfile class
-@Profile.route('/<string:userEmail>')
+@Profile.route('/profile/<string:userEmail>')
 class userProfile(Resource):
     @Profile.expect(parser)
     @Profile.response(200, 'Success(프로필 정보 요청 성공)', ProfileGetSuccessModel)

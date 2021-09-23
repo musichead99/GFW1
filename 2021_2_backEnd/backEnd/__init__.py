@@ -11,6 +11,7 @@ from user.mail import Email, mail
 from user.auth import Auth
 from user.kakao import Kakao
 from user.naver import Naver
+from service.profile import Profile
 import database, swaggerModel, werkzeug.exceptions, datetime
 
 app = Flask(__name__)
@@ -73,6 +74,7 @@ def not_allowd_method(e):
     return {"status" : "Error", "message" : "The method is not allowed for the requested URL."}, 405
 
 # namespace 등록
+api.add_namespace(swaggerModel.SwaggerModel)
 api.add_namespace(Test,'/')
 api.add_namespace(Register,'/user')
 api.add_namespace(LoginTest,'/user')
@@ -80,7 +82,7 @@ api.add_namespace(Email,'/user')
 api.add_namespace(Auth,'/user')
 api.add_namespace(Kakao,'/user/kakao')
 api.add_namespace(Naver,'/user/Naver')
-api.add_namespace(swaggerModel.SwaggerModel)
+api.add_namespace(Profile,'/service')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug="true")
