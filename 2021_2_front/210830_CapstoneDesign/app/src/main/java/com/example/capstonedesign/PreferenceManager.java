@@ -8,7 +8,7 @@ public class PreferenceManager {
 
     // 각 타입별 Default값 설정.
     private static final String DEFAULT_VALUE_STRING = "";
-    private static final boolean DEFAULT_VALUE_BOOLEAN = false;
+    private static final boolean DEFAULT_VALUE_BOOLEAN = true;
     private static final int DEFAULT_VALUE_INT = -1;
     private static final long DEFAULT_VALUE_LONG = -1L;
     private static final float DEFAULT_VALUE_FLOAT = -1F;
