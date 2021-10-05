@@ -55,6 +55,7 @@ class userAuth(Resource):
             SELECT * FROM users WHERE email=%(email)s AND password=%(password)s;
         '''
         dbData = db.executeOne(query, data)
+        db.close()
 
         # users 테이블에 일치하는 이메일과 비밀번호 한 쌍이 존재한다면 jwt토큰과 success메시지 반환
         if dbData is not None:

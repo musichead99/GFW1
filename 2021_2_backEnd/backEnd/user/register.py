@@ -80,6 +80,7 @@ class register(Resource):
             return {"status": "Failed", "message" : "Email Duplicated"}, 400
         finally:
             db.commit()
+            db.close()
         return {"status": "Success"}, 201
 
     # 회원 탈퇴 API
@@ -113,7 +114,7 @@ class register(Resource):
             '''
             db.execute(query, (dbdata,))
             db.commit()
-            return { "status" : "Success" }, 201
+            return { "status" : "Success" }, 200
     
     # 비밀번호 변경 API
     @Register.expect(ChangePW_Fileds)

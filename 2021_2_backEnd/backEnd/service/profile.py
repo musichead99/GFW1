@@ -35,7 +35,7 @@ class userProfile(Resource):
         '''
 
         profileData = db.executeOne(query,(userEmail,))
-            
+        db.close()
         if profileData is None:
             return {"status" : "Failed", "message" : "Email not registered"}, 403
         else:

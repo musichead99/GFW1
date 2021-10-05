@@ -35,6 +35,10 @@ class DBClass():
     def commit(self):
         self.db.commit()
 
+    # close
+    def close(self):
+        self.db.close()
+
     # 쿼리작성시 바로 commit 
     def execute_and_commit(self, query, args={"a":"a"}):
         try:
