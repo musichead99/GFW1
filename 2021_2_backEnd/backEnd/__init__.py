@@ -12,6 +12,7 @@ from user.auth import Auth
 from user.kakao import Kakao
 from user.naver import Naver
 from service.profile import Profile
+from service.kakaoFriendList import KakaoFriendList
 import database, swaggerModel, werkzeug.exceptions, datetime
 
 app = Flask(__name__)
@@ -83,6 +84,7 @@ api.add_namespace(Auth,'/user')
 api.add_namespace(Kakao,'/user/kakao')
 api.add_namespace(Naver,'/user/Naver')
 api.add_namespace(Profile,'/service')
+api.add_namespace(KakaoFriendList, '/service')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug="true")

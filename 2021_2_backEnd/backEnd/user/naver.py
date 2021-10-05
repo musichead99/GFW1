@@ -3,7 +3,7 @@ import re
 from flask_restx import Namespace, Resource, fields
 from flask import request
 from flask_jwt_extended import create_access_token
-import requests, database
+import requests, database, config
 
 Naver = Namespace(name='Naver', description="네이버 소셜 로그인을 위한 API")
 
@@ -28,7 +28,7 @@ class NaverAuth(Resource):
     def get(self):
         '''해당 라우트로 클라이언트가 접속 시 네이버 로그인 페이지를 json객체에 담아 반환'''
         clientID = 'f_nWrpPQdHxaUSGVuQZY'
-        redirectUri = 'http://172.23.14.215:5000/user/Naver/callback'
+        redirectUri = config.baseUrl + '/user/Naver/callback'
         Naver_oauthurl = f"https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={clientID}&redirect_uri={redirectUri}&response_type=code"
 
         return {"status" : "Success", "link": Naver_oauthurl}, 200
@@ -45,7 +45,7 @@ class NaverAuthCallback(Resource):
         authCode = request.args.get('code')
         clientID = 'f_nWrpPQdHxaUSGVuQZY'
         client_secret= 'fXdLG082wS'
-        redirectUri = 'http://172.23.14.215:5000/user/Naver/callback'
+        redirectUri = config.baseUrl + '/user/Naver/callback'
         token_request = requests.post(f"https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={clientID}&client_secret={client_secret}&redirect_uri={redirectUri}&code={authCode}&state={authCode}")
         token_request = token_request.json()
 
@@ -79,6 +79,7 @@ class NaverAuthCallback(Resource):
             '''
             db.execute(query,(NaverUserEmail, "Naver", NaverUserName))
             db.commit()
+            db.close()
         # # 가입이 되어있다면 바로 토큰 발급
         else:
             return {"status" : "Success", "access token" : create_access_token(identity = dbdata['email'])}
