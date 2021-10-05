@@ -79,8 +79,8 @@ class emailAuth(Resource):
                 select * from users where email=%s
             '''
         data = db.executeOne(query,(userEmail,))
-
+        db.close()
         if data is None:
-            return {"status":"Failed", "message": "Email not registered"}, 401
+            return {"status":"Failed", "message": "Email not registered"}, 403
         else:
             return {"status":"Success", "message":"The email registered"},200

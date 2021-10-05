@@ -3,20 +3,88 @@ package com.example.capstonedesign;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.capstonedesign.home_fragments.FS;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.data.DataType;
+
 public class MainActivity extends AppCompatActivity {
+    private static final int REQUEST_OAUTH_REQUEST_CODE = 0x1001;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("accessGoogle fit",String.valueOf(resultCode));
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
+                Log.d("REQUEST_OAUTH_REQUEST","Success");
+                PreferenceManager.setBoolean(getApplicationContext(),"REQUEST_OAUTH_REQUEST",true);
+            }
+        }
+        else{
+            Log.d("REQUEST_OAUTH_REQUEST","Fail");
+            PreferenceManager.setBoolean(getApplicationContext(),"REQUEST_OAUTH_REQUEST",false);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Context appContext = getApplicationContext();
+
+        if (ContextCompat.checkSelfPermission(appContext, Manifest.permission.ACTIVITY_RECOGNITION)
+                != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(appContext,Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            ActivityCompat.requestPermissions(this,
+                    new String[]{
+                            Manifest.permission.ACTIVITY_RECOGNITION,
+                            Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_OAUTH_REQUEST_CODE);
+        }
+
+        FitnessOptions fitnessOptions =
+                FitnessOptions.builder()
+                        .addDataType(DataType.TYPE_CALORIES_EXPENDED,FitnessOptions.ACCESS_READ)
+                        .addDataType(DataType.TYPE_DISTANCE_DELTA,FitnessOptions.ACCESS_READ)
+                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA,FitnessOptions.ACCESS_READ)
+                        .addDataType(DataType.TYPE_SPEED,FitnessOptions.ACCESS_READ)
+                        .build();
+
+        /** Google fit를 사용하기 위한 google 로그인 **/
+        GoogleSignInAccount account = GoogleSignIn.getAccountForExtension(appContext,fitnessOptions);
+
+        /** Permission이 주어져있지 않다면 Permission을 요청해줌. **/
+        if(!GoogleSignIn.hasPermissions(account,fitnessOptions)){
+            GoogleSignIn.requestPermissions(
+                    this,
+                    REQUEST_OAUTH_REQUEST_CODE,
+                    account,
+                    fitnessOptions);
+        } else{
+            Log.d("REQUEST_OAUTH_REQUEST","MainActivity has passed true to Home act");
+            PreferenceManager.setBoolean(appContext,"REQUEST_OAUTH_REQUEST",true);
+        }
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();

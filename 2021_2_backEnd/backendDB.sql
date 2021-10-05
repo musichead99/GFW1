@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.35, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.6.36, for Win64 (x86_64)
 --
 -- Host: localhost    Database: backend_test
 -- ------------------------------------------------------
--- Server version	5.6.35-log
+-- Server version	5.6.36-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -26,7 +26,7 @@ CREATE TABLE `revoked_tokens` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `jti` varchar(500) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,9 +41,11 @@ CREATE TABLE `users` (
   `email` varchar(200) DEFAULT NULL,
   `password` varchar(200) DEFAULT NULL,
   `name` varchar(200) DEFAULT NULL,
+  `kakaoAccessToken` varchar(200) DEFAULT NULL,
+  `kakaoRefreshToken` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uniqueEmail` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -55,4 +57,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-17 17:20:41
+-- Dump completed on 2021-10-05 16:14:09

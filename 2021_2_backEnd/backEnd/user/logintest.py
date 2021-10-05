@@ -16,7 +16,7 @@ class LGTest(Resource):
         jti = get_jwt()['jti']
 
         dbdata = db.executeOne(query, (jti,))
-
+        db.close()
         if dbdata is None:
             return {"message":"user_only page, hello"}
         else:

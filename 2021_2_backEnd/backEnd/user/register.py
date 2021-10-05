@@ -15,7 +15,7 @@ Register = Namespace(
 
 # API문서 작성을 위한 것들
 parser = Register.parser()
-parser.add_argument('Authorization', location='headers')
+parser.add_argument('Authorization Header', location='headers')
 RegisterFields = Register.model('1-1 Register Request json model', {
     "email" : fields.String(description="your email", required=True, example="testemail@testdomain.com"),
     "password" : fields.String(description="your password", required=True, example="testpw"),
@@ -80,6 +80,7 @@ class register(Resource):
             return {"status": "Failed", "message" : "Email Duplicated"}, 400
         finally:
             db.commit()
+            db.close()
         return {"status": "Success"}, 201
 
     # 회원 탈퇴 API
@@ -106,14 +107,14 @@ class register(Resource):
         dbdata = dbdata['email']
 
         if dbdata is None:
-            return {"status":"Failed", "message": "The email could not be found. It doesn't seem to be registered."}, 401
+            return {"status":"Failed", "message": "The email could not be found. It doesn't seem to be registered."}, 403
         else:
             query = '''
                 DELETE FROM users WHERE email=(%s);
             '''
             db.execute(query, (dbdata,))
             db.commit()
-            return { "status" : "Success" }, 201
+            return { "status" : "Success" }, 200
     
     # 비밀번호 변경 API
     @Register.expect(ChangePW_Fileds)
@@ -130,7 +131,7 @@ class register(Resource):
             "update users set password =%(new_password)s where email = %(email)s;"
             ]
         if request.json['new_password'] != request.json['new_password_again']:
-            return {"status":"Failed", "message": "The two passwords entered are different"}, 401
+            return {"status":"Failed", "message": "The two passwords entered are different"}, 40
 
         if db.executeOne(query_list[0], data):
             db.execute_and_commit(query_list[1], data)

@@ -11,7 +11,9 @@ from user.mail import Email, mail
 from user.auth import Auth
 from user.kakao import Kakao
 from user.naver import Naver
-import database, werkzeug.exceptions, datetime
+from service.profile import Profile
+from service.kakaoFriendList import KakaoFriendList
+import database, swaggerModel, werkzeug.exceptions, datetime
 
 app = Flask(__name__)
 app.config.update(JWT_SECRET_KEY = "backendTest") # jwt encoding을 위한 secret key, 추후 수정 필요
@@ -73,6 +75,7 @@ def not_allowd_method(e):
     return {"status" : "Error", "message" : "The method is not allowed for the requested URL."}, 405
 
 # namespace 등록
+api.add_namespace(swaggerModel.SwaggerModel)
 api.add_namespace(Test,'/')
 api.add_namespace(Register,'/user')
 api.add_namespace(LoginTest,'/user')
@@ -80,6 +83,8 @@ api.add_namespace(Email,'/user')
 api.add_namespace(Auth,'/user')
 api.add_namespace(Kakao,'/user/kakao')
 api.add_namespace(Naver,'/user/Naver')
+api.add_namespace(Profile,'/service')
+api.add_namespace(KakaoFriendList, '/service')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug="true")
