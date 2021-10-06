@@ -18,7 +18,7 @@ public interface initMyApi {
     @GET("/user/email/{userEmail}")
     Call<ValidateResponse> getValidateResponse(@Path("userEmail") String email);
 
-    @POST("/user/login")
+    @POST("/user/auth")
     Call<LoginResponse> getLoginResponse(@Body LoginRequest loginRequest);
 
     @POST("/user/password")
