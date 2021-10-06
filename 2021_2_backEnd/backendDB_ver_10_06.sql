@@ -1,4 +1,5 @@
 # create tables
+use backend_test;
 
 -- Table structure for table `revoked_tokens`
 DROP TABLE IF EXISTS revoked_tokens;
@@ -21,14 +22,14 @@ CREATE TABLE users (
   PRIMARY KEY (id),
   UNIQUE KEY `uniqueEmail` (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-insert into request_friend(email, password, name) values ('rdd0426@gmail.com','test1234!', '김영우');
-insert into request_friend(email, password, name) values ('tjdrn5623@gmail.com','test1234!', '정성구');
-insert into request_friend(email, password, name) values ('32190153@dankook.ac.kr','test1234!', '고희아');
-insert into request_friend(email, password, name) values ('junvery2@gmail.com','test1234!', '이호준');
-insert into request_friend(email, password, name) values ('test1@gmail.com','test1234!', '김김김');
-insert into request_friend(email, password, name) values ('test2@gmail.com','test1234!', '박박박');
-insert into request_friend(email, password, name) values ('test3@gmail.com','test1234!', '이이이');
-insert into request_friend(email, password, name) values ('test4@gmail.com','test1234!', '홍길동');
+insert into users(email, password, name) values ('rdd0426@gmail.com','test1234!', '김영우');
+insert into users(email, password, name) values ('tjdrn5623@gmail.com','test1234!', '정성구');
+insert into users(email, password, name) values ('32190153@dankook.ac.kr','test1234!', '고희아');
+insert into users(email, password, name) values ('junvery2@gmail.com','test1234!', '이호준');
+insert into users(email, password, name) values ('test1@gmail.com','test1234!', '김김김');
+insert into users(email, password, name) values ('test2@gmail.com','test1234!', '박박박');
+insert into users(email, password, name) values ('test3@gmail.com','test1234!', '이이이');
+insert into users(email, password, name) values ('test4@gmail.com','test1234!', '홍길동');
 
 
 -- Table structure for table `request_friend`
