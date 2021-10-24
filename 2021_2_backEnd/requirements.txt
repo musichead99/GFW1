@@ -26,6 +26,7 @@ MarkupSafe==2.0.1
 mod-wsgi==4.9.0
 protobuf==3.17.3
 pycparser==2.20
+pyfcm==1.5.4
 PyJWT==2.1.0
 PyMySQL==1.0.2
 pyrsistent==0.18.0

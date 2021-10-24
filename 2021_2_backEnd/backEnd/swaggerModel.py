@@ -15,7 +15,8 @@ BaseFailedModel = SwaggerModel.model('Base Failed Model', {
 })
 
 BaseProfileModel = SwaggerModel.model('Base Profile Model', {
-    "name" : fields.String(description="user name", example="testName")
+    "name" : fields.String(description="user name", example="testName"),
+    "profilePhoto" : fields.String(description="your profilePhoto", example="(imagefile with base64 Encoded code)")
 })
 
 # errorhandler에서 정의된 에러 return model

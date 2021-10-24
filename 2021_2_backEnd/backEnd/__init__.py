@@ -78,7 +78,7 @@ def not_allowd_method(e):
 
 # namespace 등록
 api.add_namespace(swaggerModel.SwaggerModel)
-api.add_namespace(Test,'/')
+api.add_namespace(Test,'/test')
 api.add_namespace(Register,'/user')
 api.add_namespace(LoginTest,'/user')
 api.add_namespace(Email,'/user')
