@@ -61,6 +61,7 @@ public class FS extends Fragment {
     Context mContext;
     private static String name_btn_goal = "btn_goal";
     TextView text_goal;
+    TextView current_step;
 
     /** Dialog에서 String 형태로 인자 전달을 위해 choice는 String으로 하고 int 값은 따로 저장. **/
     final String[] goal_choice = {"1000 보","5000 보","10000 보"};
@@ -74,17 +75,16 @@ public class FS extends Fragment {
 
     /** My메뉴 **/
     String myMenuName = "Mymenu";
-    String[] choiceArray = new String[] {"걸음수","소모 칼로리","거리","평균 속도"};
+    String[] choiceArray = new String[] {"소모 칼로리","거리","평균 속도"};
     boolean[] checkArray; // MyMenu에서 볼 정보들에 대한 정보 저장.
     int[] textViewIds = new int[]{ViewCompat.generateViewId(),ViewCompat.generateViewId(),ViewCompat.generateViewId(),ViewCompat.generateViewId()};
 
     /** Google Fit **/
     public static final String TAG = "Google Fit";
     public static final String OAUTH_TAG = "REQUEST_OAUTH_REQUEST";
-    public static final int STEP_LISTENER = 0;
-    public static final int CAL_LISTENER = 1;
-    public static final int DIS_LISTENER = 2;
-    public static final int SPD_LISTENER = 3;
+    public static final int CAL_LISTENER = 0;
+    public static final int DIS_LISTENER = 1;
+    public static final int SPD_LISTENER = 2;
     private static final int REQUEST_OAUTH_REQUEST_CODE = 0x1001;
     private TextView step = null;
     private TextView calories = null;
@@ -100,12 +100,11 @@ public class FS extends Fragment {
         mContext = getContext();
 
         /** SensorClient에 등록된 Listener를 제거해주기 위함.
-         * index [0] : Step Listener
-         * index [1] : Calories Listener
-         * index [2] : Distance Listener
-         * index [3] : Speed Listener
+         * index [0] : Calories Listener
+         * index [1] : Distance Listener
+         * index [2] : Speed Listener
          * **/
-        OnDataPointListener[] ListenerManager = new OnDataPointListener[4];
+        OnDataPointListener[] ListenerManager = new OnDataPointListener[3];
 
         // App의 Context를 저장.
         Context appContext = getActivity().getApplicationContext();
@@ -143,6 +142,8 @@ public class FS extends Fragment {
             PreferenceManager.setInt(mContext,pref_goal,goalStep);
             PreferenceManager.setInt(mContext,pref_goalIndex,0);
         }
+        /** 현재 걸음수 텍스트 **/
+        current_step = rootView.findViewById(R.id.current_step);
 
         /** 목표 걸음수 ProgressBar 초기 세팅 **/
         progressBar = rootView.findViewById(R.id.progressbar_goal);
@@ -207,7 +208,7 @@ public class FS extends Fragment {
         textViewContainer.removeAllViews();
 
         // 기존의 Listener들을 전부 제거해줌.
-        for(int index = 0;index < 4 ; index++){
+        for(int index = 0;index < 3 ; index++){
             if(ListenerManager[index] != null)
             {
                 Fitness.getSensorsClient(getContext(),GoogleSignIn.getAccountForExtension(appContext, fitnessOptions))
@@ -300,24 +301,23 @@ public class FS extends Fragment {
         dialog.show();
     }
     public void setMyMenuData(Context appContext, FitnessOptions fitnessOptions,TextView textView,int index,OnDataPointListener[] ListenerManager){
+        // this is the very basic information that we should be listening to at all time.
+        Fitness.getRecordingClient(getActivity(), GoogleSignIn.getLastSignedInAccount(appContext))
+                .subscribe(DataType.TYPE_STEP_COUNT_DELTA)
+                .addOnCompleteListener(
+                        new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "TYPE_STEP_COUNT_DELTA | Successfully subscribed!");
+                                    readStepData(appContext,textView,fitnessOptions);
+                                } else {
+                                    Log.d(TAG, "There was a problem subscribing.", task.getException());
+                                }
+                            }
+                        });
         switch(index){
             case 0:
-                Fitness.getRecordingClient(getActivity(), GoogleSignIn.getLastSignedInAccount(appContext))
-                        .subscribe(DataType.TYPE_STEP_COUNT_DELTA)
-                        .addOnCompleteListener(
-                                new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d(TAG, "TYPE_STEP_COUNT_DELTA | Successfully subscribed!");
-                                            readStepData(appContext,textView,fitnessOptions,ListenerManager);
-                                        } else {
-                                            Log.d(TAG, "There was a problem subscribing.", task.getException());
-                                        }
-                                    }
-                                });
-                break;
-            case 1:
                 Fitness.getRecordingClient(getActivity(), GoogleSignIn.getLastSignedInAccount(appContext))
                         .subscribe(DataType.TYPE_CALORIES_EXPENDED)
                         .addOnCompleteListener(
@@ -333,7 +333,7 @@ public class FS extends Fragment {
                                     }
                                 });
                 break;
-            case 2:
+            case 1:
                 Fitness.getRecordingClient(getActivity(), GoogleSignIn.getLastSignedInAccount(appContext))
                         .subscribe(DataType.TYPE_DISTANCE_DELTA)
                         .addOnCompleteListener(
@@ -349,7 +349,7 @@ public class FS extends Fragment {
                                     }
                                 });
                 break;
-            case 3:
+            case 2:
                 Fitness.getRecordingClient(getActivity(), GoogleSignIn.getLastSignedInAccount(appContext))
                         .subscribe(DataType.TYPE_SPEED)
                         .addOnCompleteListener(
@@ -367,7 +367,7 @@ public class FS extends Fragment {
                 break;
         }
     }
-    public void readStepData(Context appContext, TextView textView, FitnessOptions fitnessOptions,OnDataPointListener[] ListenerManager){
+    public void readStepData(Context appContext, TextView textView, FitnessOptions fitnessOptions){
         Log.d("readStepData"," In");
         Fitness.getHistoryClient(getContext(), GoogleSignIn.getLastSignedInAccount(appContext))
                 .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
@@ -386,6 +386,7 @@ public class FS extends Fragment {
                                     }
                                 }
                                 textView.setText("걸음수 : " + String.valueOf(userInputSteps));
+                                current_step.setText(String.valueOf(userInputSteps)+" 걸음");
                                 progressBar.setProgress(userInputSteps); // ProgressBar update
                             }
                         })
@@ -408,9 +409,9 @@ public class FS extends Fragment {
                 }
             }
             textView.setText("걸음수 : "+String.valueOf(userInputSteps));
+            current_step.setText(String.valueOf(userInputSteps)+" 걸음");
             progressBar.setProgress(userInputSteps);
         };
-        ListenerManager[STEP_LISTENER] = listener;
 
         Fitness.getSensorsClient(getContext(), GoogleSignIn.getAccountForExtension(appContext, fitnessOptions))
                 .add(
@@ -443,7 +444,7 @@ public class FS extends Fragment {
                                         }
                                     }
                                 }
-                                textView.setText("소모 칼로리 : " + String.valueOf(userInputCalories));
+                                textView.setText("소모 칼로리 : " + String.valueOf(userInputCalories) + " Kcal");
                             }
                         })
                 .addOnFailureListener(
@@ -464,7 +465,7 @@ public class FS extends Fragment {
                     userInputCalories += steps;
                 }
             }
-            textView.setText("소모 칼로리 : "+String.valueOf(userInputCalories));
+            textView.setText("소모 칼로리 : "+String.valueOf(userInputCalories) + " Kcal");
         };
         ListenerManager[CAL_LISTENER] = listener;
 
@@ -499,7 +500,7 @@ public class FS extends Fragment {
                                         }
                                     }
                                 }
-                                textView.setText("이동 거리 : "+String.valueOf(userInputDistance));
+                                textView.setText("이동 거리 : "+String.valueOf(userInputDistance) +" m");
                             }
                         })
                 .addOnFailureListener(
@@ -521,7 +522,7 @@ public class FS extends Fragment {
                     userInputDistance += dis;
                 }
             }
-            textView.setText("이동 거리 : "+String.valueOf(userInputDistance));
+            textView.setText("이동 거리 : "+String.valueOf(userInputDistance) + " m");
         };
         ListenerManager[DIS_LISTENER] = listener;
 
@@ -571,7 +572,7 @@ public class FS extends Fragment {
                                 }
                             }
                         }
-                        textView.setText("평균 속도 : " + String.valueOf(userInputSpeed));
+                        textView.setText("평균 속도 : " + String.valueOf(userInputSpeed)+" m/s");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -590,7 +591,7 @@ public class FS extends Fragment {
                     userInputSpeed += avg_speed;
                 }
             }
-            textView.setText("평균 속도 : " + String.valueOf(userInputSpeed));
+            textView.setText("평균 속도 : " + String.valueOf(userInputSpeed) +" m/s");
         };
         ListenerManager[SPD_LISTENER] = listener;
 
