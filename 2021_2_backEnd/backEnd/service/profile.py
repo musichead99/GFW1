@@ -23,7 +23,7 @@ ProfileGetFailedModel = Profile.inherit('5-2. Profile get/put failed model', swa
 class userProfile(Resource):
     @Profile.expect(parser)
     @Profile.response(200, 'Success(프로필 정보 요청 성공)', ProfileGetSuccessModel)
-    @Profile.response(403, 'Failed(이메일이 가입되어 있지 않을)', ProfileGetFailedModel)
+    @Profile.response(401, 'Failed(이메일이 가입되어 있지 않을)', ProfileGetFailedModel)
     @validate_params (
         Param('userEmail', PATH, str, rules=[Pattern(r'^[\w+-_.]+@[\w-]+\.[a-zA-Z-.]+$')])
     )
@@ -39,7 +39,7 @@ class userProfile(Resource):
         profileData = db.executeOne(query,(userEmail,))
         db.close()
         if profileData is None:
-            return {"status" : "Failed", "message" : "Email not registered"}, 403
+            return {"status" : "Failed", "message" : "Email not registered"}, 401
         else:
             return {"status" : "Success", "profile" : profileData}
     
@@ -61,7 +61,7 @@ class userProfile(Resource):
                 select from users where email = %s
             '''
         if db.executeOne(query, (userEmail,)) is None:
-            return {"status":"Failed", "message": "Email not registered"}, 403
+            return {"status":"Failed", "message": "Email not registered"}, 401
 
         # 각 파라미터별로 DB에 갱신
         if 'name' in data :

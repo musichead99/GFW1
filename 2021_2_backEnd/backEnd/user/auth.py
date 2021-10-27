@@ -40,7 +40,7 @@ LogoutRevokedTokenModel = Auth.inherit('2-8. Logout Revocked token json model', 
 class userAuth(Resource): 
     @Auth.doc(params={'email' : "your email", "password": "your password"})
     @Auth.expect(LoginFields)
-    @Auth.response(201, 'Success', LoginSuccessModel)
+    @Auth.response(200, 'Success', LoginSuccessModel)
     @Auth.response(400, 'Failed', LoginFailedModel)   
     @validate_params(
         Param('email', JSON, str, rules=[Pattern(r'^[\w+-_.]+@[\w-]+\.[a-zA-Z-.]+$')]),   # 이메일 형식 체크
@@ -65,12 +65,12 @@ class userAuth(Resource):
                 }, 200
         # 일치하는 이메일이 없을 경우에는 failed 메시지 반환
         else:
-            return {"status" : "Failed", "message" : "Cannot Login"}, 403
+            return {"status" : "Failed", "message" : "Cannot Login"}, 401
 
     @jwt_required()
     @Auth.expect(parser)
-    @Auth.response(400, 'Failed ( 이미 blocklist에 등록된 토큰일 때 )', LogoutRevokedTokenModel)
-    @Auth.response(403, 'Failed ( header에 jwt토큰이 존재하지 않을 때 )', LogoutNoAuthModel)
+    @Auth.response(401, 'Failed ( 이미 blocklist에 등록된 토큰일 때 )', LogoutRevokedTokenModel)
+    @Auth.response(401, 'Failed ( header에 jwt토큰이 존재하지 않을 때 )', LogoutNoAuthModel)
     @Auth.response(200, 'Success',SuccessModel)
     # DELETE method로 url에 접근했을 때
     def delete(self):

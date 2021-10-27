@@ -60,7 +60,7 @@ class AppFriend(Resource):
         or user_email=%(acceptor)s and user_friend_email=%(requester)s
         ;
         '''
-       ## 이미 친구인 경우
+        ## 이미 친구인 경우
         if db.executeAll(query2, data):   
             return {"status" : "failed", "message" : "aleardy friend"}, 400
 
@@ -70,7 +70,7 @@ class AppFriend(Resource):
         '''
         db.execute_and_commit(query3, (data['requester'], data['acceptor']))
         db.execute_and_commit(query3, (data['acceptor'], data['requester']))
-        return {"status" : "success", "message" : "Friend request has been accepted"}, 200
+        return {"status" : "success", "message" : "Friend request has been accepted"}, 201
     
     #친구 삭제
     def delete(self, *args, **kwargs):

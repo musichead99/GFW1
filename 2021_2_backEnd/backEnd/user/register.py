@@ -86,8 +86,8 @@ class register(Resource):
     # 회원 탈퇴 API
     @Register.expect(parser)
     @jwt_required()
-    @Register.response(201, 'Success', SuccessModel)
-    @Register.response(400, 'Failed', DeleteFailedModel)
+    @Register.response(200, 'Success', SuccessModel)
+    @Register.response(401, 'Failed', DeleteFailedModel)
     def delete(self, *args):
         """Authorization header에 존재하는 jwt토큰에서 email을 분리하여 회원 탈퇴"""
         userEmail = get_jwt_identity()
@@ -107,7 +107,7 @@ class register(Resource):
         dbdata = dbdata['email']
 
         if dbdata is None:
-            return {"status":"Failed", "message": "The email could not be found. It doesn't seem to be registered."}, 403
+            return {"status":"Failed", "message": "The email could not be found. It doesn't seem to be registered."}, 401
         else:
             query = '''
                 DELETE FROM users WHERE email=(%s);
@@ -119,7 +119,7 @@ class register(Resource):
     # 비밀번호 변경 API
     @Register.expect(ChangePW_Fileds)
     @Register.response(201, 'Success', ChangeSucessModel)
-    @Register.response(401, 'Failed(입력한 비밀번호가 서로 다를때)', ChangeFailedModel_2)
+    @Register.response(400, 'Failed(입력한 비밀번호가 서로 다를때)', ChangeFailedModel_2)
     @Register.response(400, 'Failed(입력한 email이 틀렸을 때)', ChangeFailedModel_1)
     def put(self, *args):
         """json객체로 보내진 email, password"""
@@ -131,7 +131,7 @@ class register(Resource):
             "update users set password =%(new_password)s where email = %(email)s;"
             ]
         if request.json['new_password'] != request.json['new_password_again']:
-            return {"status":"Failed", "message": "The two passwords entered are different"}, 40
+            return {"status":"Failed", "message": "The two passwords entered are different"}, 400
 
         if db.executeOne(query_list[0], data):
             db.execute_and_commit(query_list[1], data)
