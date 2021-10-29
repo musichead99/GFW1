@@ -15,6 +15,7 @@ from user.fcmToken import FcmToken
 from service.profile import Profile
 from service.friends import Friends
 from service.notification import Notification
+from service.image import Image
 
 import database, swaggerModel, werkzeug.exceptions, datetime
 
@@ -88,6 +89,7 @@ api.add_namespace(Profile,'/service')
 api.add_namespace(Friends, '/service')
 api.add_namespace(FcmToken, '/user')
 api.add_namespace(Notification, '/service')
+api.add_namespace(Image, '/service')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug="true")
