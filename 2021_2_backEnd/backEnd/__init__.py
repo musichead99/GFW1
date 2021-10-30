@@ -4,9 +4,9 @@ from flask_restx import Api
 from flask_jwt_extended import JWTManager, exceptions
 from flask_request_validator.error_formatter import demo_error_formatter
 from flask_request_validator.exceptions import InvalidRequestError 
-from test.test import Test
+# from test.test import Test
 from user.register import Register
-from user.logintest import LoginTest
+# from user.logintest import LoginTest
 from user.mail import Email
 from user.auth import Auth
 from user.kakao import Kakao
@@ -16,6 +16,7 @@ from service.profile import Profile
 from service.friends import Friends
 from service.notification import Notification
 from service.image import Image
+from service.health_data import HealthData
 
 import database, swaggerModel, werkzeug.exceptions, datetime
 
@@ -78,9 +79,9 @@ def server_error(e):
 
 # namespace 등록
 api.add_namespace(swaggerModel.SwaggerModel)
-api.add_namespace(Test,'/test')
+# api.add_namespace(Test,'/test')
 api.add_namespace(Register,'/user')
-api.add_namespace(LoginTest,'/user')
+# api.add_namespace(LoginTest,'/user')
 api.add_namespace(Email,'/user')
 api.add_namespace(Auth,'/user')
 api.add_namespace(Kakao,'/user/kakao')
@@ -90,6 +91,8 @@ api.add_namespace(Friends, '/service')
 api.add_namespace(FcmToken, '/user')
 api.add_namespace(Notification, '/service')
 api.add_namespace(Image, '/service')
+api.add_namespace(HealthData, '/service')
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug="true")
