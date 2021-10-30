@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
@@ -22,22 +23,29 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.request.OnDataPointListener;
+import com.google.android.gms.fitness.request.SensorRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class FA_frag1 extends Fragment {
     // LineChart를 가르킬 변수.
     private LineChart lineChart;
     private boolean WEEK = false;
     private boolean MONTH = true;
-    private String TAG = "Google Fit Step Count Delta Subscription";
+    private String TAG = "Google Fit Step Count Delta";
 
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fa_frag1,container,false);
-
 
         Context appContext = rootView.getContext().getApplicationContext();
 
@@ -116,5 +124,9 @@ public class FA_frag1 extends Fragment {
                                 }
                             }
                         });
+    }
+
+    public void readStepData(Context appContext,FitnessOptions fitnessOptions){
+
     }
 }
