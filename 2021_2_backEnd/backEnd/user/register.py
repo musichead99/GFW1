@@ -2,61 +2,50 @@
 from flask import request
 from flask_jwt_extended.utils import get_jwt_identity, get_jwt
 from flask_restx import Namespace, Resource, fields
-import database
+import database, swaggerModel
 from pymysql import err
 from flask_request_validator import *
 from flask_jwt_extended import jwt_required
 
 Register = Namespace(
     name='Register',
-    description="회원가입/탈퇴를 위한 API"    
+    description="회원가입/탈퇴, 비밀번호 변경을 처리하는 API"    
 )
-
 
 # API문서 작성을 위한 것들
 parser = Register.parser()
-parser.add_argument('Authorization Header', location='headers')
-RegisterFields = Register.model('1-1 Register Request json model', {
-    "email" : fields.String(description="your email", required=True, example="testemail@testdomain.com"),
-    "password" : fields.String(description="your password", required=True, example="testpw"),
-    "name" : fields.String(description="your name", required=True, example="testname")
+parser.add_argument('Authorization', location='headers', help='사용자의 jwt토큰, 회원 인증에 사용된다.')
+RegisterPostRequest = Register.model('1-1 Register Request model', {
+    "email" : fields.String(description="유저의 이메일", required=True, example="testemail@testdomain.com", help='testpw123!'),
+    "password" : fields.String(description="유저의 비밀번호", required=True, example="testpw123!", help='test'),
+    "name" : fields.String(description="유저의 이름", required=True, example="testname", help='test')
     })
-FailedModel = Register.model('1-2 Register Failed json model', {
-    "status" : fields.String(description="Success or Failed", example="Failed"),
-    "message" : fields.String(description="message", example="Email Duplicated")
+RegisterPostFailedResponse = Register.inherit('1-2 Register Failed Response model', swaggerModel.BaseFailedModel, {
+    "message" : fields.String(description="오류 메시지", example="Email Duplicated")
     })
-SuccessModel = Register.model('1-3 Register/Delete Success json model', {
-    "status" : fields.String(description="Success or Failed", example="Success")
+RegisterDeleteFailedResponse = Register.inherit('1-3 Delete Failed Response model', swaggerModel.BaseFailedModel,{
+    "message" : fields.String(description="오류 메시지", example="The email could not be found. It doesn't seem to be registered.")
     })
-DeleteFailedModel = Register.model('1-4 Delete Failed json model', {
-    "status" : fields.String(description="Success or Failed", example="Failed"),
-    "message" : fields.String(description="message", example="The email could not be found. It doesn't seem to be registered.")
+RegisterPutRequest = Register.model('1-4 ChangePW Request model', {
+    "email" : fields.String(description="유저의 이메일", required=True, example="testemail@testdomain.com"),
+    "new_password" : fields.String(description="유저의 새로운 비밀번호", required=True, example="testpw2!"),
+    "new_password_again" : fields.String(description="유저의 새로운 비밀번호", required=True, example="testpw2!")
     })
-ChangePW_Fileds = Register.model('1-2 ChangePW Request json model', {
-    "email" : fields.String(description="your email", required=True, example="testemail@testdomain.com"),
-    "new_password" : fields.String(description="your original password", required=True, example="testpw2!"),
-    "new_password_again" : fields.String(description="your new password ", required=True, example="testpw2!")
+ChangeFailedModel_1 = Register.inherit('1-5 ChangePW Failed_2 Response model', swaggerModel.BaseFailedModel,{
+    "message" : fields.String(description="오류 메시지", example="Wrong email")
     })
-ChangeSucessModel = Register.model('1-5 ChangePW Success json model', {
-    "status" : fields.String(description="Success or Failed", example="Success"),
-    "message" : fields.String(description="message", example="The password has changed.")
-    })
-ChangeFailedModel_1 = Register.model('1-7 ChangePW Failed_2 json model', {
-    "status" : fields.String(description="Success or Failed", example="Success"),
-    "message" : fields.String(description="message", example="Wrong email")
-    })
-ChangeFailedModel_2 = Register.model('1-6 ChangePW Failed_1 json model', {
-    "status" : fields.String(description="Success or Failed", example="Success"),
-    "message" : fields.String(description="message", example="The two passwords entered are different")
+ChangeFailedModel_2 = Register.inherit('1-6 ChangePW Failed_1 Response model', swaggerModel.BaseFailedModel, {
+    "message" : fields.String(description="오류 메시지", example="The two passwords entered are different")
     })
 
 # 일반 이메일 회원가입, 회원탈퇴 클래스
 @Register.route('/register')
+@Register.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
 class register(Resource):
-    @Register.doc(params={"email" : "your email", "password" : "your password(영어+숫자+특수문자의 8자리 이상 20자리 미만)", "name" : "your name"})
-    @Register.expect(RegisterFields)
-    @Register.response(201, 'Success', SuccessModel)
-    @Register.response(400, 'Failed', FailedModel)
+    @Register.expect(RegisterPostRequest)
+    @Register.doc(description='test')
+    @Register.response(201, 'Success', swaggerModel.BaseSuccessModel)
+    @Register.response(400, 'Failed(회원가입 실패, 이미 가입되어 있는 이메일일 경우)', RegisterPostFailedResponse)
     # request 유효성 검사
     @validate_params(
         Param('email', JSON, str, rules=[Pattern(r'^[\w+-_.]+@[\w-]+\.[a-zA-Z-.]+$')]),   # 이메일 형식 체크
@@ -65,7 +54,7 @@ class register(Resource):
     )
     # 회원 가입 API
     def post(self, *args):
-        """json객체로 보내진 email, name, password로 회원가입"""
+        """클라이언트로부터 회원 정보를 받아 회원가입을 수행하고 결과를 반환한다."""
         # json형식으로 data parsing, mysql connection을 위한 객체 생성
         data = request.json
         db = database.DBClass()
@@ -85,11 +74,15 @@ class register(Resource):
 
     # 회원 탈퇴 API
     @Register.expect(parser)
+    @Register.response(200, 'Success(회원탈퇴 성공)', swaggerModel.BaseSuccessModel)
+    @Register.response(400, 'Failed(이미 탈퇴되었거나 가입되지 않은 이메일일 경우)', RegisterDeleteFailedResponse)
+    @Register.response(401, 
+    'Failed(jwt 토큰 관련 이슈)\nmessage : Missing Authorization Header(header에 jwt토큰이 존재하지 않을 때)\nmessage : Token has been revoked(토큰이 blocklist에 존재할 때)\nmessage : Token has expired(토큰이 만료되었을 때)',
+    swaggerModel.NoAuthModel
+    )
     @jwt_required()
-    @Register.response(201, 'Success', SuccessModel)
-    @Register.response(400, 'Failed', DeleteFailedModel)
     def delete(self, *args):
-        """Authorization header에 존재하는 jwt토큰에서 email을 분리하여 회원 탈퇴"""
+        """클라이언트로부터 받은 jwt토큰에서 이메일을 분리하여 회원탈퇴를 수행하고 결과를 반환한다."""
         userEmail = get_jwt_identity()
         jti = get_jwt()['jti']
         db = database.DBClass()
@@ -107,7 +100,7 @@ class register(Resource):
         dbdata = dbdata['email']
 
         if dbdata is None:
-            return {"status":"Failed", "message": "The email could not be found. It doesn't seem to be registered."}, 403
+            return {"status":"Failed", "message": "The email could not be found. It doesn't seem to be registered."}, 400
         else:
             query = '''
                 DELETE FROM users WHERE email=(%s);
@@ -117,12 +110,12 @@ class register(Resource):
             return { "status" : "Success" }, 200
     
     # 비밀번호 변경 API
-    @Register.expect(ChangePW_Fileds)
-    @Register.response(201, 'Success', ChangeSucessModel)
-    @Register.response(401, 'Failed(입력한 비밀번호가 서로 다를때)', ChangeFailedModel_2)
-    @Register.response(400, 'Failed(입력한 email이 틀렸을 때)', ChangeFailedModel_1)
+    @Register.expect(RegisterPutRequest)
+    @Register.response(201, 'Success', swaggerModel.BaseSuccessModel)
+    @Register.response(400, 'Failed(입력한 비밀번호가 서로 다를 경우)', ChangeFailedModel_2)
+    @Register.response(400, 'Failed(입력한 email이 틀렸을 경우)', ChangeFailedModel_1)
     def put(self, *args):
-        """json객체로 보내진 email, password"""
+        """클라이언트로부터 비밀번호를 받아서 비밀번호 변경을 수행한다."""
         data = request.json
 
         db = database.DBClass()
@@ -131,10 +124,10 @@ class register(Resource):
             "update users set password =%(new_password)s where email = %(email)s;"
             ]
         if request.json['new_password'] != request.json['new_password_again']:
-            return {"status":"Failed", "message": "The two passwords entered are different"}, 40
+            return {"status":"Failed", "message": "The two passwords entered are different"}, 400
 
         if db.executeOne(query_list[0], data):
             db.execute_and_commit(query_list[1], data)
-            return {"status":"Success", "message":"The password has changed"},200
+            return {"status":"Success"},200
         else:
             return {"status":"Failed", "message": "Wrong email"}, 400

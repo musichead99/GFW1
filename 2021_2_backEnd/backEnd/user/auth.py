@@ -7,47 +7,35 @@ import database, swaggerModel
 
 Auth = Namespace(
     name = 'Auth',
-    description="로그인/아웃을 위한 API"
+    description="로그인/아웃을 처리하는 API"
 )
 
 parser = Auth.parser()
-parser.add_argument('Authorization Header', location='headers')
-LoginFields = Auth.model('2-1 Login Request json model', {
-    "email" : fields.String(description="your email", required=True, example="testemail@testdomain.com"),
-    "password" : fields.String(description="your password", required=True, example="testpw")
+parser.add_argument('Authorization', location='headers', type=str, help='유저의 jwt토큰, 회원 인증에 사용된다.')
+AuthPostRequest = Auth.model('2-1 Login Request json model', {
+    "email" : fields.String(description="유저의 이메일", required=True, example="testemail@testdomain.com"),
+    "password" : fields.String(description="유저의 비밀번호", required=True, example="testpw123!")
 })
-FailedModel = Auth.model('2-2 Failed json model', {
-    "status" : fields.String(description="Success or Failed", example="Failed")
+AuthFailedModel = Auth.inherit('2-5. Login Failed json model', swaggerModel.BaseFailedModel, {
+    "message" : fields.String(description="에러 메시지", example="Cannot Login")
 })
-SuccessModel = Auth.model('2-3 Success json model', {
-    "status" : fields.String(description="Success or Failed", example="Success"),
-})
-LoginFailedModel = Auth.inherit('2-5. Login Failed json model', FailedModel, {
-    "message" : fields.String(description="message", example="Cannot Login")
-})
-LoginSuccessModel = Auth.inherit('2-6. Login Success json model', SuccessModel,{
-    "access token" : fields.String(description="Token", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYzMDI4NzE3MiwianRpIjoiMjcwNjNjODctYWNhYS00NDJhLTk1M2UtMWM1MWQ3YmNjNTJkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Imp1bnZlcnkyQG5hdmVyLmNvbSIsIm5iZiI6MTYzMDI4NzE3Mn0.QnyKfFmjHWNg6ShGsgRRawCzgWzoSDT3YjUzTtg2_Yg"),
-})
-LogoutNoAuthModel = Auth.inherit('2-7. Logout Authorization Failed json model', FailedModel, {
-    "message" : fields.String(description="message", example="Missing Authorization Header")
-})
-LogoutRevokedTokenModel = Auth.inherit('2-8. Logout Revocked token json model', FailedModel, {
-    "message" : fields.String(description="message", example="Token has been revoked")
+AuthSuccessModel = Auth.inherit('2-6. Login Success json model', swaggerModel.BaseSuccessModel,{
+    "access token" : fields.String(description="access jwt token", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTYzMDI4NzE3MiwianRpIjoiMjcwNjNjODctYWNhYS00NDJhLTk1M2UtMWM1MWQ3YmNjNTJkIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6Imp1bnZlcnkyQG5hdmVyLmNvbSIsIm5iZiI6MTYzMDI4NzE3Mn0.QnyKfFmjHWNg6ShGsgRRawCzgWzoSDT3YjUzTtg2_Yg"),
 })
 
 # userAuth 클래스, 로그인과 로그아웃기능을 함
 @Auth.route('/auth')
+@Auth.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
 class userAuth(Resource): 
-    @Auth.doc(params={'email' : "your email", "password": "your password"})
-    @Auth.expect(LoginFields)
-    @Auth.response(201, 'Success', LoginSuccessModel)
-    @Auth.response(400, 'Failed', LoginFailedModel)   
+    @Auth.expect(AuthPostRequest)
+    @Auth.response(200, 'Success (access용 jwt 토큰을 반환한다. 유효기간은 10일)', AuthSuccessModel)
+    @Auth.response(400, 'Failed (일치하는 회원 정보가 없어 로그인에 실패했을 경우)', AuthFailedModel)   
     @validate_params(
         Param('email', JSON, str, rules=[Pattern(r'^[\w+-_.]+@[\w-]+\.[a-zA-Z-.]+$')]),   # 이메일 형식 체크
         Param('password', JSON, str, rules=CompositeRule(Pattern(r'(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[^\w\s]).*'), MinLength(8), MaxLength(20))),   # 비밀번호 형식 체크(한, 영, 숫자, 특수문자 포함)
     )
     def post(self, *args):
-        """json형식으로 전달받은 email, password로 로그인"""
+        """클라이언트로부터 유저의 로그인 정보를 받아서 access용 jwt 토큰을 반환한다."""
         # json형식으로 data parsing, mysql connection을 위한 객체 생성
         data = request.json
         db = database.DBClass()
@@ -65,16 +53,18 @@ class userAuth(Resource):
                 }, 200
         # 일치하는 이메일이 없을 경우에는 failed 메시지 반환
         else:
-            return {"status" : "Failed", "message" : "Cannot Login"}, 403
+            return {"status" : "Failed", "message" : "Cannot Login"}, 400
 
-    @jwt_required()
     @Auth.expect(parser)
-    @Auth.response(400, 'Failed ( 이미 blocklist에 등록된 토큰일 때 )', LogoutRevokedTokenModel)
-    @Auth.response(403, 'Failed ( header에 jwt토큰이 존재하지 않을 때 )', LogoutNoAuthModel)
-    @Auth.response(200, 'Success',SuccessModel)
+    @Auth.response(200, 'Success', swaggerModel.BaseSuccessModel)
+    @Auth.response(401, 
+    'Failed(jwt 토큰 관련 이슈)\nmessage : Missing Authorization Header(header에 jwt토큰이 존재하지 않을 때)\nmessage : Token has been revoked(토큰이 blocklist에 존재할 때)\nmessage : Token has expired(토큰이 만료되었을 때)',
+    swaggerModel.NoAuthModel
+    )
+    @jwt_required()
     # DELETE method로 url에 접근했을 때
     def delete(self):
-        """header의 Authorization fields에 JWT토큰을 포함해서 요청하면 해당 토큰을 blocklist에 등록한다."""
+        """클라이언트로부터 받은 jwt토큰을 blocklist에 등록해 로그아웃 처리를 한다."""
         # 받은 request의 header에서 jwt토큰을 분리해서 DB의 블랙리스트 테이블(revoked_tokens)에 등록한다.
         jti = get_jwt()['jti']
         db = database.DBClass()

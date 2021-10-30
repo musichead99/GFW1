@@ -17,8 +17,8 @@ CREATE TABLE users (
   email varchar(200) DEFAULT NULL,
   password varchar(200) DEFAULT NULL,
   name varchar(200) DEFAULT NULL,
-  kakaoAccessToken varchar(200) DEFAULT NULL,
-  kakaoRefreshToken varchar(200) DEFAULT NULL,
+  fcmToken varchar(200) DEFAULT NULL,
+  profilePhoto varchar(200) DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY `uniqueEmail` (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
