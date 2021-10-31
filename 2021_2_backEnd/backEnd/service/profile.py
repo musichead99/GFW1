@@ -11,7 +11,7 @@ Profile = Namespace(name="Profile", description="프로필 정보를 처리하�
 parser = Profile.parser()
 parser.add_argument('Authorization', location='headers', type=str, help='유저의 jwt토큰, 회원 인증에 사용된다.')
 ProfileGetSuccessResponse = Profile.inherit('5-1. Profile get success response model', swaggerModel.BaseSuccessModel,{
-    "profile" : fields.Nested(swaggerModel.BaseProfilePutModel)
+    "profile" : fields.Nested(swaggerModel.BaseProfileGetModel)
 })
 ProfileGetFailedResponse = Profile.inherit('5-2. Profile get/put failed response model', swaggerModel.BaseFailedModel, 
     {"message" : fields.String(description="오류 메시지", example="Email not registered")}

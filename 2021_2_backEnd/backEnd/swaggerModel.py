@@ -14,12 +14,12 @@ BaseFailedModel = SwaggerModel.model('Base Failed Model', {
     "status" : fields.String(description="Success or Failed", example="Failed")
 })
 
-BaseProfileGetModel = SwaggerModel.model('Base Profile Model', {
+BaseProfileGetModel = SwaggerModel.model('Base Profile get Model', {
     "name" : fields.String(description="유저의 이름", example="testName"),
-    "profilePhoto" : fields.String(description="유저의 프로필 사진 정보", example=config.baseUrl+"/service/images/default_profile.jpg")
+    "profilePhoto" : fields.String(description="유저의 프로필 사진 정보", example=config.baseUrl+"/service/image/default_profile.jpg")
 })
 
-BaseProfilePutModel = SwaggerModel.model('Base Profile Model', {
+BaseProfilePutModel = SwaggerModel.model('Base Profile put Model', {
     "name" : fields.String(description="유저의 이름", example="testName"),
     "profilePhoto" : fields.String(description="유저의 프로필 사진 정보", example="base64 encoded image file")
 })
