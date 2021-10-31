@@ -63,7 +63,7 @@ class userProfile(Resource):
 
         # 이메일이 현재 가입되어 있는지 체크
         query = '''
-                select from users where email = %s
+                select * from users where email = (%s);
             '''
         if db.executeOne(query, (userEmail,)) is None:
             return {"status":"Failed", "message": "Email not registered"}, 400
@@ -71,11 +71,17 @@ class userProfile(Resource):
         # 각 파라미터별로 DB에 갱신
         if 'name' in data :
             query = '''
-                update users set name = %s where email = %s
+                update users set name = (%s) where email = (%s);
             '''
             db.execute(query, (data['name'], userEmail))
         
         if 'profilePhoto' in data :
+            pass
+
+        if 'dateOfBirth' in data :
+            pass
+
+        if 'abode' in data :
             pass
 
         db.commit()
