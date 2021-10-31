@@ -1,6 +1,7 @@
 # swaggerModel.py
 
 from flask_restx import Namespace, fields
+import config
 
 SwaggerModel = Namespace('SwaggerModel')
 
@@ -13,8 +14,14 @@ BaseFailedModel = SwaggerModel.model('Base Failed Model', {
     "status" : fields.String(description="Success or Failed", example="Failed")
 })
 
-BaseProfileModel = SwaggerModel.model('Base Profile Model', {
+BaseProfileGetModel = SwaggerModel.model('Base Profile Model', {
     "name" : fields.String(description="유저의 이름", example="testName"),
+    "profilePhoto" : fields.String(description="유저의 프로필 사진 정보", example=config.baseUrl+"/service/images/default_profile.jpg")
+})
+
+BaseProfilePutModel = SwaggerModel.model('Base Profile Model', {
+    "name" : fields.String(description="유저의 이름", example="testName"),
+    "profilePhoto" : fields.String(description="유저의 프로필 사진 정보", example="base64 encoded image file")
 })
 
 # errorhandler에서 정의된 에러 return model

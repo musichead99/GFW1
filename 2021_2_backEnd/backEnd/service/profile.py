@@ -11,7 +11,7 @@ Profile = Namespace(name="Profile", description="프로필 정보를 처리하�
 parser = Profile.parser()
 parser.add_argument('Authorization', location='headers', type=str, help='유저의 jwt토큰, 회원 인증에 사용된다.')
 ProfileGetSuccessResponse = Profile.inherit('5-1. Profile get success response model', swaggerModel.BaseSuccessModel,{
-    "profile" : fields.Nested(swaggerModel.BaseProfileModel)
+    "profile" : fields.Nested(swaggerModel.BaseProfilePutModel)
 })
 ProfileGetFailedResponse = Profile.inherit('5-2. Profile get/put failed response model', swaggerModel.BaseFailedModel, 
     {"message" : fields.String(description="오류 메시지", example="Email not registered")}
@@ -24,8 +24,8 @@ ProfileGetFailedResponse = Profile.inherit('5-2. Profile get/put failed response
     swaggerModel.NoAuthModel
     )
 @Profile.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
+@Profile.expect(parser)
 class userProfile(Resource):
-    @Profile.expect(parser)
     @Profile.response(200, 'Success(프로필 정보 요청 성공)', ProfileGetSuccessResponse)
     @Profile.response(400, 'Failed(유저가 가입되어 있지 않을 경우)', ProfileGetFailedResponse)
     @jwt_required()
@@ -41,7 +41,7 @@ class userProfile(Resource):
         db.close()
 
         if profileData['profilePhoto'] is None:
-            profileData['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
+            profileData['profilePhoto'] = config.baseUrl + '/service/images/default_profile.jpg'
 
         if profileData is None:
             return {"status" : "Failed", "message" : "Email not registered"}, 400
@@ -52,7 +52,7 @@ class userProfile(Resource):
         Param('name', JSON, str, required=False, rules=CompositeRule(Pattern(r'[a-zA-Z가-힣]'), MinLength(1)))  
     )
     @jwt_required()
-    @Profile.expect(swaggerModel.BaseProfileModel)
+    @Profile.expect(swaggerModel.BaseProfileGetModel)
     @Profile.response(200, 'Success(프로필 정보 변경 성공)', swaggerModel.BaseSuccessModel)
     @Profile.response(400, 'Failed(유저가 가입되어 있지 않을 경우)', ProfileGetFailedResponse)
     def put(self, *args):
