@@ -52,7 +52,7 @@ class userProfile(Resource):
         Param('name', JSON, str, required=False, rules=CompositeRule(Pattern(r'[a-zA-Z가-힣]'), MinLength(1)))  
     )
     @jwt_required()
-    @Profile.expect(swaggerModel.BaseProfileGetModel)
+    @Profile.expect(swaggerModel.BaseProfilePutModel)
     @Profile.response(200, 'Success(프로필 정보 변경 성공)', swaggerModel.BaseSuccessModel)
     @Profile.response(400, 'Failed(유저가 가입되어 있지 않을 경우)', ProfileGetFailedResponse)
     def put(self, *args):
