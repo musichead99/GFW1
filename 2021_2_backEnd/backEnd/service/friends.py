@@ -1,7 +1,6 @@
 # Friends.py
 
 from flask import request
-from flask.scaffold import F
 from flask_restx import Resource, Namespace, fields
 from flask_jwt_extended.utils import get_jwt_identity, get_jwt
 from flask_jwt_extended import jwt_required
