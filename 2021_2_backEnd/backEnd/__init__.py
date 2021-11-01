@@ -17,6 +17,7 @@ from service.friends import Friends
 from service.notification import Notification
 from service.image import Image
 from service.health_data import HealthData
+from service.ranking import Ranking
 
 import database, swaggerModel, werkzeug.exceptions, datetime
 
@@ -92,7 +93,7 @@ api.add_namespace(FcmToken, '/user')
 api.add_namespace(Notification, '/service')
 api.add_namespace(Image, '/service')
 api.add_namespace(HealthData, '/service')
-
+api.add_namespace(Ranking, '/service')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug="true")

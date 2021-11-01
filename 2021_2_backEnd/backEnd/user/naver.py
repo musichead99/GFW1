@@ -22,7 +22,7 @@ NaverAuthCallbackKeyErrorResponse = Naver.inherit('5-3 Naver auth callback keyer
 @Naver.route('/')
 @Naver.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
 class NaverAuth(Resource):
-    @Naver.response(200, 'Success', NaverAuthGetSuccessResponse)
+    @Naver.response(200, 'Success(로그인 페이지 링크 반환)', NaverAuthGetSuccessResponse)
     def get(self):
         '''클라이언트가 접속 시 네이버 로그인 페이지 링크를 반환 한다'''
         clientID = 'f_nWrpPQdHxaUSGVuQZY'
@@ -34,7 +34,7 @@ class NaverAuth(Resource):
 @Naver.route('/callback')
 @Naver.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
 class NaverAuthCallback(Resource):
-    @Naver.response(200, 'Success', NaverAuthCallbackSuccessResponse)
+    @Naver.response(200, 'Success(접근 토큰 반환)', NaverAuthCallbackSuccessResponse)
     @Naver.response(400, 'Failed( 네이버에게 받은 response에 특정 key들이 존재하지 않을 경우 )', NaverAuthCallbackKeyErrorResponse)
     def get(self):
         '''네이버에게 인증 코드를 받아 회원가입, 로그인 처리를 하고 access용 jwt 토큰을 반환한다.'''
