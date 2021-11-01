@@ -28,6 +28,7 @@ AuthSuccessModel = Auth.inherit('2-6. Login Success json model', swaggerModel.Ba
 @Auth.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
 class userAuth(Resource): 
     @Auth.expect(AuthPostRequest)
+    @Auth.doc(params={'payload' : 'email : 유저의 이메일\npassword : 유저의 비밀번호'})
     @Auth.response(200, 'Success (access용 jwt 토큰을 반환한다. 유효기간은 10일)', AuthSuccessModel)
     @Auth.response(400, 'Failed (일치하는 회원 정보가 없어 로그인에 실패했을 경우)', AuthFailedModel)   
     @validate_params(
