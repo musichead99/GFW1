@@ -1,6 +1,7 @@
 # Friends.py
 
 from flask import request
+from flask.scaffold import F
 from flask_restx import Resource, Namespace, fields
 from flask_jwt_extended.utils import get_jwt_identity, get_jwt
 from flask_jwt_extended import jwt_required
@@ -34,6 +35,9 @@ FriendsPutFailed2Request = Friends.inherit('Friend failed model ', swaggerModel.
 })
 FriendsPutFailed3Request = Friends.inherit('Friend failed model ', swaggerModel.BaseFailedModel, {
     "message" : fields.String(description="에러 메시지", example="Worng email")
+})
+FriendsSuccessModel = Friends.inherit('Friends Success model', swaggerModel.BaseSuccessModel,{
+    "list" : fields.String(description="access jwt token", example="[test1@naver.com, test2@naver.com, test3@naver.com... ]"),
 })
 
 @Friends.route("/friends")
@@ -74,6 +78,7 @@ class AppFriend(Resource):
     )
     @jwt_required()
     @Friends.expect(parser, FriendsPutRequest)
+    @Friends.doc(params= {"payload":"accept : 수락 여부(대소문자 구별 없음)"})
     @Friends.response(200, 'Success', swaggerModel.BaseSuccessModel)
     @Friends.response(400, 'Failed ( 친구 입력이 잘못되었다.)', FriendsPutFailedRequest)  
     @Friends.response(401, 'Failed (이미 친구이다.)', FriendsPutFailed2Request)  
@@ -160,16 +165,15 @@ class AppFriend(Resource):
         return {"status" : "success", "message" : "Your friend has been deleted"}, 200
 
 
-@Friends.route("/friendsList/page=<string:page>")
+@Friends.route("/friendsList")
 class AppFriendList(Resource):
     @jwt_required()
     @Friends.expect(parser)
-    @Friends.response(200, 'Success', swaggerModel.BaseSuccessModel)
+    @Friends.response(200, 'Success(친구 목록을 반환한다.)', FriendsSuccessModel)
     @Friends.response(400, 'Failed ( 친구가 없다. )', swaggerModel.BaseFailedModel) 
     def get(self, *args, **kwargs):
-        """친구목록을 페이지 별로 보여준다"""
+        """사용자의 친구목록을 보여준다"""
         userEmail = get_jwt_identity()
-        page = int(kwargs['page'])
 
         db = database.DBClass()
         query = '''
@@ -178,20 +182,19 @@ class AppFriendList(Resource):
 
         result = [i["user_friend_email"] for i in db.executeAll(query,(userEmail))]
         if result:
-            return {"status" : "success", "message" : f"{result[100*(page-1):100*page]}"}, 200 
+            return {"status" : "success", "message" : f"{result}"}, 200 
         else:
             return  {"status" : "Failed", "message" : "no friends"}, 400
 
-@Friends.route("/friendRequestList/page=<string:page>")
+@Friends.route("/friendRequestList")
 class AppFriendRequestList(Resource):
     @jwt_required()
     @Friends.expect(parser)
-    @Friends.response(200, 'Success', swaggerModel.BaseSuccessModel)
+    @Friends.response(200, 'Success(친구 요청목록을 반환한다.)', FriendsSuccessModel)
     @Friends.response(400, 'Failed ( 친구 요청이 없다. )', swaggerModel.BaseFailedModel) 
     def get(self, *args, **kwargs):
-        """친구요청목록을 페이지 별로 보여준다"""
+        """사용자에게 친구요청을 보낸 유저목록을 보여준다"""
         userEmail = get_jwt_identity()
-        page = int(kwargs['page'])
 
         db = database.DBClass()
         query = '''
@@ -200,6 +203,6 @@ class AppFriendRequestList(Resource):
 
         result = [i["requester"] for i in db.executeAll(query,(userEmail))]
         if result:
-            return {"status" : "success", "message" : f"{result[100*(page-1):100*page]}"}, 200 
+            return {"status" : "success", "message" : f"{result}"}, 200 
         else:
             return {"status" : "Failed", "message" : "No request"}, 400 

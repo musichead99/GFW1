@@ -12,43 +12,38 @@ parser = HealthData.parser()
 parser.add_argument('Authorization', location='headers', type=str, help='본인 인증으로 jwt 토큰이 사용된다.')
 parser2 = HealthData.parser()
 parser2.add_argument('stepCount', location='body', type=str, help='본인 걸음수')
-HealthDataPutRequest = HealthData.model('HealthData put model', {
-    "stepCount" : fields.String(description="총 걸음수", required=True, example="10000")
+HealthDataPostRequest = HealthData.model('HealthData put model', {
+    "stepCount" : fields.String(description="총 걸음수", required=True, example="10000"),
+    "calories" : fields.String(description="소비한 칼로리(kcal)", required=True, example="2500"),
+    "distance" : fields.String(description="운동한 거리(km)", required=True, example="5"),
+
 })
-HealthDataPostRequest = HealthData.model('HealthData post model', {
-    "friendEmail" : fields.String(description="친구 이메일", required=True, example="[test2@naver.com, test3@naver.com]")
-})
-HealthDataPostFailed = HealthData.inherit('Friend failed model ', swaggerModel.BaseFailedModel, {
+HealthDataGetFailed = HealthData.inherit('HealthData failed model ', swaggerModel.BaseFailedModel, {
     "message" : fields.String(description="에러 메시지", example="Not your friend")
 })
+HealthDataGetSuccess = HealthData.inherit('HealthData success model ', swaggerModel.BaseSuccessModel, HealthDataPostRequest)
 
 @HealthData.route("/HealthData/")
 @HealthData.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
 class AppFriend(Resource):
-    @jwt_required()
-    @HealthData.response(200, 'Success', swaggerModel.BaseSuccessModel)
-    @HealthData.expect(parser)
-    def get(self, *args, **kwargs):
-        """ 친구 목록과 랭킹을 반환한다."""
-        userEmail = get_jwt_identity()
-        return {"status" : "success", "ranking" : ""}
 
     @jwt_required()
     @HealthData.response(200, 'Success', swaggerModel.BaseSuccessModel)
-    @HealthData.response(400, 'Failed (친구 이메일이 잘못되었거나 친구가 아니다.)', HealthDataPostFailed)   
     @HealthData.expect(parser, HealthDataPostRequest)
-    @validate_params(
-        Param('friendEmail', JSON, str, rules=[Pattern(r'^[\w+-_.]+@[\w-]+\.[a-zA-Z-.]+$')]),   # 이메일 형식 체크
-    )
+    @HealthData.doc(params={"payload":"stepCount : 총 걸음 수\n kcal : 소비한 칼로리(kcal)\n km : 운동한 거리(km)\n"})
     def post(self, *args, **kwargs):
-        """ 친구의 운동데이터를 반환한다."""
-        userEmail = get_jwt_identity()
-        return {"status" : "success", "message" : "Downloading has Completed"}
-
-    @jwt_required()
-    @HealthData.response(200, 'Success', swaggerModel.BaseSuccessModel)
-    @HealthData.expect(parser, parser2, HealthDataPutRequest)
-    def put(self, *args, **kwargs):
         """ 업데이트 된 운동정보를 DB에 저장한다."""
         userEmail = get_jwt_identity()
         return {"status" : "success", "message" : "Your data has benn updated"}
+
+@HealthData.route("/HealthData/{freindEmail}")
+@HealthData.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
+class AppFriend(Resource):
+
+    @jwt_required()
+    @HealthData.response(200, 'Success(친구의 운동데이터를 반환)', HealthDataGetSuccess)
+    @HealthData.response(400, 'Failed (친구 이메일이 잘못되었거나 친구가 아니다.)', HealthDataGetFailed)  
+    def get(self, *args, **kwargs):
+        """ 사용자가 선택한 친구의 운동데이터를 반환한다."""
+        userEmail = get_jwt_identity()
+        return {"status" : "success", "message" : "Downloading has Completed"}
