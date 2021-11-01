@@ -12,10 +12,10 @@ FcmTokenPostFailedResponse = FcmToken.inherit('fcm token post failed response mo
     'message' : fields.String(description='오류 메시지', example='Email not registered')
 })
 
-# 미완성
 @FcmToken.route('/fcmToken')
 class AppFcmToken(Resource):
     @FcmToken.expect(FcmTokenPostRequest)
+    @FcmToken.doc(params={'payload' : 'token : 유저의 fcm token, 푸시 메시지를 보낼 때 각 유저들을 구분하기 위해 사용된다.'})
     @FcmToken.response(200, 'Success', swaggerModel.BaseSuccessModel)
     @FcmToken.response(400, 'Failed(유저가 가입되어 있지 않을 경우)', FcmTokenPostFailedResponse)
     @FcmToken.response(401, 

@@ -28,6 +28,7 @@ NotificationPostFailedResponse = Notification.inherit('notification failed respo
     )
 @Notification.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
 class AppNotification(Resource):
+    @Notification.doc(params={'payload' : 'receiver : 메시지를 받을 유저의 이메일\ntitle : 메시지의 타이틀\nbody : 메시지의 내용'})
     @Notification.expect(parser, NotificationPostRequest)
     @Notification.response(200, 'Sucess', swaggerModel.BaseSuccessModel)
     @Notification.response(400, 'Failed(메시지를 받을 유저의 fcmToken이 존재하지 않을 경우)', NotificationPostFailedResponse)
