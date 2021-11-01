@@ -53,6 +53,7 @@ class userProfile(Resource):
     )
     @jwt_required()
     @Profile.expect(swaggerModel.BaseProfilePutModel)
+    @Profile.doc(params={'payload' : 'name : 유저의 이름(닉네임)\ndateOfBirth : 유저의 생년월일\n abode : 유저의 거주지(도, 광역시, 특별시 단위)\n profilePhoto : base64로 인코딩된 유저의 프로필 사진'})
     @Profile.response(200, 'Success(프로필 정보 변경 성공)', swaggerModel.BaseSuccessModel)
     @Profile.response(400, 'Failed(유저가 가입되어 있지 않을 경우)', ProfileGetFailedResponse)
     def put(self, *args):
