@@ -5,7 +5,7 @@
     android:background="#00F6C2C2"
     android:orientation="horizontal">
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart"
+        android:id="@+id/fa_frag1_lineChart"
         android:layout_width="0dp"
         android:layout_weight="5"
         android:layout_height="match_parent">
@@ -13,11 +13,12 @@
     </com.github.mikephil.charting.charts.LineChart>
 
     <ToggleButton
-        android:id="@+id/toggleButton"
+        android:id="@+id/fa_frag1_toggleButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
+        android:checked="false"
         android:text="일주일"
         android:textOff="7일"
         android:textOn="1개월" />

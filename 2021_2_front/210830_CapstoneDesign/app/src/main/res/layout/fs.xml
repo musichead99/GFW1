@@ -16,13 +16,16 @@
         android:id="@+id/current_step"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="0 걸음" />
 
     <ProgressBar
         android:id="@+id/progressbar_goal"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:scaleY="2"
+        android:layout_marginHorizontal="10dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="0" />
+            android:text="0"
+            android:layout_marginLeft="10dp"/>
 
         <TextView
             android:id="@+id/text_goal"
@@ -42,7 +46,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="" />
+            android:text=""
+            android:layout_marginRight="10dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -112,22 +117,22 @@
                     android:id="@+id/textView_cal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12dp"
-                    android:text="TextView" />
+                    android:text="소모 칼로리 : 0 cal"
+                    android:textSize="12dp" />
 
                 <TextView
                     android:id="@+id/textView_dis"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12dp"
-                    android:text="TextView" />
+                    android:text="이동 거리 : 0 m"
+                    android:textSize="12dp" />
 
                 <TextView
                     android:id="@+id/textView_moveMin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12dp"
-                    android:text="TextView" />
+                    android:text="이동 시간 : 0 분"
+                    android:textSize="12dp" />
 
             </LinearLayout>
 
