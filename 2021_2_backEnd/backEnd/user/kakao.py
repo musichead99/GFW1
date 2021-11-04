@@ -80,14 +80,8 @@ class KakaoAuthCallback(Resource):
             db.execute(query,(kakaoUserEmail, "kakao", kakaoUserName, kakaoUserPhoto))
             db.commit()
             db.close()
-        # 가입이 되어있다면 카카오 엑세스 토큰을 갱신하고 바로 토큰 발급
+        # 가입이 되어있다면 바로 토큰 발급
         else:
-            query='''
-                update users set kakaoAccessToken=(%s) where email = (%s);
-            '''
-            db.execute(query,(accessToken, kakaoUserEmail))
-            db.commit()
-            db.close()
             return {"status" : "Success", "access token" : create_access_token(identity = dbdata['email'])}
 
         return {"status" : "Success", "access token" : create_access_token(identity = kakaoUserEmail)}
