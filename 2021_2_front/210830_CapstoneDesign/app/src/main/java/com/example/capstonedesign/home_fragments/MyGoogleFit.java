@@ -7,20 +7,36 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
+import com.google.android.gms.fitness.result.DataReadResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -43,10 +59,6 @@ public class MyGoogleFit {
     public static final int TYPE_CALORIES   = 0b00010;
     public static final int TYPE_DISTANCE   = 0b00100;
     public static final int TYPE_MOVE_MIN   = 0b01000;
-
-    // Period
-    public static final boolean PERIOD_WEEK = true;
-    public static final boolean PERIOD_MONTH = false;
 
     // Masks
     private static final int[] TYPE_MASK = {
@@ -73,6 +85,7 @@ public class MyGoogleFit {
     private static ArrayList<OnDataPointListener> ListenerManager = new ArrayList<OnDataPointListener>();
 
     public static MyGoogleFit getInstance(){
+        Log.d("MyGoogleFit","Getting Instance" );
         if(myGoogleFit == null){
             myGoogleFit = new MyGoogleFit();
         }
@@ -94,12 +107,7 @@ public class MyGoogleFit {
         return MyGoogleFit.fitnessOptions;
     }
 
-    /** 아직 빌딩 해야하는 Method.
-    public void subPeriodicData(int dataType, Context current_context ,boolean period){
-        int actual_period = period ? 7 : 30;
-    }
-    **/
-    public MyGoogleFit subDailyData(int dataType, Context cur_context){
+    public MyGoogleFit subscription(int dataType, Context cur_context){
         int length = TYPE_MASK.length;
         for(int i =0 ; i<length ; i++){
             if((dataType & TYPE_MASK[i]) != 0){
@@ -120,7 +128,7 @@ public class MyGoogleFit {
         }
         return myGoogleFit;
     }
-    public MyGoogleFit unsubDailyData(int dataType, Context cur_context){
+    public MyGoogleFit unsubscription(int dataType, Context cur_context){
         int length = TYPE_MASK.length;
         for(int i =0 ; i<length ; i++){
             if((dataType & TYPE_MASK[i]) != 0){
@@ -140,6 +148,104 @@ public class MyGoogleFit {
             }
         }
         return myGoogleFit;
+    }
+    public void setLineChart(float[] result, LineChart lineChart,boolean tf_period){
+        int period = tf_period ? 30 : 7;
+
+        ArrayList<String> labels = new ArrayList<String>();
+        ArrayList<Entry> entry_chart = new ArrayList<>();
+
+        lineChart.setTouchEnabled(false);
+        lineChart.setPinchZoom(false);
+
+        Log.d("Period Value",String.valueOf(period));
+        for(int i = 0;i<period;i++){
+            entry_chart.add(new Entry(i,result[i]));
+            labels.add(period-i + "일전");
+        }
+
+        LineDataSet lineDataSet = new LineDataSet(entry_chart, "나의 정보");
+
+        // Setting ValueFormatter
+        XAxis xAxis = lineChart.getXAxis();
+
+        ValueFormatter valueFormatter = new ValueFormatter() {
+            @Override
+            public String getAxisLabel(float value, AxisBase axis) {
+                int position = (int) Math.round(value);
+                return labels.get(position);
+            }
+        };
+        xAxis.setValueFormatter(valueFormatter);
+
+        YAxis yAxis_left = lineChart.getAxisLeft();
+        YAxis yAxis_right = lineChart.getAxisRight();
+        yAxis_left.setAxisMinimum(0.0f);
+        yAxis_right.setAxisMinimum(0.0f);
+
+        // LineData가 필요하여 선언.
+        LineData chartData = new LineData();
+        chartData.addDataSet(lineDataSet);
+
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.setData(chartData);
+        /** Animation 세팅. **/
+        lineChart.animateXY(3000,3000);
+        lineChart.invalidate();
+
+    }
+
+    public void getPeriodicData(int dataType, Context cur_context ,boolean tf_period,float[] result,LineChart lineChart){
+        // 만약 SharedPreference data로 저장해놓고
+        // last update 날짜가 오늘 날짜랑 같다면 거기서 데이터 꺼내오고 아니면
+        // 새로 업데이트 해주는 방식으로 하면 좋을것 같네.
+        // 우선은 호출 할때마다 갱신하는식으로 할 예정.
+        int index_dataType = Math.getExponent(dataType);
+        DataType CUR_DATATYPE = DATA_TYPE[index_dataType];
+
+        ZonedDateTime endTime = LocalDate.now().atStartOfDay(ZoneId.systemDefault());
+        ZonedDateTime startTime = tf_period ? endTime.minusMonths(1) : endTime.minusWeeks(1);
+
+        DataReadRequest dataReadRequests = new DataReadRequest.Builder()
+                .aggregate(CUR_DATATYPE)
+                .bucketByTime(1,TimeUnit.DAYS)
+                .setTimeRange(startTime.toEpochSecond(), endTime.toEpochSecond(),TimeUnit.SECONDS)
+                .build();
+
+        Fitness.getHistoryClient(cur_context, GoogleSignIn.getLastSignedInAccount(appContext))
+                .readData(dataReadRequests)
+                .addOnSuccessListener(new OnSuccessListener<DataReadResponse>() {
+                    @Override
+                    public void onSuccess(DataReadResponse dataReadResponse) {
+                        int count = 0;
+                        Log.d("AGGREGATE_data : ","process name getHistoryClient has been successfully done");
+                        for(Bucket bucket : dataReadResponse.getBuckets()){
+                            Log.d("Bucket reading :", "Success");
+                            for(DataSet dataset : bucket.getDataSets()){
+                                Log.d("DataSet reading :", "Success");
+                                for(DataPoint dp : dataset.getDataPoints()){
+                                    Log.i("Loaded Data","Data point:");
+                                    Log.i("Loaded Data","\tType: "+dp.getDataType().getName());
+                                    Log.i("Loaded Data","\tStart: "+dp.getStartTime(TimeUnit.DAYS));
+                                    Log.i("Loaded Data","\tEnd: " + dp.getEndTime(TimeUnit.DAYS));
+                                    for (Field field : dp.getDataType().getFields()) {
+                                        result[count] = (index_dataType == 0 || index_dataType == 3)? dp.getValue(field).asInt() : dp.getValue(field).asFloat();
+                                        Log.i("Loaded Data", "\tField: " + field.getName() +" Value: " + result[count]);
+                                    }
+                                    count++;
+
+                                }
+                            }
+                        }
+                        setLineChart(result,lineChart, tf_period);
+                     }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("getHistoryClient","Here's some problem of getting history client");
+                    }
+                });
     }
     public MyGoogleFit updateDailyTotal(Context cur_context,int dataType,float[] result, TextView[] textViews,TextView cur_step, ProgressBar prgBar) {
         int length = TYPE_MASK.length;

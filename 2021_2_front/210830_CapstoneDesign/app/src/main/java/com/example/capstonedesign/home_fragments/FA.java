@@ -25,6 +25,7 @@ public class FA extends Fragment {
     FA_frag1 fa_frag1;
     FA_frag2 fa_frag2;
     FA_frag3 fa_frag3;
+    FA_frag4 fa_frag4;
     // viewPager2 var for fa_viewPager2
     ViewPager2 viewPager2;
     // Indicator for viewPager2
@@ -33,7 +34,7 @@ public class FA extends Fragment {
     TabLayout tabLayout;
 
     // The items for tabLayout
-    final List<String> tabItems = Arrays.asList("소모 칼로리","걸음수","거리");
+    final List<String> tabItems = Arrays.asList("걸음수","칼로리","거리","이동시간");
 
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fa,container,false);
@@ -47,7 +48,7 @@ public class FA extends Fragment {
         springDotsIndicator = (SpringDotsIndicator)rootView.findViewById(R.id.spring_dots_indicator);
 
         // Same num as the actual num of fragments
-        viewPager2.setOffscreenPageLimit(3);
+        viewPager2.setOffscreenPageLimit(4);
 
         MyPagerAdapter adapter = new MyPagerAdapter(getActivity());
 
@@ -60,6 +61,9 @@ public class FA extends Fragment {
 
         fa_frag3 = new FA_frag3();
         adapter.addItem(fa_frag3);
+
+        fa_frag4 = new FA_frag4();
+        adapter.addItem(fa_frag4);
 
         viewPager2.setAdapter(adapter);
         springDotsIndicator.setViewPager2(viewPager2);

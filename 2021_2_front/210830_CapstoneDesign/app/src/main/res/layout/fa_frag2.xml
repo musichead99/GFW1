@@ -2,13 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#B48AFF"
-    android:orientation="vertical">
+    android:background="#00F6C2C2"
+    android:orientation="horizontal">
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/fa_frag2_lineChart"
+        android:layout_width="0dp"
+        android:layout_weight="5"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
+    </com.github.mikephil.charting.charts.LineChart>
+
+    <ToggleButton
+        android:id="@+id/fa_frag2_toggleButton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="fa_frag2 test"
-        android:textSize="30sp" />
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:checked="false"
+        android:text="일주일"
+        android:textOff="7일"
+        android:textOn="1개월" />
 </LinearLayout>
