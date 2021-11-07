@@ -7,11 +7,11 @@ import database, swaggerModel
 
 Email = Namespace(name = 'Email', description="사용자 계정 메일을 검색하는 API")
 
-SuccessResponse = Email.inherit('3-2. Email Not_registed model ', swaggerModel.BaseFailedModel, {
+SuccessResponse = Email.inherit('3-2. Email Not_registed model ', swaggerModel.BaseSuccessModel, {
     
     "message" : fields.String(description="message", example="Email not registered")
     })
-FailedResponse = Email.inherit('3-4. Email is in DB json model', swaggerModel.BaseSuccessModel, {
+FailedResponse = Email.inherit('3-4. Email is in DB json model', swaggerModel.BaseFailedModel, {
     "message" : fields.String(description="message", example="The email registered"),
     })
 
