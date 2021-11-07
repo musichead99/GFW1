@@ -18,6 +18,8 @@ CREATE TABLE users (
   password varchar(200) DEFAULT NULL,
   name varchar(200) DEFAULT NULL,
   fcmToken varchar(200) DEFAULT NULL,
+  dateOfBirth date DEFAULT NULL,
+  abode varchar(10) DEFAULT NULL,
   profilePhoto varchar(200) DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY `uniqueEmail` (email)
