@@ -7,7 +7,7 @@ from flask_jwt_extended import jwt_required
 from flask_request_validator import *
 import database, swaggerModel
 
-Ranking = Namespace(name = "Ranking", description="랭킹정보를 가져오고 관리하는 API222")
+Ranking = Namespace(name = "Ranking", description="랭킹정보를 가져오고 관리하는 API")
 parser = Ranking.parser()
 parser.add_argument('Authorization', location='headers', type=str, help='본인 인증으로 jwt 토큰이 사용된다.')
 RankingSuccessModel = Ranking.inherit('Ranking Success model', swaggerModel.BaseSuccessModel,{
