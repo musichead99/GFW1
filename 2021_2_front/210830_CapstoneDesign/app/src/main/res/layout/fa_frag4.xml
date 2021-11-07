@@ -4,7 +4,7 @@
     android:background="#00F6C2C2"
     android:orientation="horizontal">
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/fa_frag3_lineChart"
+        android:id="@+id/fa_frag4_lineChart"
         android:layout_width="0dp"
         android:layout_weight="5"
         android:layout_height="match_parent">
@@ -12,7 +12,7 @@
     </com.github.mikephil.charting.charts.LineChart>
 
     <ToggleButton
-        android:id="@+id/fa_frag3_toggleButton"
+        android:id="@+id/fa_frag4_toggleButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

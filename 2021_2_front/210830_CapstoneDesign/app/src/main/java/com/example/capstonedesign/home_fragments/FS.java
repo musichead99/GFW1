@@ -116,7 +116,7 @@ public class FS extends Fragment {
             else textView_actData[i].setVisibility(TextView.GONE);
         }
         // subscription & updating dailytotal.
-        myGoogleFit.subDailyData(dataType,getContext());
+        myGoogleFit.subscription(dataType,getContext());
                 /*
                 .updateDailyTotal(getContext(),dataType,ActDatas,textView_actData,current_step,progressBar)
                 .addListener(getContext(),1,ListenerManager,ActDatas,current_step,progressBar)
@@ -296,11 +296,11 @@ public class FS extends Fragment {
                             // Step 1.
                             scheduler.cancel();
                             // Step 2.
-                            myGoogleFit.unsubDailyData(dataType,getContext());
+                            myGoogleFit.unsubscription(dataType,getContext());
                             textView_actData[count].setVisibility(TextView.GONE);
                         }else{
                             // Step 3 & 4
-                            myGoogleFit.subDailyData(dataType,mContext);
+                            myGoogleFit.subscription(dataType,mContext);
                             textView_actData[count].setVisibility(TextView.VISIBLE);
                         }
                     }
