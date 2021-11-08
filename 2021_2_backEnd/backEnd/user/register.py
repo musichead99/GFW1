@@ -27,7 +27,6 @@ RegisterDeleteFailedResponse = Register.inherit('1-3 Delete Failed Response mode
     "message" : fields.String(description="오류 메시지", example="The email could not be found. It doesn't seem to be registered.")
     })
 RegisterPutRequest = Register.model('1-4 ChangePW Request model', {
-    "email" : fields.String(description="유저의 이메일", required=True, example="testemail@testdomain.com"),
     "new_password" : fields.String(description="유저의 새로운 비밀번호", required=True, example="testpw2!"),
     "new_password_again" : fields.String(description="유저의 새로운 비밀번호", required=True, example="testpw2!")
     })
@@ -43,7 +42,7 @@ ChangeFailedModel_2 = Register.inherit('1-6 ChangePW Failed_1 Response model', s
 @Register.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
 class register(Resource):
     @Register.expect(RegisterPostRequest)
-    @Register.doc(params={'payload' : 'email : 유저의 이메일\npassword : 유저의 비밀번호(8~20자리 영, 숫자, 특수문자 포함)\n name : 유저의 이름(닉네임)'})
+    @Register.doc(params={'payload' : 'email : 유저의 이메일\npassword : 유저의 비밀번호\n name : 유저의 이름(닉네임)'})
     @Register.response(201, 'Success', swaggerModel.BaseSuccessModel)
     @Register.response(400, 'Failed(회원가입 실패, 이미 가입되어 있는 이메일일 경우)', RegisterPostFailedResponse)
     # request 유효성 검사
@@ -111,24 +110,26 @@ class register(Resource):
     
     # 비밀번호 변경 API
     @Register.expect(RegisterPutRequest)
-    @Register.doc(params={'payload' : 'email : 유저의 이메일\nnaw_password : 유저의 변경할 비밀번호\nnew_password_again : 유저가 다시 한 번 입력한 비밀번호'})
+    @Register.doc(params={'payload' : 'naw_password : 유저의 변경할 비밀번호\nnew_password_again : 유저가 다시 한 번 입력한 비밀번호'})
     @Register.response(201, 'Success', swaggerModel.BaseSuccessModel)
     @Register.response(400, 'Failed(입력한 비밀번호가 서로 다를 경우)', ChangeFailedModel_2)
     @Register.response(400, 'Failed(입력한 email이 틀렸을 경우)', ChangeFailedModel_1)
+    @jwt_required()    
     def put(self, *args):
         """클라이언트로부터 비밀번호를 받아서 비밀번호 변경을 수행한다."""
         data = request.json
-
+        userEmail = get_jwt_identity()
+        new_password = data["new_password"]
         db = database.DBClass()
-        query_list = [
-            "select * from users where email = %(email)s;",
-            "update users set password =%(new_password)s where email = %(email)s;"
-            ]
-        if request.json['new_password'] != request.json['new_password_again']:
+        
+        if data['new_password'] != data['new_password_again']:
             return {"status":"Failed", "message": "The two passwords entered are different"}, 400
-
-        if db.executeOne(query_list[0], data):
-            db.execute_and_commit(query_list[1], data)
+        query_list = [
+            f"select * from users where email = {userEmail};",
+            f"update users set password ={new_password} where email = {userEmail};"
+            ]
+        if db.executeOne(query_list[0]):
+            db.execute_and_commit(query_list[1])
             return {"status":"Success"},200
         else:
             return {"status":"Failed", "message": "Wrong email"}, 400
