@@ -160,16 +160,6 @@ public class FS extends Fragment {
             }
         });
 
-        /** 산책 시작 버튼 **/
-        fl = new FL();
-        Button btn_workout = rootView.findViewById(R.id.btn_workout);
-        btn_workout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /** 산책버튼 누를 시 위치탭의 산책 시작으로 넘어감. **/
-                ((Home)getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.container,fl).commit();
-            }
-        });
 
         /** My 메뉴 편집 더보기 메뉴 설정. **/
         ImageButton see_more_btn = (ImageButton) rootView.findViewById(R.id.see_more_button);

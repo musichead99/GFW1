@@ -23,4 +23,11 @@ public interface initMyApi {
 
     @POST("/user/password")
     Call<RePassResponse> getRePassResponse(@Body RePassRequest rePassRequest);
+
+    @GET("Not Determined yet")
+    Call<FriendListResponse> getFriendListResponse();
+
+    @POST("Not Determined yet")
+    Call<DDTSResponse> getDDTS(@Body DDTSRequest ddtsRequest );
+    // DDTS : Daily Data To Server
 }
