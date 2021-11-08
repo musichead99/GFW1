@@ -43,7 +43,7 @@ ChangeFailedModel_2 = Register.inherit('1-6 ChangePW Failed_1 Response model', s
 @Register.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
 class register(Resource):
     @Register.expect(RegisterPostRequest)
-    @Register.doc(params={'payload' : 'email : 유저의 이메일\npassword : 유저의 비밀번호\n name : 유저의 이름(닉네임)'})
+    @Register.doc(params={'payload' : 'email : 유저의 이메일\npassword : 유저의 비밀번호(8~20자리 영, 숫자, 특수문자 포함)\n name : 유저의 이름(닉네임)'})
     @Register.response(201, 'Success', swaggerModel.BaseSuccessModel)
     @Register.response(400, 'Failed(회원가입 실패, 이미 가입되어 있는 이메일일 경우)', RegisterPostFailedResponse)
     # request 유효성 검사

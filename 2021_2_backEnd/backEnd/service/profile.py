@@ -5,6 +5,7 @@ from flask_restx import Resource, Namespace, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_request_validator import *
 import database, swaggerModel, config
+from datetime import date
 
 Profile = Namespace(name="Profile", description="프로필 정보를 처리하는 API")
 
@@ -34,18 +35,19 @@ class userProfile(Resource):
         userEmail = get_jwt_identity()
         db = database.DBClass()
         query = '''
-            select name, profilePhoto from users where email=(%s);
+            select name, dateOfBirth, abode, profilePhoto from users where email=(%s);
         '''
 
         profileData = db.executeOne(query,(userEmail,))
         db.close()
 
-        if profileData['profilePhoto'] is None:
-            profileData['profilePhoto'] = config.baseUrl + '/service/images/default_profile.jpg'
-
         if profileData is None:
             return {"status" : "Failed", "message" : "Email not registered"}, 400
         else:
+            if profileData['profilePhoto'] is None:
+                profileData['profilePhoto'] = config.baseUrl + '/service/images/default_profile.jpg'
+
+            profileData['dateOfBirth'] = date.isoformat(profileData['dateOfBirth'])
             return {"status" : "Success", "profile" : profileData}
     
     @validate_params (
@@ -80,10 +82,16 @@ class userProfile(Resource):
             pass
 
         if 'dateOfBirth' in data :
-            pass
+            query = '''
+                update users set dateOfBirth = (%s) where email = (%s);
+            '''
+            db.execute(query, (date.fromisoformat(data['dateOfBirth']), userEmail))
 
         if 'abode' in data :
-            pass
+            query = '''
+                update users set abode = (%s) where email = (%s);
+            '''
+            db.execute(query, (data['abode'], userEmail))
 
         db.commit()
         db.close()
