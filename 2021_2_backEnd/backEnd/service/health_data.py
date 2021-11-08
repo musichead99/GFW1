@@ -25,7 +25,10 @@ HealthDataPostRequest = HealthData.model('HealthData put model', {
 HealthDataGetFailed = HealthData.inherit('HealthData failed model ', swaggerModel.BaseFailedModel, {
     "message" : fields.String(description="에러 메시지", example="Not your friend")
 })
-HealthDataGetSuccess = HealthData.inherit('HealthData success model ', swaggerModel.BaseSuccessModel, HealthDataPostRequest)
+
+HealthDataGetSuccess = HealthData.inherit('HealthData get success response model', swaggerModel.BaseSuccessModel,{
+    "FriendHealthData" : fields.Nested(swaggerModel.BaseHealthDataModel)
+})
 
 @HealthData.route("/healthData")
 @HealthData.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
