@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.capstonedesign">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
     <application
         android:allowBackup="true"
@@ -14,8 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstoneDesign"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Password"></activity>
-        <activity android:name=".Email"/>
+        <receiver
+            android:name=".DateChangeReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DATE_CHANGED"/>
+            </intent-filter>
+
+        </receiver>
+
+        <activity android:name=".CFriendListActivity" />
+        <activity android:name=".Password" />
+        <activity android:name=".Email" />
         <activity android:name=".Register" />
         <activity android:name=".Setting" />
         <activity android:name=".Home" />

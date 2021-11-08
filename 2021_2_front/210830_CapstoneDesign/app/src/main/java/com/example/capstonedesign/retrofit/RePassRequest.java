@@ -2,6 +2,8 @@ package com.example.capstonedesign.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class RePassRequest {
     @SerializedName("password")
     public String inputPw;
