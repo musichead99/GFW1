@@ -19,6 +19,8 @@ import com.example.capstonedesign.retrofit.RegisterResponse;
 import com.example.capstonedesign.retrofit.RetrofitClient;
 import com.example.capstonedesign.retrofit.initMyApi;
 
+import java.util.ArrayList;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
