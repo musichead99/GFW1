@@ -45,9 +45,10 @@ class userProfile(Resource):
             return {"status" : "Failed", "message" : "Email not registered"}, 400
         else:
             if profileData['profilePhoto'] is None:
-                profileData['profilePhoto'] = config.baseUrl + '/service/images/default_profile.jpg'
+                profileData['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
 
-            profileData['dateOfBirth'] = date.isoformat(profileData['dateOfBirth'])
+            if profileData['dateOfBirth'] is not None:
+                profileData['dateOfBirth'] = date.isoformat(profileData['dateOfBirth'])
             return {"status" : "Success", "profile" : profileData}
     
     @validate_params (

@@ -1,0 +1,54 @@
+com/example/capstonedesign/Email.java
+ com.example.capstonedesign.Email
+com/example/capstonedesign/home_fragments/FA_frag3.java
+ com.example.capstonedesign.home_fragments.FA_frag3
+com/example/capstonedesign/home_fragments/FC.java
+ com.example.capstonedesign.home_fragments.FC
+com/example/capstonedesign/home_fragments/LoginRequest.java
+ com.example.capstonedesign.home_fragments.LoginRequest
+com/example/capstonedesign/home_fragments/FL.java
+ com.example.capstonedesign.home_fragments.FL
+com/example/capstonedesign/Register.java
+ com.example.capstonedesign.Register
+ com.example.capstonedesign.Register$1
+ com.example.capstonedesign.Register$1$1
+ com.example.capstonedesign.Register$2
+ com.example.capstonedesign.Register$2$1
+ com.example.capstonedesign.Register$3
+com/example/capstonedesign/Login.java
+ com.example.capstonedesign.Login
+ com.example.capstonedesign.Login$1
+ com.example.capstonedesign.Login$1$1
+com/example/capstonedesign/Password.java
+ com.example.capstonedesign.Password
+ com.example.capstonedesign.Password$1
+com/example/capstonedesign/RegisterRequest.java
+ com.example.capstonedesign.RegisterRequest
+com/example/capstonedesign/home_fragments/FA_frag2.java
+ com.example.capstonedesign.home_fragments.FA_frag2
+com/example/capstonedesign/home_fragments/FA.java
+ com.example.capstonedesign.home_fragments.FA
+ com.example.capstonedesign.home_fragments.FA$1
+com/example/capstonedesign/home_fragments/FA_frag1.java
+ com.example.capstonedesign.home_fragments.FA_frag1
+com/example/capstonedesign/MainActivity.java
+ com.example.capstonedesign.MainActivity
+ com.example.capstonedesign.MainActivity$1
+ com.example.capstonedesign.MainActivity$1$1
+ com.example.capstonedesign.MainActivity$1$2
+ com.example.capstonedesign.MainActivity$2
+ com.example.capstonedesign.MainActivity$2$1
+ com.example.capstonedesign.MainActivity$2$2
+com/example/capstonedesign/Home.java
+ com.example.capstonedesign.Home
+ com.example.capstonedesign.Home$1
+com/example/capstonedesign/home_fragments/FA_frag4.java
+ com.example.capstonedesign.home_fragments.FA_frag4
+com/example/capstonedesign/BuildConfig.java
+ com.example.capstonedesign.BuildConfig
+com/example/capstonedesign/Setting.java
+ com.example.capstonedesign.Setting
+com/example/capstonedesign/ValidateRequest.java
+ com.example.capstonedesign.ValidateRequest
+com/example/capstonedesign/home_fragments/FS.java
+ com.example.capstonedesign.home_fragments.FS

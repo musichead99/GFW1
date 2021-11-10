@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.capstonedesign">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CapstoneDesign"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".NaverWebview"
+            android:exported="true" />
+        <activity
+            android:name=".KakaoWebview"
+            android:exported="true" />
+        <activity
+            android:name=".QuestionActivity"
+            android:exported="true" />
+        <activity
+            android:name=".NoticeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".FriendActivity"
+            android:exported="true" />
+        <activity
+            android:name=".InformationActivity"
+            android:exported="true" />
+        <activity
+            android:name=".imageActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SettingActivity"
+            android:exported="true" />
+        <activity android:name=".Password" />
+        <activity android:name=".Email" />
+        <activity android:name=".Register" />
+        <activity android:name=".Home" />
+        <activity android:name=".Login" />
+        <activity android:name=".Logout" />
+        <activity android:name=".Delete" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="0a7f8c2ca3de8c96200356d20dcab31e" />
+    </application>
+
+</manifest>

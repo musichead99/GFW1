@@ -18,6 +18,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.HistoryClient;
 import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
@@ -38,6 +39,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /** 현 Class에서 가능한 작업 정리.
@@ -195,6 +199,75 @@ public class MyGoogleFit {
 
     }
 
+    public void dataToServer(int dataType, Context cur_context,float[] result){
+        ZonedDateTime endTime = LocalDate.now().atStartOfDay(ZoneId.systemDefault());
+        ZonedDateTime startTime = endTime.minusDays(1);
+
+         DataReadRequest dataReadRequests = new DataReadRequest.Builder()
+                 .aggregate(DATA_TYPE[0])
+                 .aggregate(DATA_TYPE[1])
+                 .aggregate(DATA_TYPE[2])
+                 .aggregate(DATA_TYPE[3])
+                 .bucketByTime(1,TimeUnit.DAYS)
+                 .setTimeRange(startTime.toEpochSecond(), endTime.toEpochSecond(),TimeUnit.SECONDS)
+                 .build();
+
+         Fitness.getHistoryClient(cur_context, GoogleSignIn.getLastSignedInAccount(appContext))
+                 .readData(dataReadRequests)
+                 .addOnSuccessListener(new OnSuccessListener<DataReadResponse>() {
+                            @Override
+                            public void onSuccess(DataReadResponse dataReadResponse) {
+                                float[] result = new float[4];
+                                Arrays.fill(result,0);
+
+                                Log.d("AGGREGATE_data : ","process name getHistoryClient has been successfully done");
+                                for(Bucket bucket : dataReadResponse.getBuckets()){
+                                    Log.d("Bucket reading :", "Success");
+                                    for(DataSet dataset : bucket.getDataSets()){
+                                        Log.d("DataSet reading :", "Success");
+                                        for(DataPoint dp : dataset.getDataPoints()){
+                                            Log.i("Loaded Data","Data point:");
+                                            Log.i("Loaded Data","\tType: "+dp.getDataType().getName());
+                                            Log.i("Loaded Data","\tStart: "+dp.getStartTime(TimeUnit.DAYS));
+                                            Log.i("Loaded Data","\tEnd: " + dp.getEndTime(TimeUnit.DAYS));
+                                            for (Field field : dp.getDataType().getFields()) {
+                                                switch(field.getName()){
+                                                    case "step":
+                                                        result[0] = dp.getValue(field).asInt();
+                                                        Log.i("Loaded Data", "\tField: " + field.getName() +" Value: " + result[0]);
+                                                        break;
+                                                    case "calories":
+                                                        result[1] = dp.getValue(field).asFloat();
+                                                        Log.i("Loaded Data", "\tField: " + field.getName() +" Value: " + result[0]);
+                                                        break;
+                                                    case "distance":
+                                                        result[2] = dp.getValue(field).asFloat();
+                                                        Log.i("Loaded Data", "\tField: " + field.getName() +" Value: " + result[0]);
+                                                        break;
+                                                    case "duration":
+                                                        result[3] = dp.getValue(field).asInt();
+                                                        Log.i("Loaded Data", "\tField: " + field.getName() +" Value: " + result[0]);
+                                                        break;
+                                                    default:
+                                                        Log.d("dataToServer","Switch문에서 문제가 있는것 같습니다.");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // 여기서 서버로 데이터 전송.
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("getHistoryClient","Here's some problem of getting history client");
+                            }
+                        });
+    }
+
+
     public void getPeriodicData(int dataType, Context cur_context ,boolean tf_period,float[] result,LineChart lineChart){
         // 만약 SharedPreference data로 저장해놓고
         // last update 날짜가 오늘 날짜랑 같다면 거기서 데이터 꺼내오고 아니면
@@ -204,7 +277,7 @@ public class MyGoogleFit {
         DataType CUR_DATATYPE = DATA_TYPE[index_dataType];
 
         ZonedDateTime endTime = LocalDate.now().atStartOfDay(ZoneId.systemDefault());
-        ZonedDateTime startTime = tf_period ? endTime.minusMonths(1) : endTime.minusWeeks(1);
+        ZonedDateTime startTime = tf_period ? endTime.minusDays(30) : endTime.minusWeeks(1);
 
         DataReadRequest dataReadRequests = new DataReadRequest.Builder()
                 .aggregate(CUR_DATATYPE)
@@ -233,7 +306,6 @@ public class MyGoogleFit {
                                         Log.i("Loaded Data", "\tField: " + field.getName() +" Value: " + result[count]);
                                     }
                                     count++;
-
                                 }
                             }
                         }

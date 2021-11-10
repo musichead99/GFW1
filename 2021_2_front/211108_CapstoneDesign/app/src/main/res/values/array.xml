@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sounds">
+        <item>진동</item>
+        <item>기본음</item>
+        <item>뾰로롱</item>
+        <item>휘파람</item>
+        <item>물방울</item>
+        <item>실로폰</item>
+    </string-array>
+</resources>
