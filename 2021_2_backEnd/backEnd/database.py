@@ -8,7 +8,7 @@ class DBClass():
     def __init__(self):
         self.db = pymysql.connect(
             user        = 'root',
-            passwd      = 'password',
+            passwd      = 'zlrqhem1',
             host        = '127.0.0.1',
             db          = 'backend_test',
             charset     = 'utf8',
@@ -20,13 +20,13 @@ class DBClass():
         self.cursor.execute(query, args)
 
     # 쿼리를 수행한 결과를 전부 반환
-    def executeAll(self, query, args):
+    def executeAll(self, query, args={"a":"a"}):
         self.cursor.execute(query, args)
         row = self.cursor.fetchall()
         return row
 
     # 쿼리를 수행한 결과 중 최상위 row만 반환
-    def executeOne(self, query, args):
+    def executeOne(self, query, args={"a":"a"}):
         self.cursor.execute(query, args)
         row = self.cursor.fetchone()
         return row

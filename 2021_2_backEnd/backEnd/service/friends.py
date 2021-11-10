@@ -26,18 +26,28 @@ FriendsGetRequest = Friends.model('Friend get model ', {
 FriendsGet2Request = Friends.model('Friend get2model ', {
     "friendEmail" : fields.String(description="친구의 이메일", required=True, example="testemail2@testdomain.com")
 })
-FriendsPutFailedRequest = Friends.inherit('Friend failed model ', swaggerModel.BaseFailedModel, {
+FriendsPutFailedRequest = Friends.inherit('Friend put failed model ', swaggerModel.BaseFailedModel, {
     "message" : fields.String(description="에러 메시지", example="already requested or exist")
 })
-FriendsPutFailed2Request = Friends.inherit('Friend failed model ', swaggerModel.BaseFailedModel, {
+FriendsPutFailed2Request = Friends.inherit('Friend put failed model 2 ', swaggerModel.BaseFailedModel, {
     "message" : fields.String(description="에러 메시지", example="aleardy friend")
 })
-FriendsPutFailed3Request = Friends.inherit('Friend failed model ', swaggerModel.BaseFailedModel, {
+FriendsPutFailed3Request = Friends.inherit('Friend put failed model 3', swaggerModel.BaseFailedModel, {
     "message" : fields.String(description="에러 메시지", example="Worng email")
 })
 FriendsSuccessModel = Friends.inherit('Friends Success model', swaggerModel.BaseSuccessModel,{
-    "list" : fields.String(description="access jwt token", example="[test1@naver.com, test2@naver.com, test3@naver.com... ]"),
+    "FriendsList" : fields.String(description="친구목록", example="[['test9@gmail.com', '페이커', 'http://180.80.221.11:5000/service/images/default_profile.jpg'], ['test3@gmail.com', '류현진', 'http://180.80.221.11:5000/service/images/default_profile.jpg']]"),
 })
+FriendsSuccessModel2 = Friends.inherit('Friends Success model2', swaggerModel.BaseSuccessModel,{
+    "FriendsList" : fields.String(description="친구목록 2", example="{email : ['test9@gmail.com', 'test3@gmail.com'], name : ['페이커', '류현진'], profilePhoto : ['http://180.80.221.11:5000/service/images/default_profile.jpg', 'http://180.80.221.11:5000/service/images/default_profile.jpg']}"),
+})
+FriendsGetFailedRequest = Friends.inherit('Friend get failed model', swaggerModel.BaseFailedModel, {
+    "message" : fields.String(description="에러 메시지", example="No friend")
+})
+FriendsGetFailedRequest2 = Friends.inherit('Friend get failed model2', swaggerModel.BaseFailedModel, {
+    "message" : fields.String(description="에러 메시지", example="No request")
+})
+
 
 @Friends.route("/friends")
 @Friends.response(500, 'Failed(서버 관련 이슈)', swaggerModel.InternalServerErrorModel)
@@ -50,11 +60,12 @@ class AppFriend(Resource):
     @Friends.expect(parser, FriendsPostRequest)
     @Friends.response(200, 'Success', swaggerModel.BaseSuccessModel)
     @Friends.response(400, 'Failed (전에 이미 친구추가 요청을 보냈다.)', FriendsPutFailed3Request)   
-    def post(self, *args, **kwargs):
+    def post(self, *args):
         """ 사용자로부터 친구 이메일을 인자로 받아서 친구 요청을 보낸다."""
         requester = get_jwt_identity()
         data = request.json
         acceptor = data['friendEmail']
+        print(data)
 
         db = database.DBClass()
         query = f'''
@@ -164,44 +175,72 @@ class AppFriend(Resource):
         return {"status" : "success", "message" : "Your friend has been deleted"}, 200
 
 
+
 @Friends.route("/friendsList")
 class AppFriendList(Resource):
     @jwt_required()
     @Friends.expect(parser)
     @Friends.response(200, 'Success(친구 목록을 반환한다.)', FriendsSuccessModel)
-    @Friends.response(400, 'Failed ( 친구가 없다. )', swaggerModel.BaseFailedModel) 
+    @Friends.response(400, 'Failed ( 친구가 없다. )', FriendsGetFailedRequest) 
     def get(self, *args, **kwargs):
         """사용자의 친구목록을 보여준다"""
         userEmail = get_jwt_identity()
 
         db = database.DBClass()
-        query = '''
-            select user_friend_email from friends where user_email = (%s);
+        query = f'''
+            select email, name, profilePhoto from users, (select user_friend_email from friends where user_email = '{userEmail}') as gg where gg.user_friend_email = email;
         '''
-
-        result = [i["user_friend_email"] for i in db.executeAll(query,(userEmail))]
-        if result:
-            return {"status" : "success", "message" : f"{result}"}, 200 
+        if (friendsList_dict := db.executeAll(query)):
+            return {"status" : "success", "FriendsList" : f"{[list(i.values()) for i in friendsList_dict]}"},200
         else:
             return  {"status" : "Failed", "message" : "no friends"}, 400
 
-@Friends.route("/friendRequestList")
+@Friends.route("/friendsList_2")
+class AppFriendList(Resource):
+    @jwt_required()
+    @Friends.expect(parser)
+    @Friends.response(200, 'Success(친구 목록을 반환한다.)', FriendsSuccessModel2)
+    @Friends.response(400, 'Failed ( 친구가 없다. )', FriendsGetFailedRequest) 
+    def get(self, *args, **kwargs):
+        """사용자의 친구목록을 보여준다"""
+        userEmail = get_jwt_identity()
+
+        db = database.DBClass()
+        query = f'''
+            select email, name, profilePhoto from users, (select user_friend_email from friends where user_email = '{userEmail}') as gg where gg.user_friend_email = email;
+        '''
+        if not(result := db.executeAll(query)):
+            return  {"status" : "Failed", "message" : "no friends"}, 400
+        email = []
+        name =[]
+        profilePhoto = []
+
+        for i in result:
+            email.append(i["email"])
+            name.append(i["name"])
+            profilePhoto.append(i["profilePhoto"])
+
+
+        return {"status" : "success", "FriendsList" : 
+        f"{{email : {email}, name : {name}, profilePhoto : {profilePhoto}}}"},200
+
+@Friends.route("/friendsRequestList")
 class AppFriendRequestList(Resource):
     @jwt_required()
     @Friends.expect(parser)
     @Friends.response(200, 'Success(친구 요청목록을 반환한다.)', FriendsSuccessModel)
-    @Friends.response(400, 'Failed ( 친구 요청이 없다. )', swaggerModel.BaseFailedModel) 
+    @Friends.response(400, 'Failed ( 친구 요청이 없다. )', FriendsGetFailedRequest2) 
     def get(self, *args, **kwargs):
         """사용자에게 친구요청을 보낸 유저목록을 보여준다"""
         userEmail = get_jwt_identity()
 
         db = database.DBClass()
-        query = '''
-            select requester from request_friend where acceptor = (%s);
+        query = f'''
+            select email, name, profilePhoto from users, (select requester from request_friend where acceptor = '{userEmail}') as gg where gg.requester = email;
         '''
 
-        result = [i["requester"] for i in db.executeAll(query,(userEmail))]
-        if result:
-            return {"status" : "success", "message" : f"{result}"}, 200 
+        if (RequestList_dict := db.executeAll(query)):
+            return {"status" : "success", "FriendsList" : f"{[list(i.values()) for i in RequestList_dict]}"},200
         else:
-            return {"status" : "Failed", "message" : "No request"}, 400 
+            return  {"status" : "Failed", "message" : "No request"}, 400
+    

@@ -16,9 +16,7 @@ CREATE TABLE users (
   password varchar(200) DEFAULT NULL,
   name varchar(200) DEFAULT NULL,
   fcmToken varchar(200) DEFAULT NULL,
-  profilePhoto varchar(200) DEFAULT NULL,
-  dateOfBirth date DEFAULT NULL,
-  abode varchar(10) DEFAULT NULL,
+  profilePhoto varchar(2000) DEFAULT "https://mblogthumb-phinf.pstatic.net/20150427_261/ninevincent_1430122791768m7oO1_JPEG/kakao_1.jpg?type=w2",
   PRIMARY KEY (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
