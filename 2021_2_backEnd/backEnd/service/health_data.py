@@ -26,7 +26,7 @@ HealthDataGetFailed = HealthData.inherit('HealthData failed model ', swaggerMode
 })
 
 HealthDataGetSuccess = HealthData.inherit('HealthData get success response model', swaggerModel.BaseSuccessModel,{
-    "FriendHealthData" : fields.Nested(swaggerModel.BaseHealthDataModel)
+    "FriendHealthData" : fields.String(description="친구의 운동데이터", example="""{step_count_month : [10000, 10000, ... , 10000], carories_month : [100, 100, ..., 100], distance_month : [4000, 4000, ..., 4000], time_month : [60, 60, ... , 60], Date_month : ['2021-10-08', '2021-10-09', ... , '2021-11-07'], }""")
 })
 
 @HealthData.route("/healthData")
@@ -89,5 +89,4 @@ class AppFriend(Resource):
             distance_month.append(i["distance"])
             time_month.append(i["time"])
 
-        return {"status" : "success", "FriendHealthData" : 
-        f"{{step_count_month : {step_count_month}, carories_month : {carories_month}, distance_month : {distance_month}, time_month : {time_month}, Date_month : {Date_month}, }}"},200
+        return {"status" : "success", "FriendHealthData" : f"{{step_count_month : {step_count_month}, carories_month : {carories_month}, distance_month : {distance_month}, time_month : {time_month}, Date_month : {Date_month}, }}"},200
