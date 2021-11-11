@@ -5,7 +5,7 @@ from flask_restx import Resource, Namespace, fields
 from flask_jwt_extended.utils import get_jwt_identity, get_jwt
 from flask_jwt_extended import jwt_required
 from flask_request_validator import *
-import database, swaggerModel
+import database, swaggerModel, config
 
 Friends = Namespace(name = "Friends", description="친구관련 작업을 처리하는 API")
 parser = Friends.parser()
@@ -175,31 +175,11 @@ class AppFriend(Resource):
         return {"status" : "success", "message" : "Your friend has been deleted"}, 200
 
 
-
 @Friends.route("/friendsList")
 class AppFriendList(Resource):
     @jwt_required()
     @Friends.expect(parser)
-    @Friends.response(200, 'Success(친구 목록을 반환한다.)', FriendsSuccessModel)
-    @Friends.response(400, 'Failed ( 친구가 없다. )', FriendsGetFailedRequest) 
-    def get(self, *args, **kwargs):
-        """사용자의 친구목록을 보여준다"""
-        userEmail = get_jwt_identity()
-
-        db = database.DBClass()
-        query = f'''
-            select email, name, profilePhoto from users, (select user_friend_email from friends where user_email = '{userEmail}') as gg where gg.user_friend_email = email;
-        '''
-        if (friendsList_dict := db.executeAll(query)):
-            return {"status" : "success", "FriendsList" : f"{[list(i.values()) for i in friendsList_dict]}"},200
-        else:
-            return  {"status" : "Failed", "message" : "no friends"}, 400
-
-@Friends.route("/friendsList_2")
-class AppFriendList(Resource):
-    @jwt_required()
-    @Friends.expect(parser)
-    @Friends.response(200, 'Success(친구 목록을 반환한다.)', FriendsSuccessModel2)
+    @Friends.response(200, 'Success(친구 목록을 각각의 인자당 리스트로 반환한다.)', FriendsSuccessModel2)
     @Friends.response(400, 'Failed ( 친구가 없다. )', FriendsGetFailedRequest) 
     def get(self, *args, **kwargs):
         """사용자의 친구목록을 보여준다"""
@@ -218,11 +198,13 @@ class AppFriendList(Resource):
         for i in result:
             email.append(i["email"])
             name.append(i["name"])
+            if not i['profilePhoto']:
+                i['profilePhoto'] = config.baseUrl + '/service/images/default_profile.jpg'
             profilePhoto.append(i["profilePhoto"])
 
 
         return {"status" : "success", "FriendsList" : 
-        f"{{email : {email}, name : {name}, profilePhoto : {profilePhoto}}}"},200
+        {"email" : email, "name" : name, "profilePhoto" : profilePhoto}},200
 
 @Friends.route("/friendsRequestList")
 class AppFriendRequestList(Resource):
