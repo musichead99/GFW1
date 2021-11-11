@@ -31,11 +31,11 @@ class userProfile(Resource):
     @Profile.response(200, 'Success(프로필 정보 요청 성공)', ProfileGetSuccessResponse)
     @Profile.response(400, 'Failed(유저가 가입되어 있지 않을 경우)', ProfileGetFailedResponse)
     @jwt_required()
-    def get(self, friendEmail):
+    def get(self, **kwargs):
         '''클라이언트로부터 받은 jwt토큰에서 이메일을 분리하여 해당하는 프로필 정보를 반환한다.'''
 
-        if friendEmail is not None:
-            userEmail = friendEmail
+        if 'friendEmail' in kwargs:
+            userEmail = kwargs['friendEmail']
         else:
             userEmail = get_jwt_identity()
 
