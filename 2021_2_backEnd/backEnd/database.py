@@ -8,7 +8,7 @@ class DBClass():
     def __init__(self):
         self.db = pymysql.connect(
             user        = 'root',
-            passwd      = 'zlrqhem1',
+            passwd      = 'password',
             host        = '127.0.0.1',
             db          = 'backend_test',
             charset     = 'utf8',
