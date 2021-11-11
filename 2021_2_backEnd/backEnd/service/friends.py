@@ -203,8 +203,7 @@ class AppFriendList(Resource):
             profilePhoto.append(i["profilePhoto"])
 
 
-        return {"status" : "success", "FriendsList" : 
-        {"email" : email, "name" : name, "profilePhoto" : profilePhoto}},200
+        return {"status" : "success", "FriendsList" :  result},200
 
 @Friends.route("/friendsRequestList")
 class AppFriendRequestList(Resource):
