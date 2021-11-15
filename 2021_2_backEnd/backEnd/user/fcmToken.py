@@ -31,7 +31,7 @@ class AppFcmToken(Resource):
         query = '''
             select * from users where email = (%s);
         '''
-        if db.execute(query, (userEmail,)) is None:
+        if db.executeOne(query, (userEmail,)) is None:
             return {'status' : 'Failed', 'message' : 'Email not registered'}, 400
 
         query = '''
