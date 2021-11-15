@@ -5,7 +5,6 @@ select * from request_friend;
 select * from friends;
 select * from health_data;
 
-
 ## insert
 
 # users table
@@ -25,16 +24,30 @@ insert into users(email, password, name) values ('test9@gmail.com','test1234!', 
 
 
 #request_friend table
-insert into request_friend(requester, acceptor) values ('test8@gmail.com','test1@gmail.com');
-insert into request_friend(requester, acceptor) values ('test1@gmail.com','test4@gmail.com');
+insert into request_friend(requester, acceptor) values ('test1@gmail.com','test2@gmail.com');
+insert into request_friend(requester, acceptor) values ('test2@gmail.com','test3@gmail.com');
+insert into request_friend(requester, acceptor) values ('test3@gmail.com','test4@gmail.com');
+insert into request_friend(requester, acceptor) values ('test4@gmail.com','test5@gmail.com');
+insert into request_friend(requester, acceptor) values ('test5@gmail.com','test6@gmail.com');
+insert into request_friend(requester, acceptor) values ('test6@gmail.com','test7@gmail.com');
+insert into request_friend(requester, acceptor) values ('test7@gmail.com','test8@gmail.com');
+insert into request_friend(requester, acceptor) values ('test8@gmail.com','test9@gmail.com');
+insert into request_friend(requester, acceptor) values ('test9@gmail.com','test1@gmail.com');
 
 # friends table
-insert into friends(user_email, user_friend_email) values ('test1@gmail.com', 'test9@gmail.com');
-insert into friends(user_email, user_friend_email) values ('test9@gmail.com', 'test1@gmail.com');
 insert into friends(user_email, user_friend_email) values ('test1@gmail.com', 'test3@gmail.com');
 insert into friends(user_email, user_friend_email) values ('test3@gmail.com', 'test1@gmail.com');
-insert into friends(user_email, user_friend_email) values ('test8@gmail.com', 'test9@gmail.com');
-insert into friends(user_email, user_friend_email) values ('test9@gmail.com','test8@gmail.com');
+insert into friends(user_email, user_friend_email) values ('test1@gmail.com', 'test4@gmail.com');
+insert into friends(user_email, user_friend_email) values ('test4@gmail.com', 'test1@gmail.com');
+insert into friends(user_email, user_friend_email) values ('test1@gmail.com', 'test5@gmail.com');
+insert into friends(user_email, user_friend_email) values ('test5@gmail.com', 'test1@gmail.com');
+insert into friends(user_email, user_friend_email) values ('test1@gmail.com', 'test6@gmail.com');
+insert into friends(user_email, user_friend_email) values ('test6@gmail.com', 'test1@gmail.com');
+insert into friends(user_email, user_friend_email) values ('test1@gmail.com', 'test7@gmail.com');
+insert into friends(user_email, user_friend_email) values ('test7@gmail.com', 'test1@gmail.com');
+insert into friends(user_email, user_friend_email) values ('test1@gmail.com', 'test8@gmail.com');
+insert into friends(user_email, user_friend_email) values ('test8@gmail.com', 'test1@gmail.com');
+
 
 # health_data table
 insert into health_data values('test9@gmail.com','2021-10-01','10000','100','4000','60');
@@ -68,3 +81,13 @@ insert into health_data values('test9@gmail.com','2021-10-28','20000','200','800
 insert into health_data values('test9@gmail.com','2021-10-29','30000','300','12000','60');
 insert into health_data values('test9@gmail.com','2021-10-30','20000','200','8000','120');
 
+
+insert into health_data values('test1@gmail.com','2021-11-30','10000','200','8000','120');
+insert into health_data values('test2@gmail.com','2021-11-30','20000','200','8000','120');
+insert into health_data values('test3@gmail.com','2021-11-30','30000','200','8000','120');
+insert into health_data values('test4@gmail.com','2021-11-30','40000','200','8000','120');
+insert into health_data values('test5@gmail.com','2021-11-30','50000','200','8000','120');
+insert into health_data values('test6@gmail.com','2021-11-30','60000','200','8000','120');
+insert into health_data values('test7@gmail.com','2021-11-30','70000','200','8000','120');
+insert into health_data values('test8@gmail.com','2021-11-30','80000','200','8000','120');
+insert into health_data values('test9@gmail.com','2021-11-30','90000','200','8000','120');
