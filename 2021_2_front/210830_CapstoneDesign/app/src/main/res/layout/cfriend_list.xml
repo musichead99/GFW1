@@ -5,7 +5,8 @@
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -27,6 +28,7 @@
             android:textAlignment="center"/>
 
         <TextView
+            android:id="@+id/cfriend_list_confirm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

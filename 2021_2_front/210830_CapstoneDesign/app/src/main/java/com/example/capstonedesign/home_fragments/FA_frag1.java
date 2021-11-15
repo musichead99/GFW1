@@ -35,12 +35,29 @@ public class FA_frag1 extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fa_frag1,container,false);
 
+        String friend_email = null;
+        String friend_name = null;
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            // 여기서 친구의 데이터를 가져오고.
+            friend_email = bundle.getString("CompareFriend");
+            friend_name = bundle.getString("FriendName");
+        }
+
         Context appContext = rootView.getContext().getApplicationContext();
         Context curContext = rootView.getContext();
         ToggleButton toggle_btn = rootView.findViewById(R.id.fa_frag1_toggleButton);
         boolean tf_period = toggle_btn.isChecked();
         float[] result = new float[30];
+
+
+        /** LineChart의 기본 세팅을 해주는 부분 **/
         LineChart lineChart = rootView.findViewById(R.id.fa_frag1_lineChart);
+        LineChartSetter lineChartSetter = LineChartSetter.newLineChartSetter()
+                .setLineChart(lineChart)
+                .setPeriod(tf_period)
+                .setBasic()
+                .setLabel();
 
         Arrays.fill(result,(float)0);
 
@@ -58,6 +75,8 @@ public class FA_frag1 extends Fragment {
         int dataType = MyGoogleFit.TYPE_STEP;
         myGoogleFit.subscription(dataType,curContext)
                 .getPeriodicData(dataType,curContext,tf_period,result,lineChart);
+        // if(친구 비교 자료 필요) 여기서 친구의 그래프 그려주면 될듯. tf_period : True 30일, False 7일
+        // myGoogleFit.setLineChart(float[] result, LineChart lineChart,boolean tf_period,String name);
 
         toggle_btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

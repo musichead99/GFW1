@@ -2,20 +2,33 @@ package com.example.capstonedesign.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class FriendListResponse {
-    @SerializedName("friendList")
-    private ArrayList<Friend> friendList;
+    @SerializedName("status")
+    private String status;
 
-    public FriendListResponse(ArrayList<Friend> friendList){
-        this.friendList = friendList;
+    @SerializedName("message")
+    private String message = "No message";
+
+    @SerializedName("FriendsList")
+    private List<Friend> friend;
+
+    public FriendListResponse(List<Friend> friend){
+        this.friend = friend;
     }
 
-    public ArrayList<Friend> getFriendList(){
-        return friendList;
+    public List<Friend> getFriendList(){
+        return friend;
     }
-    public void setFriendList(ArrayList<Friend> newList){
-        friendList = newList;
+    public void setFriendList(List<Friend> newList){
+        friend = newList;
+    }
+
+    public String getStatus(){
+        return status;
+    }
+    public String getMessage(){
+        return message;
     }
 }

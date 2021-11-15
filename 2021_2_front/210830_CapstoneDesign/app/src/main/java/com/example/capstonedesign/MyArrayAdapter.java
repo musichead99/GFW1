@@ -1,6 +1,7 @@
 package com.example.capstonedesign;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,16 +30,25 @@ public class MyArrayAdapter extends ArrayAdapter {
         // Get the data item for this position
         Friend friend = (Friend) getItem(position);
 
+        Uri img_src = Uri.parse(friend.getImage());
+        String name = friend.getName();
+        String email = friend.getEmail();
+
         // Lookup view for data population
         CircleImageView profile_img = convertView.findViewById(R.id.cmp_friendItem_profile_img);
-        TextView name = (TextView) convertView.findViewById(R.id.cfriend_list_Item_name);
+        TextView name_view = (TextView) convertView.findViewById(R.id.cfriend_list_Item_name);
         CheckBox checkBox = convertView.findViewById(R.id.cfriend_list_Item_check_box);
+
         // Populate the data into the template view using the data object
-        profile_img.setImageResource(R.drawable.ic_launcher_background);
-        name.setText(friend.getName());
-        if(position == 1){
+        name_view.setText(name);
+
+        if(position == 0){
             checkBox.setChecked(true);
-        }else checkBox.setChecked(false);
+            profile_img.setVisibility(profile_img.GONE);
+        }else{
+            profile_img.setImageURI(img_src);
+            checkBox.setChecked(false);
+        }
 
         // Return the completed view to render on screen
         return convertView;
