@@ -1,25 +1,46 @@
 package com.example.capstonedesign;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.example.capstonedesign.retrofit.KakaoResponse;
+import com.example.capstonedesign.retrofit.LoginResponse;
 import com.example.capstonedesign.retrofit.RetrofitClient;
 import com.example.capstonedesign.retrofit.initMyApi;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.Gson;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,8 +92,27 @@ public class KakaoWebview extends AppCompatActivity {
         });
         mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.setWebViewClient(new WebViewClientClass());
+        mWebView.addJavascriptInterface(new MyJavaScriptInterface(),"Android");
     }
     private class WebViewClientClass extends android.webkit.WebViewClient {
+        private boolean FLAG = false;
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+
+            if(FLAG == true){
+                view.loadUrl("javascript:window.Android.getHtml(document.getElementsByTagName('body')[0].innerText);");
+                FLAG = false;
+                view.destroy();
+                Intent intent = new Intent(getApplicationContext(), Home.class);
+                startActivity(intent);
+                finish();
+            }
+
+        }
+
+
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -81,8 +121,10 @@ public class KakaoWebview extends AppCompatActivity {
             Log.d("_URI_",uri.getPath().toString());
             sharedPreferences = getSharedPreferences("email", MODE_PRIVATE);
             editor = sharedPreferences.edit();
+
             if(uri.getPath().contains("/user/kakao/callback")) {
-                //token = request.getUrl().getQueryParameter("access token");                              //다시 봐야함 이부분은
+                FLAG = true;
+                /*token = request.getUrl().getQueryParameter("access token");
                 HashMap<String, String> headerMap = new HashMap<>();
                 headerMap.put("access token", token);
                 view.loadUrl(request.getUrl().toString(), headerMap);
@@ -93,6 +135,7 @@ public class KakaoWebview extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), Home.class);
                 startActivity(intent);
                 finish();
+                */
             }
             return false;
         }
@@ -105,5 +148,14 @@ public class KakaoWebview extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+    public class MyJavaScriptInterface{
+        @JavascriptInterface
+        public void getHtml(String html) { //위 자바스크립트가 호출되면 여기로 html이 반환됨
+            Gson gson = new Gson();
+            LoginResponse loginResponse = gson.fromJson(html,LoginResponse.class);
+            Log.d("access_token",loginResponse.getToken());
+            // 결과 처리.
+        }
     }
 }

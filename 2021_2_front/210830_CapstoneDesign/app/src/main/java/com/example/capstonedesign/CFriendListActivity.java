@@ -2,51 +2,94 @@ package com.example.capstonedesign;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.capstonedesign.retrofit.Friend;
+import com.example.capstonedesign.retrofit.FriendListResponse;
+import com.example.capstonedesign.retrofit.RetrofitClient;
+import com.example.capstonedesign.retrofit.initMyApi;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CFriendListActivity extends AppCompatActivity {
 
-    private static CheckBox checkBox = null;
+    private CheckBox checkBox = null;
+    private String passing_email = null;
+    private String friendName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cfriend_list);
 
+        Context thisContext = this;
         ListView listView = findViewById(R.id.cfriend_list_listView);
         CheckBox prev_checkBox = null;
+        TextView tb_confirm = findViewById(R.id.cfriend_list_confirm);
 
+        ArrayList<Friend> al_friends = new ArrayList<Friend>();
 
-        // 1. Retrofit을 이용해서 POST 방식으로 친구의 목록(아마 배열의 형태로 받아올 것이라 예상)을 받아오기.
-        // 2. 받아온 친구 목록을 ArrayList 형태의 friends 변수에 add 해줌.
-        // 3. ArrayAdapter를 통해서 listView에 관련 정보를 띄워줌. (제일 처음으로는 선택 안함이라는
-        //    Friend 객체를 생성해서 넣을 것임.)
-        // 4.
+        RetrofitClient retrofitClient = RetrofitClient.getInstance();
+        initMyApi initMyApi = RetrofitClient.getRetrofitInterface();
+        initMyApi.getFriendListResponse().enqueue(new Callback<FriendListResponse>() {
+            @Override
+            public void onResponse(Call<FriendListResponse> call, Response<FriendListResponse> response) {
+                FriendListResponse result = response.body();
 
-        ArrayList<Friend> friends = new ArrayList<Friend>();
+                String status_msg = result.getStatus();
+                Log.d("Getting friendsList",status_msg);
 
-        MyArrayAdapter myArrayAdapter = new MyArrayAdapter(this,friends);
+                List<Friend> friendsList = result.getFriendList();
+                al_friends.add(new Friend(null,null,"선택안함"));
+                al_friends.addAll(friendsList);
 
-        listView.setAdapter(myArrayAdapter);
+                MyArrayAdapter myArrayAdapter = new MyArrayAdapter(thisContext,al_friends);
+
+                listView.setAdapter(myArrayAdapter);
+            }
+            @Override
+            public void onFailure(Call<FriendListResponse> call, Throwable t) {
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(checkBox == null) checkBox = view.findViewById(R.id.cfriend_list_Item_check_box);
                 Friend friend = (Friend) parent.getItemAtPosition(position);
+                friendName = friend.getName();
                 checkBox.setChecked(false);
                 checkBox = view.findViewById(R.id.cfriend_list_Item_check_box);
                 checkBox.setChecked(true);
+                passing_email = friend.getEmail();
             }
         });
 
+        tb_confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 여기서 passing_email에 있는 값을 보내준다.
+                Intent intent = new Intent(getBaseContext(),Home.class);
+                intent.putExtra("IntentType",0);
+                intent.putExtra("CompareFriend",passing_email);
+                intent.putExtra("FriendName",friendName);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }
