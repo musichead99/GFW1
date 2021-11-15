@@ -31,8 +31,8 @@ public class Email extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.hide();
 
         check = findViewById(R.id.check);
         email = findViewById(R.id.email);

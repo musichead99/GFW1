@@ -27,8 +27,8 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.hide();
 
         fa = new FA();
         fc = new FC();
@@ -47,16 +47,16 @@ public class Home extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 switch(item.getItemId()){
-                    case R.id.first_bottm_tab:
+                    case R.id.first_bottm_tab: //상태
                         getSupportFragmentManager().beginTransaction().replace(R.id.container,fs).commit();
                         return true;
-                    case R.id.second_bottm_tab:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container,fl).commit();
-                        return true;
-                    case R.id.third_bottm_tab:
+                    case R.id.second_bottm_tab: //분석
                         getSupportFragmentManager().beginTransaction().replace(R.id.container,fa).commit();
                         return true;
-                    case R.id.fourth_bottm_tab:
+                    case R.id.third_bottm_tab: //프로필
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container,fl).commit();
+                        return true;
+                    case R.id.fourth_bottm_tab: //설정
                         getSupportFragmentManager().beginTransaction().replace(R.id.container,fc).commit();
                         return true;
                 }

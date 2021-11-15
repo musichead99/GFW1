@@ -47,8 +47,8 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.hide();
 
         pw_notion=findViewById(R.id.pw_notion);
         register_pw = findViewById(R.id.register_pw);
@@ -187,7 +187,7 @@ public class Register extends AppCompatActivity {
         call.enqueue(new Callback<ValidateResponse>() {
             @Override
             public void onResponse(Call<ValidateResponse> call, Response<ValidateResponse> response) {
-                if(response.isSuccessful() && return_email==true) {
+                if(response.isSuccessful() && return_email==true) { //                                                                      ****오류있음!*****
                     ValidateResponse result = response.body();
                     String status = result.getStatus();
                     Toast.makeText(getApplicationContext(),"사용할 수 있는 이메일입니다.",Toast.LENGTH_SHORT).show();
@@ -221,11 +221,11 @@ public class Register extends AppCompatActivity {
             // 성공시.
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                Log.d("value","값들" + validate+return_name+return_pw_check);
                 //통신이 성공함.
                 if (userPwd.equals(PassCK) && validate==true && return_name == true && return_pw_check == true) {
                     if (response.isSuccessful() && response.body() != null) {
                         //response.body()을 result에 저장.
+                        Log.d("value","values : " + validate+return_name+return_pw_check);
                         RegisterResponse result = response.body();
                         String message = result.getMessage();
                         Intent intent = new Intent(getApplicationContext(), Login.class);

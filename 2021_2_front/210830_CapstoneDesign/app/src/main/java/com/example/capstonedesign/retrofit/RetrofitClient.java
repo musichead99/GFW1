@@ -1,5 +1,6 @@
 package com.example.capstonedesign.retrofit;
 
+import java.util.concurrent.TimeUnit;
 import android.content.Context;
 
 import com.example.capstonedesign.PreferenceManager;
@@ -21,7 +22,7 @@ public class RetrofitClient {
     private static initMyApi initMyApi;
 
     //사용하고 있는 서버 BASE 주소
-    private static String baseUrl = "http://125.6.37.125:5000/";
+    private static String baseUrl = "http://125.6.37.125:5000";
 
     private RetrofitClient() {
         //로그를 보기 위한 Interceptor
@@ -30,6 +31,9 @@ public class RetrofitClient {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(30,TimeUnit.SECONDS)
+                .writeTimeout(15,TimeUnit.SECONDS)
                 .addInterceptor(new Interceptor() {
                     // interceptor를 추가해서 만약에 token이 Preference data로 저장되어 있으면
                     // Header를 추가.

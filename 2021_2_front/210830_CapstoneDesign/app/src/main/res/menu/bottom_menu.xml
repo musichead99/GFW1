@@ -9,15 +9,9 @@
         android:enabled="true"
         android:icon="@drawable/state"
         android:title="@string/state" />
-    <item
-        android:id="@+id/second_bottm_tab"
-        app:showAsAction="always"
-        android:enabled="true"
-        android:icon="@drawable/location"
-        android:title="@string/location"/>
 
     <item
-        android:id="@+id/third_bottm_tab"
+        android:id="@+id/second_bottm_tab"
         app:showAsAction="always"
         android:enabled="true"
         android:icon="@drawable/graph"
@@ -25,11 +19,18 @@
     </item>
 
     <item
-        android:id="@+id/fourth_bottm_tab"
+        android:id="@+id/third_bottm_tab"
         app:showAsAction="always"
         android:enabled="true"
         android:icon="@drawable/feed"
-        android:title="@string/feed">
+        android:title="@string/profile">
     </item>
 
+    <item
+        android:id="@+id/fourth_bottm_tab"
+        app:showAsAction="always"
+        android:enabled="true"
+        android:icon="@drawable/setting"
+        android:title="설정">
+    </item>
 </menu>
