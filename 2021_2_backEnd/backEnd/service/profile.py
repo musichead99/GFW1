@@ -3,7 +3,6 @@
 from flask import request
 from flask_restx import Resource, Namespace, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_request_validator import *
 from pymysql import NULL
 import database, swaggerModel, config
 from datetime import date
@@ -57,9 +56,6 @@ class userProfile(Resource):
                 profileData['dateOfBirth'] = date.isoformat(profileData['dateOfBirth'])
             return {"status" : "Success", "profile" : profileData}
     
-    @validate_params (
-        Param('name', JSON, str, required=False, rules=CompositeRule(Pattern(r'[a-zA-Z가-힣]'), MinLength(1)))  
-    )
     @jwt_required()
     @Profile.expect(swaggerModel.BaseProfilePutModel)
     @Profile.doc(params={'payload' : 'name : 유저의 이름(닉네임)\ndateOfBirth : 유저의 생년월일\n abode : 유저의 거주지(도, 광역시, 특별시 단위)\n profilePhoto : base64로 인코딩된 유저의 프로필 사진'})
@@ -85,7 +81,7 @@ class userProfile(Resource):
             '''
             db.execute(query, (data['name'], userEmail))
         
-        if 'profilePhoto' in data and data['ProfilePhoto'] is not None:
+        if 'profilePhoto' in data and data['profilePhoto'] is not None:
             pass
 
         if 'dateOfBirth' in data and data['dateOfBirth'] is not None:
