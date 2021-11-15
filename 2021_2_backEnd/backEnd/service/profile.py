@@ -85,7 +85,7 @@ class userProfile(Resource):
             '''
             db.execute(query, (data['name'], userEmail))
         
-        if 'profilePhoto' in data and data['Profilephoto'] is not None:
+        if 'profilePhoto' in data and data['ProfilePhoto'] is not None:
             pass
 
         if 'dateOfBirth' in data and data['dateOfBirth'] is not None:
