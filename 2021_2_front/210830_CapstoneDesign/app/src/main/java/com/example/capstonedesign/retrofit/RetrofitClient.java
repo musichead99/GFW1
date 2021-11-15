@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static Context appContext;
+    private static Context appContext = null;
     private static RetrofitClient instance = null;
     private static initMyApi initMyApi;
 
@@ -35,15 +35,18 @@ public class RetrofitClient {
                     // Header를 추가.
                     @Override
                     public Response intercept(Chain chain) throws IOException {
-                        String token = PreferenceManager.getString(appContext,"token");
-                        if( token != null){
-                            Request newRequest = chain.request().newBuilder()
-                                    .addHeader("Authorization","Bearer "+token)
-                                    .build();
-                            return chain.proceed(newRequest);
-                        }else{
-                            return null;
+                        if(appContext != null){
+                            String token = PreferenceManager.getString(appContext,"token");
+                            if( token != null){
+                                Request newRequest = chain.request().newBuilder()
+                                        .addHeader("Authorization","Bearer "+token)
+                                        .build();
+                                return chain.proceed(newRequest);
+                            }else{
+                                return null;
+                            }
                         }
+                        else return null;
                     }
                 })
                 .build();
