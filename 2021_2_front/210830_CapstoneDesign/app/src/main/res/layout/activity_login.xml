@@ -43,13 +43,21 @@
             android:id="@+id/et_pass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:background="@color/sky"
             android:textColor="@color/black"
             android:inputType="textPassword"
             android:padding="10dp"
             android:hint="@string/hint_pw"
             android:textColorHint="@color/input_register_hint" />
+
+        <CheckBox
+            android:id="@+id/check1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:clickable="false"
+            android:text="자동 로그인"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/btn_login"
@@ -69,14 +77,6 @@
             android:text="@string/btn_back"
             android:textColor="@color/black"
             android:onClick="goMain" />
-
-        <Button
-            android:id="@+id/test_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/pink"
-            android:text="Test(Go to home act)"
-            android:textColor="@color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"

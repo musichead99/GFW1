@@ -1,5 +1,7 @@
 package com.example.capstonedesign.retrofit;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -11,7 +13,7 @@ public class RetrofitClient {
     private static initMyApi initMyApi;
 
     //사용하고 있는 서버 BASE 주소
-    private static String baseUrl = "http://182.212.194.105:5000";
+    private static String baseUrl = "http://125.6.37.125:5000";
 
     private RetrofitClient() {
         //로그를 보기 위한 Interceptor
@@ -19,6 +21,9 @@ public class RetrofitClient {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(30,TimeUnit.SECONDS)
+                .writeTimeout(15,TimeUnit.SECONDS)
                 .build();
 
         //retrofit 설정

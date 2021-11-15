@@ -90,25 +90,28 @@ public class MainActivity extends AppCompatActivity {
             PreferenceManager.setBoolean(appContext,"REQUEST_OAUTH_REQUEST",true);
         }
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.hide();
 
         Button kakaobtn = (Button)findViewById(R.id.kakao);
         kakaobtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("'OOO'에서 '카카오톡'을(를) 열려고 합니다.");
+                builder.setMessage("'동네 한 바퀴'에서 '카카오톡'을(를) 열려고 합니다.");
                 builder.setPositiveButton("열기", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "카카오 연동하기", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "카카오 연동하기", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), KakaoWebview.class);
+                        startActivity(intent);
+                        finish();
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "카카오 연동 안하기", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "카카오 연동 안하기", Toast.LENGTH_LONG).show();
                     }
                 });
                 AlertDialog alert = builder.create();
@@ -121,17 +124,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("'OOO'에서 '네이버'를(을) 열려고 합니다.");
+                builder.setMessage("'동네 한 바퀴'에서 '네이버'를(을) 열려고 합니다.");
                 builder.setPositiveButton("열기", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "네이버 연동하기", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "네이버 연동하기", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), NaverWebview.class);
+                        startActivity(intent);
+                        finish();
                     }
                 });
                 builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), "네이버 연동 안하기", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "네이버 연동 안하기", Toast.LENGTH_LONG).show();
                     }
                 });
                 AlertDialog alert = builder.create();
