@@ -3,7 +3,7 @@
 from flask import request
 from flask_restx import Resource, Namespace, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from flask_request_validator import *
+from pymysql import NULL
 import database, swaggerModel, config
 from datetime import date
 
@@ -19,7 +19,7 @@ ProfileGetFailedResponse = Profile.inherit('5-2. Profile get/put failed response
 )
 
 # 프로필 관련 요청을 처리하는 userProfile class
-@Profile.route('/profile')
+@Profile.route('/profile', '/profile/<string:friendEmail>')
 @Profile.response(401, 
     'Failed(jwt 토큰 관련 이슈)\nmessage : Missing Authorization Header(header에 jwt토큰이 존재하지 않을 때)\nmessage : Token has been revoked(토큰이 blocklist에 존재할 때)\nmessage : Token has expired(토큰이 만료되었을 때)',
     swaggerModel.NoAuthModel
@@ -30,9 +30,14 @@ class userProfile(Resource):
     @Profile.response(200, 'Success(프로필 정보 요청 성공)', ProfileGetSuccessResponse)
     @Profile.response(400, 'Failed(유저가 가입되어 있지 않을 경우)', ProfileGetFailedResponse)
     @jwt_required()
-    def get(self):
+    def get(self, **kwargs):
         '''클라이언트로부터 받은 jwt토큰에서 이메일을 분리하여 해당하는 프로필 정보를 반환한다.'''
-        userEmail = get_jwt_identity()
+
+        if 'friendEmail' in kwargs:
+            userEmail = kwargs['friendEmail']
+        else:
+            userEmail = get_jwt_identity()
+
         db = database.DBClass()
         query = '''
             select name, dateOfBirth, abode, profilePhoto from users where email=(%s);
@@ -45,14 +50,12 @@ class userProfile(Resource):
             return {"status" : "Failed", "message" : "Email not registered"}, 400
         else:
             if profileData['profilePhoto'] is None:
-                profileData['profilePhoto'] = config.baseUrl + '/service/images/default_profile.jpg'
+                profileData['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
 
-            profileData['dateOfBirth'] = date.isoformat(profileData['dateOfBirth'])
+            if profileData['dateOfBirth'] is not None:
+                profileData['dateOfBirth'] = date.isoformat(profileData['dateOfBirth'])
             return {"status" : "Success", "profile" : profileData}
     
-    @validate_params (
-        Param('name', JSON, str, required=False, rules=CompositeRule(Pattern(r'[a-zA-Z가-힣]'), MinLength(1)))  
-    )
     @jwt_required()
     @Profile.expect(swaggerModel.BaseProfilePutModel)
     @Profile.doc(params={'payload' : 'name : 유저의 이름(닉네임)\ndateOfBirth : 유저의 생년월일\n abode : 유저의 거주지(도, 광역시, 특별시 단위)\n profilePhoto : base64로 인코딩된 유저의 프로필 사진'})
@@ -72,22 +75,22 @@ class userProfile(Resource):
             return {"status":"Failed", "message": "Email not registered"}, 400
 
         # 각 파라미터별로 DB에 갱신
-        if 'name' in data :
+        if 'name' in data and data['name'] is not None:
             query = '''
                 update users set name = (%s) where email = (%s);
             '''
             db.execute(query, (data['name'], userEmail))
         
-        if 'profilePhoto' in data :
+        if 'profilePhoto' in data and data['profilePhoto'] is not None:
             pass
 
-        if 'dateOfBirth' in data :
+        if 'dateOfBirth' in data and data['dateOfBirth'] is not None:
             query = '''
                 update users set dateOfBirth = (%s) where email = (%s);
             '''
             db.execute(query, (date.fromisoformat(data['dateOfBirth']), userEmail))
 
-        if 'abode' in data :
+        if 'abode' in data and data['abode'] is not None:
             query = '''
                 update users set abode = (%s) where email = (%s);
             '''

@@ -42,11 +42,13 @@ class AppNotification(Resource):
             select * from users where email=(%s);
         '''
         token = db.executeOne(query,(userEmail,))['fcmToken']
+        
+        test_message = {"title" : data['title'], "body" : data['body']}
 
         # 메시지를 받을 유저의 fcmToken이 존재하지 않을 때
         if token is None:
             return {'status' : 'Failed', 'message' : 'There''s no fcm token'}, 400
 
-        result = push_service.notify_single_device(registration_id=token, message_title=data['title'], message_body=data['body'], data_message=data)
+        result = push_service.single_device_data_message(registration_id=token, data_message=test_message, android_channel_id='test123')
 
         return {"status" : "Success"}, 200

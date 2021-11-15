@@ -14,13 +14,6 @@ BaseFailedModel = SwaggerModel.model('Base Failed Model', {
     "status" : fields.String(description="Success or Failed", example="Failed")
 })
 
-BaseHealthDataModel = SwaggerModel.model('Base HealthData Model',{
-    "stepCount" : fields.String(description="걸음수", example="10000"),
-    "calories" : fields.String(description="소모칼로리", example="2500"),
-    "distance" : fields.String(description="이동 거리", example="5"),
-    "time" : fields.String(description="이동 시간", example="10")
-})
-
 BaseProfileModel = SwaggerModel.model('Base Profile Model',{
     "name" : fields.String(description="유저의 이름", example="testName"),
     "dateOfBirth" : fields.String(description="유저의 생년월일", example="YYYY-MM-DD"),

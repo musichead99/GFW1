@@ -1,6 +1,5 @@
 # health_data.py
 
-import re
 from flask import request
 from flask_restx import Resource, Namespace, fields
 from flask_jwt_extended.utils import get_jwt_identity, get_jwt
@@ -27,7 +26,7 @@ HealthDataGetFailed = HealthData.inherit('HealthData failed model ', swaggerMode
 })
 
 HealthDataGetSuccess = HealthData.inherit('HealthData get success response model', swaggerModel.BaseSuccessModel,{
-    "FriendHealthData" : fields.Nested(swaggerModel.BaseHealthDataModel)
+    "FriendHealthData" : fields.String(description="친구의 운동데이터", example="""{step_count_month : [10000, 10000, ... , 10000], carories_month : [100, 100, ..., 100], distance_month : [4000, 4000, ..., 4000], time_month : [60, 60, ... , 60], Date_month : ['2021-10-08', '2021-10-09', ... , '2021-11-07'], }""")
 })
 
 @HealthData.route("/healthData")
@@ -78,6 +77,16 @@ class AppFriend(Resource):
                 select * from health_data where user_email = "{friendEmail}" ORDER BY date limit 30;
             '''
         FriendHealthData= db.executeAll(query2)
+        Date_month = []
+        step_count_month =[]
+        carories_month = []
+        distance_month = []
+        time_month = []
+        for i in FriendHealthData:
+            Date_month.append(str(i["Date"]))
+            step_count_month.append(i["step_count"])
+            carories_month.append(i["carories"])
+            distance_month.append(i["distance"])
+            time_month.append(i["time"])
 
-
-        return {"status" : "success", "FriendHealthData" : f"{FriendHealthData}"},200
+        return {"status" : "success", "FriendHealthData" : f"{{step_count_month : {step_count_month}, carories_month : {carories_month}, distance_month : {distance_month}, time_month : {time_month}, Date_month : {Date_month}, }}"},200
