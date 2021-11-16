@@ -82,6 +82,8 @@ public class FA_frag1 extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 lineChart.clear();
+                lineChartSetter.setPeriod(isChecked)
+                        .setLabel();
                 if(isChecked){
                     myGoogleFit.getPeriodicData(dataType,curContext,isChecked,result,lineChart);
                 }else{

@@ -9,20 +9,20 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import java.util.ArrayList;
 
 public class LineChartSetter {
-    private LineChartSetter lineChartSetter = null;
     private int period; // True : 30, False : 7
     private LineChart lineChart;
 
     public static LineChartSetter newLineChartSetter(){
         return new LineChartSetter();
     }
+
     public LineChartSetter setLineChart(LineChart lineChart){
         this.lineChart = lineChart;
-        return lineChartSetter;
+        return this;
     }
     public LineChartSetter setPeriod(boolean bool_period){
         this.period = bool_period ? 30 : 7;;
-        return lineChartSetter;
+        return this;
     }
 
     public LineChartSetter setBasic(){
@@ -38,7 +38,7 @@ public class LineChartSetter {
 
         lineChart.animateXY(3000,3000);
 
-        return lineChartSetter;
+        return this;
     }
     public LineChartSetter setLabel(){
 
@@ -60,6 +60,6 @@ public class LineChartSetter {
         };
         xAxis.setValueFormatter(valueFormatter);
 
-        return lineChartSetter;
+        return this;
     }
 }
