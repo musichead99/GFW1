@@ -247,6 +247,7 @@ public class MyGoogleFit {
                                     @Override
                                     public void onResponse(Call<DDTSResponse> call, Response<DDTSResponse> response) {
                                         DDTSResponse result = response.body();
+                                        
                                         String status = result.getStatus();
                                         String message = result.getMessage();
 
