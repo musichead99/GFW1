@@ -12,6 +12,8 @@ import android.widget.ToggleButton;
 import androidx.fragment.app.Fragment;
 
 import com.example.capstonedesign.R;
+import com.example.capstonedesign.retrofit.RetrofitClient;
+import com.example.capstonedesign.retrofit.initMyApi;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -35,6 +37,13 @@ public class FA_frag1 extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fa_frag1,container,false);
 
+        Context appContext = rootView.getContext().getApplicationContext();
+        Context curContext = rootView.getContext();
+        ToggleButton toggle_btn = rootView.findViewById(R.id.fa_frag1_toggleButton);
+        boolean tf_period = toggle_btn.isChecked();
+        float[] myData = new float[30];
+        float[] friendData;
+
         String friend_email = null;
         String friend_name = null;
         Bundle bundle = getArguments();
@@ -42,13 +51,8 @@ public class FA_frag1 extends Fragment {
             // 여기서 친구의 데이터를 가져오고.
             friend_email = bundle.getString("CompareFriend");
             friend_name = bundle.getString("FriendName");
+            friendData = new float[30];
         }
-
-        Context appContext = rootView.getContext().getApplicationContext();
-        Context curContext = rootView.getContext();
-        ToggleButton toggle_btn = rootView.findViewById(R.id.fa_frag1_toggleButton);
-        boolean tf_period = toggle_btn.isChecked();
-        float[] result = new float[30];
 
 
         /** LineChart의 기본 세팅을 해주는 부분 **/
@@ -59,7 +63,7 @@ public class FA_frag1 extends Fragment {
                 .setBasic()
                 .setLabel();
 
-        Arrays.fill(result,(float)0);
+        Arrays.fill(myData,(float)0);
 
         /** Google fit 데이터 불러오기. **/
         FitnessOptions fitnessOptions =
@@ -74,9 +78,16 @@ public class FA_frag1 extends Fragment {
 
         int dataType = MyGoogleFit.TYPE_STEP;
         myGoogleFit.subscription(dataType,curContext)
-                .getPeriodicData(dataType,curContext,tf_period,result,lineChart);
-        // if(친구 비교 자료 필요) 여기서 친구의 그래프 그려주면 될듯. tf_period : True 30일, False 7일
-        // myGoogleFit.setLineChart(float[] result, LineChart lineChart,boolean tf_period,String name);
+                .getPeriodicData(dataType,curContext,tf_period,myData,lineChart);
+        // Step 1. if(friend_email != null)
+        if(friend_email != null){
+            // Step 2. retrofit을 통해서 해당 친구의 정보를 받아옴.
+            RetrofitClient retrofitClient = RetrofitClient.getInstance();
+            initMyApi initMyApi = RetrofitClient.getRetrofitInterface();
+
+        }
+        // Step 3. 여기서 친구의 그래프 그려주면 될듯. tf_period : True 30일, False 7일
+        // myGoogleFit.setLineChart(float[] friendData, LineChart lineChart,boolean tf_period,String name);
 
         toggle_btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -85,9 +96,9 @@ public class FA_frag1 extends Fragment {
                 lineChartSetter.setPeriod(isChecked)
                         .setLabel();
                 if(isChecked){
-                    myGoogleFit.getPeriodicData(dataType,curContext,isChecked,result,lineChart);
+                    myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
                 }else{
-                    myGoogleFit.getPeriodicData(dataType,curContext,isChecked,result,lineChart);
+                    myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
                 }
             }
         });

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -76,6 +75,7 @@ public class Login extends AppCompatActivity {
         retrofitClient = RetrofitClient.getInstance();
         initMyApi = RetrofitClient.getRetrofitInterface();
 
+
         initMyApi.getLoginResponse(loginRequest).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
@@ -83,6 +83,7 @@ public class Login extends AppCompatActivity {
                     LoginResponse result = response.body();
                     String message = result.getMessage();
                     String token = result.getToken();
+                    PreferenceManager.setString(getApplicationContext(),"token",token);
                     editor.putString("token", token);
                     editor.commit();
                     editor1.putString("userEmail", userEmail);
