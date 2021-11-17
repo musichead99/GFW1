@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/drawable/borderline.xml" value="0.36102564102564105" />
         <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/layout/activity_email.xml" value="0.36614583333333334" />
         <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/layout/activity_home.xml" value="0.36614583333333334" />
         <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/layout/activity_image.xml" value="0.36614583333333334" />
@@ -19,7 +20,7 @@
         <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/layout/cfriend_list.xml" value="0.36614583333333334" />
         <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/layout/fa.xml" value="0.36614583333333334" />
         <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/layout/fc.xml" value="0.36614583333333334" />
-        <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/layout/fl.xml" value="0.36614583333333334" />
+        <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/layout/fl.xml" value="0.33" />
         <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/layout/fs.xml" value="0.36614583333333334" />
         <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/menu/bottom_menu.xml" value="0.36614583333333334" />
         <entry key="..\:/Git_Projects/GFW1-master/2021_2_front/210830_CapstoneDesign/app/src/main/res/xml/setting_preference.xml" value="0.36614583333333334" />
