@@ -7,6 +7,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.example.capstonedesign.retrofit.DDTSRequest;
+import com.example.capstonedesign.retrofit.DDTSResponse;
+import com.example.capstonedesign.retrofit.RetrofitClient;
+import com.example.capstonedesign.retrofit.initMyApi;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -43,6 +47,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /** 현 Class에서 가능한 작업 정리.
  *  1. 얻고자 하는 데이터 타입에 따른 client들 등록.
@@ -153,50 +161,25 @@ public class MyGoogleFit {
         }
         return myGoogleFit;
     }
-    public void setLineChart(float[] result, LineChart lineChart,boolean tf_period){
+    public void setLineChart(float[] result, LineChart lineChart,boolean tf_period,String name){
         int period = tf_period ? 30 : 7;
 
-        ArrayList<String> labels = new ArrayList<String>();
         ArrayList<Entry> entry_chart = new ArrayList<>();
-
-        lineChart.setTouchEnabled(false);
-        lineChart.setPinchZoom(false);
 
         Log.d("Period Value",String.valueOf(period));
         for(int i = 0;i<period;i++){
             entry_chart.add(new Entry(i,result[i]));
-            labels.add(period-i + "일전");
         }
 
-        LineDataSet lineDataSet = new LineDataSet(entry_chart, "나의 정보");
-
-        // Setting ValueFormatter
-        XAxis xAxis = lineChart.getXAxis();
-
-        ValueFormatter valueFormatter = new ValueFormatter() {
-            @Override
-            public String getAxisLabel(float value, AxisBase axis) {
-                int position = (int) Math.round(value);
-                return labels.get(position);
-            }
-        };
-        xAxis.setValueFormatter(valueFormatter);
-
-        YAxis yAxis_left = lineChart.getAxisLeft();
-        YAxis yAxis_right = lineChart.getAxisRight();
-        yAxis_left.setAxisMinimum(0.0f);
-        yAxis_right.setAxisMinimum(0.0f);
+        LineDataSet lineDataSet = new LineDataSet(entry_chart, name);
 
         // LineData가 필요하여 선언.
         LineData chartData = new LineData();
         chartData.addDataSet(lineDataSet);
 
-        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         lineChart.setData(chartData);
-        /** Animation 세팅. **/
-        lineChart.animateXY(3000,3000);
-        lineChart.invalidate();
 
+        lineChart.invalidate();
     }
 
     public void dataToServer(int dataType, Context cur_context,float[] result){
@@ -255,8 +238,27 @@ public class MyGoogleFit {
                                         }
                                     }
                                 }
-
                                 // 여기서 서버로 데이터 전송.
+                                DDTSRequest ddtsRequest = new DDTSRequest(result[0],result[1],result[2],result[3]);
+
+                                RetrofitClient retrofitClient = RetrofitClient.getInstance();
+                                initMyApi initMyApi = RetrofitClient.getRetrofitInterface();
+                                initMyApi.getDDTS(ddtsRequest).enqueue(new Callback<DDTSResponse>() {
+                                    @Override
+                                    public void onResponse(Call<DDTSResponse> call, Response<DDTSResponse> response) {
+                                        DDTSResponse result = response.body();
+                                        
+                                        String status = result.getStatus();
+                                        String message = result.getMessage();
+
+                                        Log.d("DDTSRequest_status",status);
+                                        Log.d("DDTSRequest_message",message);
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<DDTSResponse> call, Throwable t) {
+                                    }
+                                });
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -309,7 +311,7 @@ public class MyGoogleFit {
                                 }
                             }
                         }
-                        setLineChart(result,lineChart, tf_period);
+                        setLineChart(result,lineChart, tf_period,"내 정보");
                      }
                 })
                 .addOnFailureListener(new OnFailureListener() {

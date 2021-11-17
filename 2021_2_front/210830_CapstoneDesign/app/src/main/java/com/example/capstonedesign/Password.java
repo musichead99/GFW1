@@ -33,8 +33,8 @@ public class Password extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_password);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.hide();
 
         EditText pw = findViewById(R.id.pw);
         EditText repw = findViewById(R.id.repw);

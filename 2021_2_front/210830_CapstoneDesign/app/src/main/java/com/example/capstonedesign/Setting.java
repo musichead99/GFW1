@@ -1,18 +1,11 @@
 package com.example.capstonedesign;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
+import androidx.preference.PreferenceFragmentCompat;
 
-public class Setting extends AppCompatActivity {
-
+public class Setting extends PreferenceFragmentCompat {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.setting_preference, rootKey);
     }
 }

@@ -26,10 +26,17 @@ public class FA_frag4 extends Fragment {
         Context curContext = rootView.getContext();
         ToggleButton toggle_btn = rootView.findViewById(R.id.fa_frag4_toggleButton);
         boolean tf_period = toggle_btn.isChecked();
-        float[] result = new float[30];
-        LineChart lineChart = rootView.findViewById(R.id.fa_frag4_lineChart);
+        float[] myData = new float[30];
 
-        Arrays.fill(result,(float)0);
+        /** LineChart의 기본 세팅을 해주는 부분 **/
+        LineChart lineChart = rootView.findViewById(R.id.fa_frag4_lineChart);
+        LineChartSetter lineChartSetter = LineChartSetter.newLineChartSetter()
+                .setLineChart(lineChart)
+                .setPeriod(tf_period)
+                .setBasic()
+                .setLabel();
+
+        Arrays.fill(myData,(float)0);
 
         /** Google fit 데이터 불러오기. **/
         FitnessOptions fitnessOptions =
@@ -44,16 +51,18 @@ public class FA_frag4 extends Fragment {
 
         int dataType = MyGoogleFit.TYPE_MOVE_MIN;
         myGoogleFit.subscription(dataType,curContext)
-                .getPeriodicData(dataType,curContext,tf_period,result,lineChart);
+                .getPeriodicData(dataType,curContext,tf_period,myData,lineChart);
 
         toggle_btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 lineChart.clear();
+                lineChartSetter.setPeriod(isChecked)
+                        .setLabel();
                 if(isChecked){
-                    myGoogleFit.getPeriodicData(dataType,curContext,isChecked,result,lineChart);
+                    myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
                 }else{
-                    myGoogleFit.getPeriodicData(dataType,curContext,isChecked,result,lineChart);
+                    myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
                 }
             }
         });

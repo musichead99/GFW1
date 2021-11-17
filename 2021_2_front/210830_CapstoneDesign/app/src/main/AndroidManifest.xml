@@ -3,6 +3,7 @@
     package="com.example.capstonedesign">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
@@ -23,14 +24,35 @@
             </intent-filter>
 
         </receiver>
-
+        <activity
+            android:name=".NaverWebview"
+            android:exported="true" />
+        <activity
+            android:name=".KakaoWebview"
+            android:exported="true" />
+        <activity
+            android:name=".QuestionActivity"
+            android:exported="true" />
+        <activity
+            android:name=".NoticeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".InformationActivity"
+            android:exported="true" />
+        <activity
+            android:name=".imageActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SettingActivity"
+            android:exported="true" />
         <activity android:name=".CFriendListActivity" />
         <activity android:name=".Password" />
         <activity android:name=".Email" />
         <activity android:name=".Register" />
-        <activity android:name=".Setting" />
         <activity android:name=".Home" />
         <activity android:name=".Login" />
+        <activity android:name=".Logout" />
+        <activity android:name=".Delete" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

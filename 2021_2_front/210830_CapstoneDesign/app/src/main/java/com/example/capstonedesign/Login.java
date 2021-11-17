@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -19,25 +19,27 @@ import com.example.capstonedesign.retrofit.RegisterResponse;
 import com.example.capstonedesign.retrofit.RetrofitClient;
 import com.example.capstonedesign.retrofit.initMyApi;
 
-import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Body;
 
 public class Login extends AppCompatActivity {
     private RetrofitClient retrofitClient;
     private initMyApi initMyApi;
     private EditText et_id, et_pass;
     private Button btn_login;
+    SharedPreferences sharedPreferences, sharedPreferences1;
+    SharedPreferences.Editor editor;
+    SharedPreferences.Editor editor1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.hide();
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.hide();
 
         et_id = findViewById(R.id.et_id);
         et_pass = findViewById(R.id.et_pass);
@@ -57,25 +59,22 @@ public class Login extends AppCompatActivity {
                 }
             }
         });
-        Button test_btn = findViewById(R.id.test_btn);
-        test_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),Home.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+
     }
 
     public void LoginResponse() {
         String userEmail = et_id.getText().toString().trim();
         String userPass = et_pass.getText().toString().trim();
+        sharedPreferences = getSharedPreferences("email", MODE_PRIVATE);
+        sharedPreferences1 = getSharedPreferences("name", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor1 = sharedPreferences1.edit();
 
         LoginRequest loginRequest = new LoginRequest(userEmail, userPass);
 
         retrofitClient = RetrofitClient.getInstance();
         initMyApi = RetrofitClient.getRetrofitInterface();
+
 
         initMyApi.getLoginResponse(loginRequest).enqueue(new Callback<LoginResponse>() {
             @Override
@@ -84,7 +83,11 @@ public class Login extends AppCompatActivity {
                     LoginResponse result = response.body();
                     String message = result.getMessage();
                     String token = result.getToken();
-                    //setPreference(token, token);
+                    PreferenceManager.setString(getApplicationContext(),"token",token);
+                    editor.putString("token", token);
+                    editor.commit();
+                    editor1.putString("userEmail", userEmail);
+                    editor1.commit();
 
                     Intent intent = new Intent(getApplicationContext(), Home.class);
                     startActivity(intent);

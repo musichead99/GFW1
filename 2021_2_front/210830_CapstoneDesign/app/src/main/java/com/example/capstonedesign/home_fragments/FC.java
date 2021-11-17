@@ -12,6 +12,6 @@ import com.example.capstonedesign.R;
 public class FC extends Fragment {
 
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fc,container,false);
+        return inflater.inflate(R.layout.activity_setting,container,false);
     }
 }
