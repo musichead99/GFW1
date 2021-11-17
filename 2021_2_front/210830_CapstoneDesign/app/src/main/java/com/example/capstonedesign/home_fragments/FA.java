@@ -39,9 +39,6 @@ public class FA extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fa,container,false);
 
-        // 친구 비교를 해야하는지 확인하는 부분.
-        Bundle bundle = checkBundle();
-
         /** findViewById parts**/
         viewPager2 = rootView.findViewById(R.id.fa_viewPager2);
         tabLayout = rootView.findViewById(R.id.tabs);
@@ -57,19 +54,15 @@ public class FA extends Fragment {
 
         //Adding fragments into adapter
         fa_frag1 = new FA_frag1();
-        fa_frag1.setArguments(bundle);
         adapter.addItem(fa_frag1);
 
         fa_frag2 = new FA_frag2();
-        fa_frag2.setArguments(bundle);
         adapter.addItem(fa_frag2);
 
         fa_frag3 = new FA_frag3();
-        fa_frag3.setArguments(bundle);
         adapter.addItem(fa_frag3);
 
         fa_frag4 = new FA_frag4();
-        fa_frag4.setArguments(bundle);
         adapter.addItem(fa_frag4);
 
         viewPager2.setAdapter(adapter);
@@ -110,19 +103,5 @@ public class FA extends Fragment {
         public int getItemCount() {
             return items.size();
         }
-    }
-
-    public Bundle checkBundle(){
-        Bundle bundle = getArguments();
-        Bundle result = new Bundle();
-
-        if(bundle != null){
-            String email = bundle.getString("CompareFriend");
-            String name = bundle.getString("FriendName");
-            result.putString("CompareFriend",email);
-            result.putString("FriendName",name);
-            return result;
-        }
-        return null;
     }
 }

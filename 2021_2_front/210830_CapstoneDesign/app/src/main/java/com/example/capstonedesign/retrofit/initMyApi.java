@@ -52,4 +52,16 @@ public interface initMyApi {
     @POST("/service/healthData")
     Call<DDTSResponse> getDDTS(@Body DDTSRequest ddtsRequest );
     // DDTS : Daily Data To Server
+
+    @GET("/service/healthData/{friendEmail}")
+    Call<FriendStepDataResponse> getFriendStepDataResponse(@Path("friendEmail") String email);
+
+    @GET("/service/healthData/{friendEmail}")
+    Call<FriendCaloriesDataResponse> getFriendCaloriesDataResponse(@Path("friendEmail") String email);
+
+    @GET("/service/healthData/{friendEmail}")
+    Call<FriendDistanceDataResponse> getFriendDistanceDataResponse(@Path("friendEmail") String email);
+
+    @GET("/service/healthData/{friendEmail}")
+    Call<FriendMvMinDataResponse> getFriendMvMinDataResponse(@Path("friendEmail") String email);
 }

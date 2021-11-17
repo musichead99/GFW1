@@ -11,10 +11,13 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ToggleButton;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.capstonedesign.CFriendListActivity;
+import com.example.capstonedesign.PreferenceManager;
 import com.example.capstonedesign.R;
+import com.example.capstonedesign.retrofit.FriendStepDataResponse;
 import com.example.capstonedesign.retrofit.RetrofitClient;
 import com.example.capstonedesign.retrofit.initMyApi;
 import com.github.mikephil.charting.charts.LineChart;
@@ -35,28 +38,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class FA_frag1 extends Fragment {
+
+    public static Context appContext;
+    public static LineChart lineChart;
 
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fa_frag1,container,false);
 
         ImageView btn_compareFriend = rootView.findViewById(R.id.btn_compareFriend);
-        Context appContext = rootView.getContext().getApplicationContext();
+        appContext = rootView.getContext().getApplicationContext();
         Context curContext = rootView.getContext();
         ToggleButton toggle_btn = rootView.findViewById(R.id.fa_frag1_toggleButton);
         boolean tf_period = toggle_btn.isChecked();
         float[] myData = new float[30];
-        float[] friendData;
-
-        String friend_email = null;
-        String friend_name = null;
-        Bundle bundle = getArguments();
-        if(bundle != null){
-            // 여기서 친구의 데이터를 가져오고.
-            friend_email = bundle.getString("CompareFriend");
-            friend_name = bundle.getString("FriendName");
-            friendData = new float[30];
-        }
 
         btn_compareFriend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +67,7 @@ public class FA_frag1 extends Fragment {
 
 
         /** LineChart의 기본 세팅을 해주는 부분 **/
-        LineChart lineChart = rootView.findViewById(R.id.fa_frag1_lineChart);
+        lineChart = rootView.findViewById(R.id.fa_frag1_lineChart);
         LineChartSetter lineChartSetter = LineChartSetter.newLineChartSetter()
                 .setLineChart(lineChart)
                 .setPeriod(tf_period)
@@ -91,13 +90,6 @@ public class FA_frag1 extends Fragment {
         int dataType = MyGoogleFit.TYPE_STEP;
         myGoogleFit.subscription(dataType,curContext)
                 .getPeriodicData(dataType,curContext,tf_period,myData,lineChart);
-        // Step 1. if(friend_email != null)
-        if(friend_email != null){
-            // Step 2. retrofit을 통해서 해당 친구의 정보를 받아옴.
-
-        }
-        // Step 3. 여기서 친구의 그래프 그려주면 될듯. tf_period : True 30일, False 7일
-        // myGoogleFit.setLineChart(float[] friendData, LineChart lineChart,boolean tf_period,String name);
 
         toggle_btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -113,5 +105,53 @@ public class FA_frag1 extends Fragment {
             }
         });
         return rootView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("FA_fragment1","onPause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("FA_frag1","onResume");
+        // Step 1. if(friend_email != null)
+        String friend_email = PreferenceManager.getString(appContext,"CFriend_email");
+        String friend_name = PreferenceManager.getString(appContext,"CFriend_name");
+
+        if(!friend_email.equals("")){
+            // 1. retrofit을 사용해 친구의 데이터 받아오기.
+            RetrofitClient retrofitClient = RetrofitClient.getNewInstance(appContext);
+            initMyApi initMyApi = RetrofitClient.getRetrofitInterface();
+
+            Call<FriendStepDataResponse> call = initMyApi.getFriendStepDataResponse(friend_email);
+
+            call.enqueue(new Callback<FriendStepDataResponse>() {
+                @Override
+                public void onResponse(Call<FriendStepDataResponse> call, Response<FriendStepDataResponse> response) {
+                    FriendStepDataResponse result = response.body();
+                    int[] friend_step = result.getStep();
+
+                    if(friend_step == null){
+                        Log.d("friend_step","null");
+                    }else{
+                        for(float a : friend_step){
+                            Log.d("friend_step",String.valueOf(a));
+                        }
+                    }
+                    // 2. 친구의 데이터 LineChart에 띄워주기.
+                }
+
+                @Override
+                public void onFailure(Call<FriendStepDataResponse> call, Throwable t) {
+
+                }
+            });
+            // 3. 마지막으로 PreferenceManager로 CFriend_email, CFriend_name null로 초기화.
+        }else{
+
+        }
     }
 }
