@@ -2,6 +2,7 @@ package com.example.capstonedesign;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.capstonedesign.retrofit.Friend;
 
 import java.util.ArrayList;
@@ -16,8 +18,13 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyArrayAdapter extends ArrayAdapter {
+    private CheckBox checkBox;
+
     public MyArrayAdapter(Context context, ArrayList users){
         super(context,0,users);
+    }
+    public CheckBox getFirstCheckBox(){
+        return checkBox;
     }
 
     @Override
@@ -30,7 +37,7 @@ public class MyArrayAdapter extends ArrayAdapter {
         // Get the data item for this position
         Friend friend = (Friend) getItem(position);
 
-        Uri img_src = Uri.parse(friend.getImage());
+        String img_src = friend.getImage();
         String name = friend.getName();
         String email = friend.getEmail();
 
@@ -43,10 +50,12 @@ public class MyArrayAdapter extends ArrayAdapter {
         name_view.setText(name);
 
         if(position == 0){
+            this.checkBox = checkBox;
             checkBox.setChecked(true);
             profile_img.setVisibility(profile_img.GONE);
         }else{
-            profile_img.setImageURI(img_src);
+            Log.d("Image_SRC",img_src);
+            Glide.with(getContext()).load(img_src).into(profile_img);
             checkBox.setChecked(false);
         }
 
