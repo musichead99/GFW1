@@ -68,6 +68,51 @@ public class RetrofitClient {
 
         initMyApi = retrofit.create(initMyApi.class);
     }
+    private RetrofitClient(Context appContext) {
+        this.appContext = appContext;
+        //로그를 보기 위한 Interceptor
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = null;
+
+        if(appContext != null){
+            String token = PreferenceManager.getString(appContext,"token");
+            if(token != null){
+                client = new OkHttpClient.Builder()
+                        .addInterceptor(interceptor)
+                        .connectTimeout(1, TimeUnit.MINUTES)
+                        .readTimeout(30,TimeUnit.SECONDS)
+                        .writeTimeout(15,TimeUnit.SECONDS)
+                        .addInterceptor(new Interceptor() {
+                            // interceptor를 추가해서 만약에 token이 Preference data로 저장되어 있으면
+                            // Header를 추가.
+                            @Override
+                            public Response intercept(Chain chain) throws IOException {
+                                Request newRequest = chain.request().newBuilder()
+                                        .addHeader("Authorization","Bearer "+token)
+                                        .build();
+                                return chain.proceed(newRequest);
+                            }
+                        })
+                        .build();
+            }
+            else{
+                client = OkhttpClientBuilding(interceptor);
+            }
+        }else{
+            client = OkhttpClientBuilding(interceptor);
+        }
+
+        //retrofit 설정
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client) //로그 기능 추가
+                .build();
+
+        initMyApi = retrofit.create(initMyApi.class);
+    }
 
     public RetrofitClient setContext(Context appContext){
         this.appContext = appContext;
@@ -78,6 +123,10 @@ public class RetrofitClient {
         if (instance == null) {
             instance = new RetrofitClient();
         }
+        return instance;
+    }
+    public static RetrofitClient getNewInstance(Context appContext){
+        instance = new RetrofitClient(appContext);
         return instance;
     }
 

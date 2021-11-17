@@ -45,7 +45,7 @@ public interface initMyApi {
 
     //@GET("Not Determined yet")
 
-    @GET("/service/friendRequestList")
+    @GET("/service/friendsList")
     Call<FriendListResponse> getFriendListResponse();
 
     @POST("/service/healthData")

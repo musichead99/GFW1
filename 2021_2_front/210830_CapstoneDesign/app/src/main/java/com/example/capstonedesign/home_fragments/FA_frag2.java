@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ToggleButton;
 
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,7 @@ public class FA_frag2 extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fa_frag2,container,false);
 
+        ImageView btn_compareFriend = rootView.findViewById(R.id.btn_compareFriend);
         Context appContext = rootView.getContext().getApplicationContext();
         Context curContext = rootView.getContext();
         ToggleButton toggle_btn = rootView.findViewById(R.id.fa_frag2_toggleButton);
