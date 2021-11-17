@@ -5,7 +5,7 @@ from flask_restx import Resource, Namespace, fields
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from pymysql import NULL
 import database, swaggerModel, config
-from datetime import date
+from datetime import date, timedelta
 
 Profile = Namespace(name="Profile", description="프로필 정보를 처리하는 API")
 
@@ -33,6 +33,8 @@ class userProfile(Resource):
     def get(self, **kwargs):
         '''클라이언트로부터 받은 jwt토큰에서 이메일을 분리하여 해당하는 프로필 정보를 반환한다.'''
 
+        yesterday = date.today() - timedelta(days=1)
+
         if 'friendEmail' in kwargs:
             userEmail = kwargs['friendEmail']
         else:
@@ -44,17 +46,24 @@ class userProfile(Resource):
         '''
 
         profileData = db.executeOne(query,(userEmail,))
-        db.close()
 
         if profileData is None:
             return {"status" : "Failed", "message" : "Email not registered"}, 400
-        else:
-            if profileData['profilePhoto'] is None:
-                profileData['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
 
-            if profileData['dateOfBirth'] is not None:
-                profileData['dateOfBirth'] = date.isoformat(profileData['dateOfBirth'])
-            return {"status" : "Success", "profile" : profileData}
+        if profileData['profilePhoto'] is None:
+            profileData['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
+
+        if profileData['dateOfBirth'] is not None:
+            profileData['dateOfBirth'] = date.isoformat(profileData['dateOfBirth'])
+
+        query = '''
+            select step_count from health_data where user_email = (%s) and Date = (%s);
+        '''
+
+        profileData['step_count'] = db.executeOne(query,(userEmail, yesterday))
+        db.close()
+
+        return {"status" : "Success", "profile" : profileData}
     
     @jwt_required()
     @Profile.expect(swaggerModel.BaseProfilePutModel)
