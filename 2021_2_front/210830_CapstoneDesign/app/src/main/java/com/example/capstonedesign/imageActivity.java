@@ -3,8 +3,11 @@ package com.example.capstonedesign;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -43,13 +46,14 @@ public class imageActivity extends AppCompatActivity {
     private initMyApi initMyApi;
     SharedPreferences sharedPreferences1;
     ArrayAdapter<CharSequence> adspin, adspin1, adspin2, adspin3;
-    public static String y, m, d, houseresult;
     String userName, userYear, userAbode;
+    FL fl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
+
         name0 = findViewById(R.id.name);
         year0 = findViewById(R.id.year);
         house0 = findViewById(R.id.house);
@@ -83,7 +87,9 @@ public class imageActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().add(R.id.container,new FL()).commit();
+                //getSupportFragmentManager().beginTransaction().replace(R.id.container,fl).commit();
+                Intent intent = new Intent(imageActivity.this, Home.class);
+                startActivity(intent);
             }
         });
 
@@ -186,8 +192,5 @@ public class imageActivity extends AppCompatActivity {
                 });
             }
         });
-    }
-    private void putComplete() {
-
     }
 }

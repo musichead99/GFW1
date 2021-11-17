@@ -82,9 +82,9 @@ public class KakaoWebview extends AppCompatActivity {
             editor = sharedPreferences.edit();
             if(uri.getPath().contains("/user/kakao/callback")) {
                 //token = request.getUrl().getQueryParameter("access token");                              //다시 봐야함 이부분은
-                HashMap<String, String> headerMap = new HashMap<>();
-                headerMap.put("access token", token);
-                view.loadUrl(request.getUrl().toString(), headerMap);
+                //HashMap<String, String> headerMap = new HashMap<>();
+                //headerMap.put("access token", token);
+                //view.loadUrl(request.getUrl().toString(), headerMap);
                 editor.putString("token", token);
                 editor.commit();
                 Log.d("token","토큰은"+token);

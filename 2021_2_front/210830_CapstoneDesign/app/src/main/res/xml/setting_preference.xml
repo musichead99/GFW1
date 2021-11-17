@@ -13,14 +13,6 @@
                 android:targetClass="com.example.capstonedesign.InformationActivity"
                 android:targetPackage="com.example.capstonedesign" />
         </PreferenceScreen>
-        <PreferenceScreen
-            android:summary="프로필 정보를 확인할 수 있습니다."
-            android:title="프로필"
-            app:iconSpaceReserved="false">
-            <intent
-                android:targetClass="com.example.capstonedesign.imageActivity"
-                android:targetPackage="com.example.capstonedesign" />
-        </PreferenceScreen>
     </PreferenceCategory>
     <PreferenceCategory
         android:title="알림"
