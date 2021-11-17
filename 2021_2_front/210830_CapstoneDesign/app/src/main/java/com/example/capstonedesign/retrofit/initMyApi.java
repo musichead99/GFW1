@@ -23,8 +23,9 @@ public interface initMyApi {
     @POST("/user/auth")
     Call<LoginResponse> getLoginResponse(@Body LoginRequest loginRequest);
 
-    @POST("/user/password")
-    Call<RePassResponse> getRePassResponse(@Body RePassRequest rePassRequest);
+    @PUT("/user/register")
+    Call<RePassResponse> getRePassResponse(@Body RePassRequest rePassRequest, @Header("Authorization") String header);
+
     @GET("/service/profile")
     Call<ProfileResponse> getProfileResponse(@Header("Authorization") String header);
 
