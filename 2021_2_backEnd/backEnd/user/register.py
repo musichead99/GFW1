@@ -109,7 +109,7 @@ class register(Resource):
             return { "status" : "Success" }, 200
     
     # 비밀번호 변경 API
-    @Register.expect(RegisterPutRequest)
+    @Register.expect(parser, RegisterPutRequest)
     @Register.doc(params={'payload' : 'naw_password : 유저의 변경할 비밀번호\nnew_password_again : 유저가 다시 한 번 입력한 비밀번호'})
     @Register.response(201, 'Success', swaggerModel.BaseSuccessModel)
     @Register.response(400, 'Failed(입력한 비밀번호가 서로 다를 경우)', ChangeFailedModel_2)
@@ -125,8 +125,8 @@ class register(Resource):
         if data['new_password'] != data['new_password_again']:
             return {"status":"Failed", "message": "The two passwords entered are different"}, 400
         query_list = [
-            f"select * from users where email = {userEmail};",
-            f"update users set password ={new_password} where email = {userEmail};"
+            f'select * from users where email = "{userEmail}";',
+            f'update users set password = "{new_password}" where email = "{userEmail}";'
             ]
         if db.executeOne(query_list[0]):
             db.execute_and_commit(query_list[1])

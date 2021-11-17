@@ -1,17 +1,24 @@
 package com.example.capstonedesign;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.capstonedesign.home_fragments.FL;
@@ -20,6 +27,11 @@ import com.example.capstonedesign.retrofit.RetrofitClient;
 import com.example.capstonedesign.retrofit.UpdateProfileRequest;
 import com.example.capstonedesign.retrofit.UpdateProfileResponse;
 import com.example.capstonedesign.retrofit.initMyApi;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,12 +46,14 @@ public class imageActivity extends AppCompatActivity {
     private initMyApi initMyApi;
     SharedPreferences sharedPreferences1;
     ArrayAdapter<CharSequence> adspin, adspin1, adspin2, adspin3;
-    int y=0, m=0, d=0;
+    String userName, userYear, userAbode;
+    FL fl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
+
         name0 = findViewById(R.id.name);
         year0 = findViewById(R.id.year);
         house0 = findViewById(R.id.house);
@@ -73,7 +87,9 @@ public class imageActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().add(R.id.container,new FL()).commit();
+                //getSupportFragmentManager().beginTransaction().replace(R.id.container,fl).commit();
+                Intent intent = new Intent(imageActivity.this, Home.class);
+                startActivity(intent);
             }
         });
 
@@ -81,13 +97,13 @@ public class imageActivity extends AppCompatActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                name0.setVisibility(v.INVISIBLE);
+                name0.setVisibility(v.GONE);
                 update_name.setVisibility(v.VISIBLE);
-                year0.setVisibility(v.INVISIBLE);
+                year0.setVisibility(v.GONE);
                 update_year_y.setVisibility(v.VISIBLE);
                 update_year_m.setVisibility(v.VISIBLE);
                 update_year_d.setVisibility(v.VISIBLE);
-                house0.setVisibility(v.INVISIBLE);
+                house0.setVisibility(v.GONE);
                 update_house.setVisibility(v.VISIBLE);
 
                 putUpdate();
@@ -126,25 +142,21 @@ public class imageActivity extends AppCompatActivity {
         });
     }
     private void putUpdate() {
-        String userName, userYear, userAbode, userPhoto;
-        userPhoto = "http://125.6.37.125:5000/service/image/default_profile.jpg";
-        if (update_name.getText().toString().replace(" ", "").equals("")) {
-            userName = name0.getText().toString().trim();
-        } else {
-            userName = update_name.getText().toString().trim();
-        }
-
-        //userYear = Integer.toString(y) + "-" + Integer.toString(m) + "-" + Integer.toString(d);
-        userYear = "2000-11-20";
-        userAbode = update_house.getSelectedItem().toString();
-        Log.d("주소","주소"+userAbode);
-
-        UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest(userName, userYear, userAbode, userPhoto);
 
         complete = findViewById(R.id.complete);
         complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                userYear = update_year_y.getSelectedItem().toString()+"-"+update_year_m.getSelectedItem().toString()+"-"+update_year_d.getSelectedItem().toString();
+                userAbode = update_house.getSelectedItem().toString();
+                if (update_name.getText().toString().replace(" ", "").equals("")) {
+                    userName = name0.getText().toString().trim();
+                } else {
+                    userName = update_name.getText().toString().trim();
+                }
+
+                UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest(userName, userYear, userAbode);
+
                 sharedPreferences1 = getSharedPreferences("email", MODE_PRIVATE);
                 String mytoken = sharedPreferences1.getString("token", "");
 
@@ -152,7 +164,6 @@ public class imageActivity extends AppCompatActivity {
                 initMyApi = RetrofitClient.getRetrofitInterface();
 
                 Call<UpdateProfileResponse> call = initMyApi.getUpdateProfileResponse(updateProfileRequest, "Bearer "+mytoken);
-                Log.d("토큰은","토큰은"+mytoken);
                 call.enqueue(new Callback<UpdateProfileResponse>() {
                     @Override
                     public void onResponse(Call<UpdateProfileResponse> call, Response<UpdateProfileResponse> response) {
@@ -160,6 +171,17 @@ public class imageActivity extends AppCompatActivity {
                             UpdateProfileResponse result = response.body();
                             String status = result.getStatus();
                             Log.d("성공", "성공");
+
+                            getProfile();
+                            name0.setVisibility(v.VISIBLE);
+                            update_name.setVisibility(v.GONE);
+                            year0.setVisibility(v.VISIBLE);
+                            update_year_y.setVisibility(v.GONE);
+                            update_year_m.setVisibility(v.GONE);
+                            update_year_d.setVisibility(v.GONE);
+                            house0.setVisibility(v.VISIBLE);
+                            update_house.setVisibility(v.GONE);
+
                         }
                     }
 
@@ -170,8 +192,5 @@ public class imageActivity extends AppCompatActivity {
                 });
             }
         });
-    }
-    private void putComplete() {
-
     }
 }

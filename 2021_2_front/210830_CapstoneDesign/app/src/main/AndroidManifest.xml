@@ -49,8 +49,8 @@
         <activity android:name=".Password" />
         <activity android:name=".Email" />
         <activity android:name=".Register" />
-        <activity android:name=".Setting" />
-        <activity android:name=".Home" />
+        <activity android:name=".Home"
+            android:exported="true" />
         <activity android:name=".Login" />
         <activity android:name=".Logout" />
         <activity android:name=".Delete" />
