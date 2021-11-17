@@ -39,6 +39,15 @@ class Profile {
     public String setProfilePhoto() {
         return profilePhoto;
     }
+
+    @SerializedName("step_count")
+    public String step_count;
+    public String getStep() {
+        return step_count;
+    }
+    public String setStep() {
+        return step_count;
+    }
 }
 
 public class ProfileResponse {
@@ -65,5 +74,8 @@ public class ProfileResponse {
     }
     public String getProfilePhoto() {
         return profile.getProfilePhoto();
+    }
+    public String getStep() {
+        return profile.getStep();
     }
 }
