@@ -29,9 +29,13 @@ public class RetrofitClient {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
 
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-<<<<<<< Updated upstream
-        OkHttpClient client = null;
-
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(interceptor)
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(30,TimeUnit.SECONDS)
+                .writeTimeout(15,TimeUnit.SECONDS)
+                .build();
+        /*OkHttpClient client = null;
         if(appContext != null){
             String token = PreferenceManager.getString(appContext,"token");
             if(token != null){
@@ -45,43 +49,42 @@ public class RetrofitClient {
                             // Header를 추가.
                             @Override
                             public Response intercept(Chain chain) throws IOException {
-=======
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(30,TimeUnit.SECONDS)
-                .writeTimeout(15,TimeUnit.SECONDS)
-                /*.addInterceptor(new Interceptor() {
-                    // interceptor를 추가해서 만약에 token이 Preference data로 저장되어 있으면
-                    // Header를 추가.
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        if(appContext != null){
-                            String token = PreferenceManager.getString(appContext,"token");
-                            if( token != null){
->>>>>>> Stashed changes
-                                Request newRequest = chain.request().newBuilder()
-                                        .addHeader("Authorization","Bearer "+token)
-                                        .build();
-                                return chain.proceed(newRequest);
-                            }
-<<<<<<< Updated upstream
-                        })
-                        .build();
-            }
-            else{
-                client = OkhttpClientBuilding(interceptor);
-            }
-        }else{
-            client = OkhttpClientBuilding(interceptor);
-        }
-=======
-                        }
-                        else return null;
-                    }
-                })*/
-                .build();
->>>>>>> Stashed changes
+                                OkHttpClient client = new OkHttpClient.Builder()
+                                        .addInterceptor(interceptor)
+                                        .connectTimeout(1, TimeUnit.MINUTES)
+                                        .readTimeout(30,TimeUnit.SECONDS)
+                                        .writeTimeout(15,TimeUnit.SECONDS)
+                                        .addInterceptor(new Interceptor() {
+                                                            // interceptor를 추가해서 만약에 token이 Preference data로 저장되어 있으면
+                                                            // Header를 추가.
+                                                            @Override
+                                                            public Response intercept(Chain chain) throws IOException {
+                                                                if (appContext != null) {
+                                                                    String token = PreferenceManager.getString(appContext, "token");
+                                                                    if (token != null) {
+                                                                        Request newRequest = chain.request().newBuilder()
+                                                                                .addHeader("Authorization", "Bearer " + token)
+                                                                                .build();
+                                                                        return chain.proceed(newRequest);
+                                                                    }
+                                                                }
+                                                                return null;
+                                                            }
+                                                        })
+                                                        .build();
+                                return null;
+                           }
+                                        else{
+                                            client = OkhttpClientBuilding(interceptor);
+                                        }
+                                    }else{
+                                        client = OkhttpClientBuilding(interceptor);
+                                    }
+                                                    }
+                                                    else return null;
+                                                }
+                                            })
+                .build();*/
 
         //retrofit 설정
         Retrofit retrofit = new Retrofit.Builder()
@@ -107,13 +110,5 @@ public class RetrofitClient {
 
     public static initMyApi getRetrofitInterface() {
         return initMyApi;
-    }
-    public static OkHttpClient OkhttpClientBuilding(HttpLoggingInterceptor interceptor){
-        return new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(30,TimeUnit.SECONDS)
-                .writeTimeout(15,TimeUnit.SECONDS)
-                .build();
     }
 }

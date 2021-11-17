@@ -9,8 +9,8 @@ public class UpdateProfileRequest {
     public String inputDateOfBirth;
     @SerializedName("abode")
     public String inputAbode;
-    @SerializedName("profilePhoto")
-    public String inputProfilePhoto;
+    //@SerializedName("profilePhoto")
+    //public String inputProfilePhoto;
 
     public String getInputName() {
         return inputName;
@@ -21,9 +21,9 @@ public class UpdateProfileRequest {
     public String getInputAbode() {
         return inputAbode;
     }
-    public String getInputProfilePhoto() {
+    /*public String getInputProfilePhoto() {
         return inputProfilePhoto;
-    }
+    }*/
 
     public void setInputName(String inputName) {
         this.inputName = inputName;
@@ -34,14 +34,14 @@ public class UpdateProfileRequest {
     public void setInputAbode(String inputAbode) {
         this.inputAbode = inputAbode;
     }
-    public void setInputProfilePhoto(String inputProfilePhoto) {
+    /*public void setInputProfilePhoto(String inputProfilePhoto) {
         this.inputProfilePhoto = inputProfilePhoto;
-    }
+    }*/
 
-    public UpdateProfileRequest(String inputName, String inputDateOfBirth, String inputAbode, String inputProfilePhoto) {
+    public UpdateProfileRequest(String inputName, String inputDateOfBirth, String inputAbode) {
         this.inputName = inputName;
         this.inputDateOfBirth = inputDateOfBirth;
         this.inputAbode = inputAbode;
-        this.inputProfilePhoto = inputProfilePhoto;
+        //this.inputProfilePhoto = inputProfilePhoto;
     }
 }
