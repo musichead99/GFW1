@@ -23,6 +23,8 @@ public class FL extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), imageActivity.class);
                 startActivity(intent);
+                //imageActivity activity = (imageActivity) getActivity();
+                //activity.onFragmentChanged(0);
             }
         });
         return rootView;

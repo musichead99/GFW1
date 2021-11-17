@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -28,6 +29,8 @@ public class Password extends AppCompatActivity {
 
     private EditText pw, repw;
     private initMyApi initMyApi;
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +39,8 @@ public class Password extends AppCompatActivity {
         //ActionBar actionBar = getSupportActionBar();
         //actionBar.hide();
 
-        EditText pw = findViewById(R.id.pw);
-        EditText repw = findViewById(R.id.repw);
+        pw = findViewById(R.id.pw);
+        repw = findViewById(R.id.repw);
         ImageView setImage = findViewById(R.id.setImage);
 
         Button check = findViewById(R.id.check);
@@ -73,12 +76,15 @@ public class Password extends AppCompatActivity {
         String userPwd = pw.getText().toString().trim();
         String PassCK = repw.getText().toString().trim();
 
-        RePassRequest rePassRequest = new RePassRequest(userPwd);
+        RePassRequest rePassRequest = new RePassRequest(userPwd, PassCK);
+
+        sharedPreferences = getSharedPreferences("email", MODE_PRIVATE);
+        String mytoken = sharedPreferences.getString("token", "");
 
         RetrofitClient retrofitClient = RetrofitClient.getInstance();
         initMyApi = RetrofitClient.getRetrofitInterface();
 
-        initMyApi.getRePassResponse(rePassRequest).enqueue(new Callback<RePassResponse>() {
+        initMyApi.getRePassResponse(rePassRequest, "Bearer "+mytoken).enqueue(new Callback<RePassResponse>() {
             @Override
             public void onResponse(Call<RePassResponse> call, Response<RePassResponse> response) {
                 if(userPwd.equals(PassCK)) {
