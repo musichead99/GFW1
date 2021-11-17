@@ -160,4 +160,14 @@ public class RetrofitClient {
     public static initMyApi getRetrofitInterface() {
         return initMyApi;
     }
+
+    public static OkHttpClient OkhttpClientBuilding(HttpLoggingInterceptor interceptor){
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(1, TimeUnit.MINUTES)
+                .readTimeout(30,TimeUnit.SECONDS)
+                .writeTimeout(15,TimeUnit.SECONDS)
+                .addInterceptor(interceptor)
+                .build();
+        return client;
+    }
 }

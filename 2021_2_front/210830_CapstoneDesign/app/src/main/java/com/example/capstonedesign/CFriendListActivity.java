@@ -61,6 +61,7 @@ public class CFriendListActivity extends AppCompatActivity {
                 MyArrayAdapter myArrayAdapter = new MyArrayAdapter(thisContext,al_friends);
 
                 listView.setAdapter(myArrayAdapter);
+                checkBox = myArrayAdapter.getFirstCheckBox();
             }
             @Override
             public void onFailure(Call<FriendListResponse> call, Throwable t) {
@@ -70,7 +71,8 @@ public class CFriendListActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(checkBox == null) checkBox = view.findViewById(R.id.cfriend_list_Item_check_box);
+                Log.d("onItemClick","In");
+
                 Friend friend = (Friend) parent.getItemAtPosition(position);
                 friendName = friend.getName();
                 checkBox.setChecked(false);
