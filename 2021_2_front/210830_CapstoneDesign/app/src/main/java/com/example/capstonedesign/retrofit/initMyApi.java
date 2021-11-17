@@ -52,4 +52,7 @@ public interface initMyApi {
     @POST("/service/healthData")
     Call<DDTSResponse> getDDTS(@Body DDTSRequest ddtsRequest );
     // DDTS : Daily Data To Server
+
+    @GET("/service/ranking")
+    Call<RankingResponse> getRankingResponse(@Header("Authorization") String header);
 }
