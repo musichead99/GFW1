@@ -91,6 +91,7 @@ public class FA_frag1 extends Fragment {
         myGoogleFit.subscription(dataType,curContext)
                 .getPeriodicData(dataType,curContext,tf_period,myData,lineChart);
 
+
         toggle_btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -151,7 +152,6 @@ public class FA_frag1 extends Fragment {
             });
             // 3. 마지막으로 PreferenceManager로 CFriend_email, CFriend_name null로 초기화.
         }else{
-
         }
     }
 }
