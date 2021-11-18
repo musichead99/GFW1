@@ -12,7 +12,7 @@ Ranking = Namespace(name = "Ranking", description="랭킹정보를 가져오고 
 parser = Ranking.parser()
 parser.add_argument('Authorization', location='headers', type=str, help='본인 인증으로 jwt 토큰이 사용된다.')
 RankingSuccessModel = Ranking.inherit('Ranking Success model', swaggerModel.BaseSuccessModel,{
-    "ranking" : fields.String(description="access jwt token", example=[{"user_friend_email": "test8@gmail.com","name": "손흥민","profilePhoto": "http://180.80.221.11:5000/service/images/default_profile.jpg","step_count": 80000,"rank": 1},
+    "ranking" : fields.String(description="access jwt token", example=[{"user_friend_email": "test8@gmail.com","name": "손흥민","profilePhoto": "http://180.80.221.11:5000/service/image/default_profile.jpg","step_count": 80000,"rank": 1},
     {"user_friend_email": "test7@gmail.com","name": "손연재","profilePhoto": "http://180.80.221.11:5000/service/image/default_profile.jpg","step_count": 70000,"rank": 2}]),
 })
 
