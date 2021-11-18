@@ -3,10 +3,13 @@ package com.example.capstonedesign.home_fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +44,11 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
     private initMyApi initMyApi;
     ImageView profile_myphoto;
     TextView profile_name, profile_walk;
-    ArrayList<Ranking> ranking;
-    //LinearLayout tv;
+    TextView profile_one_name, profile_one_walk;
+    TextView profile_two_name, profile_two_walk;
+    TextView profile_three_name, profile_three_walk;
+    ImageView profile_one_photo, profile_two_photo, profile_three_photo;
+    //ArrayList<Ranking> ranking;
     LinearLayout parent_layout;
 
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
@@ -64,7 +70,17 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
         profile_walk = rootView.findViewById(R.id.profile_walk);
         parent_layout = rootView.findViewById(R.id.parent_layout);
 
-        //tv = rootView.findViewById(R.id.tv);
+        profile_one_name = rootView.findViewById(R.id.profile_one_name);
+        profile_one_walk = rootView.findViewById(R.id.profile_one_walk);
+        profile_one_photo = rootView.findViewById(R.id.profile_one_photo);
+
+        profile_two_name = rootView.findViewById(R.id.profile_two_name);
+        profile_two_walk = rootView.findViewById(R.id.profile_two_walk);
+        profile_two_photo = rootView.findViewById(R.id.profile_two_photo);
+
+        profile_three_name = rootView.findViewById(R.id.profile_three_name);
+        profile_three_walk = rootView.findViewById(R.id.profile_three_walk);
+        profile_three_photo = rootView.findViewById(R.id.profile_three_photo);
 
         getProfile();
         getRanking();
@@ -106,7 +122,7 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
         RetrofitClient retrofitClient = RetrofitClient.getInstance();
         initMyApi = RetrofitClient.getRetrofitInterface();
 
-        ranking = new ArrayList<Ranking>();
+        //ranking = new ArrayList<Ranking>();
         Call<RankingResponse> call = initMyApi.getRankingResponse("Bearer "+mytoken);
         call.enqueue(new Callback<RankingResponse>() {
             @Override
@@ -115,18 +131,100 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
                     RankingResponse result = response.body();
                     String status = result.getStatus();
                     List<Ranking> rank = result.getRanking();
-                    for(int i = 0; i<result.getRanking().size(); i++) {
-                        //TextView textViewNew = new TextView(getContext());
-                        //textViewNew.setText(result.getRanking().get(i).getName());
-                        //tv.addView(textViewNew);
+
+                    profile_one_name.setText(result.getRanking().get(0).getName());
+                    profile_one_walk.setText(String.valueOf(result.getRanking().get(0).getStep_count()));
+                    profile_two_name.setText(result.getRanking().get(1).getName());
+                    profile_two_walk.setText(String.valueOf(result.getRanking().get(1).getStep_count()));
+                    profile_three_name.setText(result.getRanking().get(2).getName());
+                    profile_three_walk.setText(String.valueOf(result.getRanking().get(2).getStep_count()));
+
+                    for(int i = 3; i<result.getRanking().size(); i++) {
+                        LinearLayout playout = new LinearLayout(getContext());
+                        playout.setOrientation(LinearLayout.VERTICAL);
+                        LinearLayout.LayoutParams mplayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        mplayout.topMargin = 20;
+                        playout.setLayoutParams(mplayout);
+
                         LinearLayout layout = new LinearLayout(getContext());
-                        ImageView profile_phogo_align = new ImageView(getContext());
-                        Glide.with(getActivity()).load(result.getRanking().get(i).getProfilePhoto()).into(profile_phogo_align);
-                        ViewGroup.LayoutParams profile_photo_params = profile_phogo_align.getLayoutParams();
-                        profile_photo_params.width=60;
-                        profile_photo_params.height=60;
-                        layout.addView(profile_phogo_align);
-                        parent_layout.addView(layout);
+                        layout.setOrientation(LinearLayout.HORIZONTAL);
+                        layout.setGravity(Gravity.CENTER);
+                        LinearLayout.LayoutParams mlayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        mlayout.topMargin = 20;
+                        layout.setLayoutParams(mlayout);
+
+                        TextView get_rank = new TextView(getContext());
+                        get_rank.setText(String.valueOf(result.getRanking().get(i).getRank()));
+                        LinearLayout.LayoutParams mget_rank = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        mget_rank.gravity = Gravity.CENTER;
+                        get_rank.setLayoutParams(mget_rank);
+                        get_rank.setTextColor(Color.BLACK);
+                        get_rank.setTextSize(20);
+                        layout.addView(get_rank);
+
+                        TextView unit1 = new TextView(getContext());
+                        unit1.setText("위");
+                        LinearLayout.LayoutParams munit1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        munit1.rightMargin = 45;
+                        munit1.gravity = Gravity.CENTER;
+                        unit1.setLayoutParams(munit1);
+                        unit1.setTextColor(Color.BLACK);
+                        unit1.setTextSize(20);
+                        layout.addView(unit1);
+
+                        TextView get_name = new TextView(getContext());
+                        get_name.setText(result.getRanking().get(i).getName());
+                        LinearLayout.LayoutParams mget_name = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        mget_name.rightMargin = 40;
+                        mget_name.gravity = Gravity.CENTER;
+                        get_name.setLayoutParams(mget_name);
+                        get_name.setTextColor(Color.BLACK);
+                        get_name.setTextSize(20);
+                        layout.addView(get_name);
+
+                        TextView get_walk = new TextView(getContext());
+                        get_walk.setText(String.valueOf(result.getRanking().get(i).getStep_count()));
+                        LinearLayout.LayoutParams mget_walk = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        mget_walk.gravity = Gravity.CENTER;
+                        get_walk.setLayoutParams(mget_walk);
+                        get_walk.setTextColor(Color.BLACK);
+                        get_walk.setTextSize(20);
+                        layout.addView(get_walk);
+
+                        TextView unit2 = new TextView(getContext());
+                        unit2.setText("걸음");
+                        LinearLayout.LayoutParams munit2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                        munit2.rightMargin = 80;
+                        munit2.gravity = Gravity.CENTER;
+                        unit2.setLayoutParams(munit2);
+                        unit2.setTextColor(Color.BLACK);
+                        unit2.setTextSize(20);
+                        layout.addView(unit2);
+
+                        Button sendbtn = new Button(getContext()); //메시지 전송 버튼 생성
+                        sendbtn.setId(i); //버튼 별로 접근 가능하도록 아이디 생성, 0부터 시작
+                        sendbtn.setBackgroundResource(R.drawable.send);
+                        int btnwidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,40,getResources().getDisplayMetrics());
+                        int btnheight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,40,getResources().getDisplayMetrics());
+                        LinearLayout.LayoutParams msendbtn = new LinearLayout.LayoutParams(btnwidth, btnheight);
+                        msendbtn.gravity = Gravity.CENTER;
+                        sendbtn.setLayoutParams(msendbtn);
+                        layout.addView(sendbtn);
+
+                        View v = new View(getContext());
+                        LinearLayout.LayoutParams mv = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
+                        mv.topMargin = 30;
+                        v.setLayoutParams(mv);
+                        v.setBackgroundResource(R.color.input_register_hint);
+
+                        if(i != result.getRanking().size()-1) {
+                            playout.addView(layout);
+                            playout.addView(v);
+                        } else {
+                            playout.addView(layout);
+                        }
+
+                        parent_layout.addView(playout);
                     }
                 }
             }
