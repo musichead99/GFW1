@@ -31,10 +31,10 @@ FriendsPutFailed3Request = Friends.inherit('Friend put failed model 3', swaggerM
     "message" : fields.String(description="에러 메시지", example="Worng email")
 })
 FriendsSuccessModel = Friends.inherit('Friends Success model', swaggerModel.BaseSuccessModel,{
-    "FriendsList" : fields.String(description="친구목록", example=[{"email": "test9@gmail.com","name": "페이커","profilePhoto": "http://180.80.221.11:5000/service/images/default_profile.jpg"},  {"email": "test3@gmail.com","name": "류현진","profilePhoto": "http://180.80.221.11:5000/service/images/default_profile.jpg"}]),
+    "FriendsList" : fields.String(description="친구목록", example=[{"email": "test9@gmail.com","name": "페이커","profilePhoto": "http://180.80.221.11:5000/service/image/default_profile.jpg"},  {"email": "test3@gmail.com","name": "류현진","profilePhoto": "http://180.80.221.11:5000/service/image/default_profile.jpg"}]),
 })
 FriendsSuccessModel2 = Friends.inherit('Friends Success model2', swaggerModel.BaseSuccessModel,{
-    "FriendsRequestList" : fields.String(description="친구요청목록", example=[{"email": "test8@gmail.com","name": "손흥민","profilePhoto": "http://180.80.221.11:5000/service/images/default_profile.jpg"}])
+    "FriendsRequestList" : fields.String(description="친구요청목록", example=[{"email": "test8@gmail.com","name": "손흥민","profilePhoto": "http://180.80.221.11:5000/service/image/default_profile.jpg"}])
 })
 FriendsGetFailedRequest = Friends.inherit('Friend get failed model', swaggerModel.BaseFailedModel, {
     "message" : fields.String(description="에러 메시지", example="No friend")
@@ -189,7 +189,7 @@ class AppFriendList(Resource):
 
         for i in result:
             if not i['profilePhoto']:
-                i['profilePhoto'] = config.baseUrl + '/service/images/default_profile.jpg'
+                i['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
 
 
         return {"status" : "success", "FriendsList" :  result},200
@@ -216,7 +216,7 @@ class AppFriendRequestList(Resource):
         for i in result:
 
             if not i['profilePhoto']:
-                i['profilePhoto'] = config.baseUrl + '/service/images/default_profile.jpg'
+                i['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
 
         return {"status" : "success", "FriendsRequestList" :  result},200
 

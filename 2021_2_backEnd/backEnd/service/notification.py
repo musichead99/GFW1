@@ -39,11 +39,17 @@ class AppNotification(Resource):
         userEmail = data['receiver']
         db = database.DBClass()
         query = '''
-            select * from users where email=(%s);
+            select fcmToken, profilePhoto from users where email=(%s);
         '''
-        token = db.executeOne(query,(userEmail,))['fcmToken']
+        DBdata = db.executeOne(query,(userEmail,))
+        token = DBdata['fcmToken']
+        photo = DBdata['profilePhoto']
         
-        test_message = {"title" : data['title'], "body" : data['body']}
+        
+        if photo is None:
+            photo = config.baseUrl + '/service/image/default_profile.jpg'
+
+        test_message = {"title" : data['title'], "body" : data['body'], "profilePhoto" : photo}
 
         # 메시지를 받을 유저의 fcmToken이 존재하지 않을 때
         if token is None:

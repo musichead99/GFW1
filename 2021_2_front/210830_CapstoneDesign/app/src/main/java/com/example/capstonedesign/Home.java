@@ -1,5 +1,6 @@
 package com.example.capstonedesign;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -31,13 +32,14 @@ public class Home extends AppCompatActivity {
         //ActionBar actionBar = getSupportActionBar();
         //actionBar.hide();
 
+        PreferenceManager.setString(getApplicationContext(),"CFriend_email",null);
+        PreferenceManager.setString(getApplicationContext(),"CFriend_name",null);
+
         fa = new FA();
         fc = new FC();
         fl = new FL();
         fs = new FS();
 
-        // Intent를 확인해서 다른 Fragment로 넘어가야하는 경우 이를 수행해주는 함수.
-        checkIntent();
 
         // Home 입장시 첫 화면 배치
         getSupportFragmentManager().beginTransaction().replace(R.id.container,fs).commit();
@@ -71,25 +73,5 @@ public class Home extends AppCompatActivity {
         startActivity(intent);
 
         finish();
-    }
-    public void checkIntent(){
-        Intent intent = getIntent();
-        if(intent == null) return;
-        else{
-            // Step 1. Checking the 'IntentType' value
-            switch (intent.getIntExtra("IntentType",-1)){
-                case 0:
-                    String email = intent.getStringExtra("CompareFriend");
-                    String name = intent.getStringExtra("FriendName");
-                    Bundle bundle = new Bundle();
-                    bundle.putString("CompareFriend",email);
-                    bundle.putString("FriendName",name);
-                    fa.setArguments(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container,fa).commit();
-                    break;
-                default :
-                    break;
-            }
-        }
     }
 }

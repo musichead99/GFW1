@@ -10,9 +10,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.capstonedesign.home_fragments.FA;
+import com.example.capstonedesign.home_fragments.FA_frag1;
 import com.example.capstonedesign.retrofit.Friend;
 import com.example.capstonedesign.retrofit.FriendListResponse;
 import com.example.capstonedesign.retrofit.RetrofitClient;
@@ -37,14 +40,16 @@ public class CFriendListActivity extends AppCompatActivity {
         setContentView(R.layout.cfriend_list);
 
         Context thisContext = this;
+        ImageView btn_back = findViewById(R.id.cfriend_list_back);
         ListView listView = findViewById(R.id.cfriend_list_listView);
-        CheckBox prev_checkBox = null;
         TextView tb_confirm = findViewById(R.id.cfriend_list_confirm);
 
         ArrayList<Friend> al_friends = new ArrayList<Friend>();
 
-        RetrofitClient retrofitClient = RetrofitClient.getInstance();
+        RetrofitClient retrofitClient = RetrofitClient.getNewInstance(getApplicationContext());
         initMyApi initMyApi = RetrofitClient.getRetrofitInterface();
+        retrofitClient.setContext(getApplicationContext());
+        final MyArrayAdapter[] myArrayAdapter = new MyArrayAdapter[1];
         initMyApi.getFriendListResponse().enqueue(new Callback<FriendListResponse>() {
             @Override
             public void onResponse(Call<FriendListResponse> call, Response<FriendListResponse> response) {
@@ -57,9 +62,9 @@ public class CFriendListActivity extends AppCompatActivity {
                 al_friends.add(new Friend(null,null,"선택안함"));
                 al_friends.addAll(friendsList);
 
-                MyArrayAdapter myArrayAdapter = new MyArrayAdapter(thisContext,al_friends);
+                myArrayAdapter[0] = new MyArrayAdapter(thisContext,al_friends);
 
-                listView.setAdapter(myArrayAdapter);
+                listView.setAdapter(myArrayAdapter[0]);
             }
             @Override
             public void onFailure(Call<FriendListResponse> call, Throwable t) {
@@ -69,7 +74,12 @@ public class CFriendListActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(checkBox == null) checkBox = view.findViewById(R.id.cfriend_list_Item_check_box);
+                Log.d("onItemClick","In");
+                if(checkBox == null){
+                    Log.d("CheckBox","initialize");
+                    checkBox = myArrayAdapter[0].getFirstCheckBox();
+                }
+
                 Friend friend = (Friend) parent.getItemAtPosition(position);
                 friendName = friend.getName();
                 checkBox.setChecked(false);
@@ -82,12 +92,15 @@ public class CFriendListActivity extends AppCompatActivity {
         tb_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 여기서 passing_email에 있는 값을 보내준다.
-                Intent intent = new Intent(getBaseContext(),Home.class);
-                intent.putExtra("IntentType",0);
-                intent.putExtra("CompareFriend",passing_email);
-                intent.putExtra("FriendName",friendName);
-                startActivity(intent);
+                PreferenceManager.setString(getApplicationContext(),"CFriend_email",passing_email);
+                PreferenceManager.setString(getApplicationContext(),"CFriend_name",friendName);
+                finish();
+            }
+        });
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 finish();
             }
         });

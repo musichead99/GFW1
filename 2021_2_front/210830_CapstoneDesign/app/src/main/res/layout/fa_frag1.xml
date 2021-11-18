@@ -5,6 +5,7 @@
     android:background="#00F6C2C2"
     android:orientation="vertical">
 
+
     <ImageView
         android:id="@+id/btn_compareFriend"
         android:layout_width="30dp"

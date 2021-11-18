@@ -10,11 +10,11 @@ public class Friend {
     @SerializedName("name")
     public String name;
 
-    @SerializedName("profile_img")
-    public String profile_img;
+    @SerializedName("profilePhoto")
+    public String profilePhoto;
 
-    public Friend(String profile_img, String email, String name){
-        this.profile_img = profile_img;
+    public Friend(String profilePhoto, String email, String name){
+        this.profilePhoto = profilePhoto;
         this.email = email;
         this.name = name;
     }
@@ -22,7 +22,7 @@ public class Friend {
         return this.email;
     }
     public String getImage(){
-        return this.profile_img;
+        return this.profilePhoto;
     }
     public String getName(){
         return this.name;
