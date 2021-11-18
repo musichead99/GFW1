@@ -31,8 +31,8 @@ import retrofit2.Response;
 public class CFriendListActivity extends AppCompatActivity {
 
     private CheckBox checkBox = null;
-    private String passing_email = null;
-    private String friendName = null;
+    private String passing_email = "";
+    private String friendName = "선택안함";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class CFriendListActivity extends AppCompatActivity {
                 Log.d("Getting friendsList",status_msg);
 
                 List<Friend> friendsList = result.getFriendList();
-                al_friends.add(new Friend(null,null,"선택안함"));
+                al_friends.add(new Friend(null,"","선택안함"));
                 al_friends.addAll(friendsList);
 
                 myArrayAdapter[0] = new MyArrayAdapter(thisContext,al_friends);
