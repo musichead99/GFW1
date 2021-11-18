@@ -234,7 +234,7 @@
                     android:textSize="25sp"
                     android:textColor="@color/black"
                     android:gravity="center"
-                    android:text="1"/>
+                    android:text="3"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -261,162 +261,11 @@
         android:layout_width="match_parent"
         android:layout_height="210dp">
         <LinearLayout
+            android:id="@+id/parent_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginRight="30dp"
-                    android:background="@drawable/person" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="4"
-                    android:layout_gravity="center"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="위"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="35dp"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="XX"
-                    android:layout_gravity="center"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="걸음"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="80dp"
-                    android:textSize="18sp" />
-                <Button
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/send"
-                    android:layout_gravity="center" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/input_register_hint"
-                android:layout_marginTop="10dp">
-            </View>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginRight="30dp"
-                    android:background="@drawable/person" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="5"
-                    android:layout_gravity="center"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="위"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="35dp"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="XX"
-                    android:layout_gravity="center"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="걸음"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="80dp"
-                    android:textSize="18sp" />
-                <Button
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/send"
-                    android:layout_gravity="center" />
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/input_register_hint"
-                android:layout_marginTop="10dp">
-            </View>
-            <LinearLayout
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginRight="30dp"
-                    android:background="@drawable/person" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="6"
-                    android:layout_gravity="center"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="위"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="35dp"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="XX"
-                    android:layout_gravity="center"
-                    android:textSize="18sp" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="걸음"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="80dp"
-                    android:textSize="18sp" />
-                <Button
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/send"
-                    android:layout_gravity="center" />
-            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>

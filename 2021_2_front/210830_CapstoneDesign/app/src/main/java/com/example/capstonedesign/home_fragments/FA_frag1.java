@@ -112,7 +112,7 @@ public class FA_frag1 extends Fragment {
         super.onPause();
         Log.d("FA_fragment1","onPause");
     }
-
+/*
     @Override
     public void onResume() {
         super.onResume();
@@ -153,5 +153,5 @@ public class FA_frag1 extends Fragment {
         }else{
 
         }
-    }
+    }*/
 }
