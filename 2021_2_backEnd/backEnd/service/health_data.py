@@ -104,11 +104,11 @@ class AppFriend(Resource):
             time_month.append(i["time"])
 
         return {"status" : "success", "FriendHealthData" : {
-            step_count_month : {step_count_month}, 
-            carories_month : {carories_month}, 
-            distance_month : {distance_month}, 
-            time_month : {time_month}, 
-            Date_month : {Date_month},} },200
+            "step_count_month" : step_count_month, 
+            "carories_month" : carories_month, 
+            "distance_month" : distance_month, 
+            "time_month" : time_month, 
+            "Date_month" : Date_month,} },200
 
 
 @HealthData.route("/healthData/step/<string:friendEmail>")
