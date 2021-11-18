@@ -56,16 +56,16 @@ public interface initMyApi {
     @GET("/service/ranking")
     Call<RankingResponse> getRankingResponse(@Header("Authorization") String header);
 
-    @GET("/service/healthData/{friendEmail}")
+    @GET("/service/healthData/step/{friendEmail}")
     Call<FriendStepDataResponse> getFriendStepDataResponse(@Path("friendEmail") String email);
 
-    @GET("/service/healthData/{friendEmail}")
+    @GET("/service/healthData/calorie/{friendEmail}")
     Call<FriendCaloriesDataResponse> getFriendCaloriesDataResponse(@Path("friendEmail") String email);
 
-    @GET("/service/healthData/{friendEmail}")
+    @GET("/service/healthData/distance/{friendEmail}")
     Call<FriendDistanceDataResponse> getFriendDistanceDataResponse(@Path("friendEmail") String email);
 
-    @GET("/service/healthData/{friendEmail}")
+    @GET("/service/healthData/time/{friendEmail}")
     Call<FriendMvMinDataResponse> getFriendMvMinDataResponse(@Path("friendEmail") String email);
 
 }

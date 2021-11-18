@@ -1,6 +1,7 @@
 package com.example.capstonedesign.home_fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -167,6 +168,7 @@ public class MyGoogleFit {
         ArrayList<Entry> entry_chart = new ArrayList<>();
 
         Log.d("Period Value",String.valueOf(period));
+
         for(int i = 0;i<period;i++){
             entry_chart.add(new Entry(i,result[i]));
         }
@@ -176,6 +178,39 @@ public class MyGoogleFit {
         // LineData가 필요하여 선언.
         LineData chartData = new LineData();
         chartData.addDataSet(lineDataSet);
+
+        lineChart.setData(chartData);
+
+        lineChart.invalidate();
+    }
+    public void setLineChart(float[] myData,float[] friData, LineChart lineChart,boolean tf_period,String friName){
+        float[] newFriData = new float[30];
+        int period = tf_period ? 30 : 7;
+
+        Arrays.fill(newFriData,0);
+
+        int counter = period - 1;
+        for(float temp : friData){
+            newFriData[counter] = temp;
+            counter--;
+        }
+
+        ArrayList<Entry> entry_chart1 = new ArrayList<>();
+        ArrayList<Entry> entry_chart2 = new ArrayList<>();
+
+        for(int i = 0;i<period;i++){
+            entry_chart1.add(new Entry(i,myData[i]));
+            entry_chart2.add(new Entry(i,newFriData[i]));
+        }
+
+        LineDataSet lineDataSet1 = new LineDataSet(entry_chart1, "내 정보");
+        LineDataSet lineDataSet2 = new LineDataSet(entry_chart2, friName);
+        lineDataSet2.setColor(Color.RED);
+
+        // LineData가 필요하여 선언.
+        LineData chartData = new LineData();
+        chartData.addDataSet(lineDataSet1);
+        chartData.addDataSet(lineDataSet2);
 
         lineChart.setData(chartData);
 
@@ -313,6 +348,57 @@ public class MyGoogleFit {
                         }
                         setLineChart(result,lineChart, tf_period,"내 정보");
                      }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("getHistoryClient","Here's some problem of getting history client");
+                    }
+                });
+    }
+    public void getPeriodicData(int dataType, Context cur_context ,boolean tf_period,float[] result,float[] friData,LineChart lineChart){
+        // 만약 SharedPreference data로 저장해놓고
+        // last update 날짜가 오늘 날짜랑 같다면 거기서 데이터 꺼내오고 아니면
+        // 새로 업데이트 해주는 방식으로 하면 좋을것 같네.
+        // 우선은 호출 할때마다 갱신하는식으로 할 예정.
+        int index_dataType = Math.getExponent(dataType);
+        DataType CUR_DATATYPE = DATA_TYPE[index_dataType];
+
+        ZonedDateTime endTime = LocalDate.now().atStartOfDay(ZoneId.systemDefault());
+        ZonedDateTime startTime = tf_period ? endTime.minusDays(30) : endTime.minusWeeks(1);
+
+        DataReadRequest dataReadRequests = new DataReadRequest.Builder()
+                .aggregate(CUR_DATATYPE)
+                .bucketByTime(1,TimeUnit.DAYS)
+                .setTimeRange(startTime.toEpochSecond(), endTime.toEpochSecond(),TimeUnit.SECONDS)
+                .build();
+
+        Fitness.getHistoryClient(cur_context, GoogleSignIn.getLastSignedInAccount(appContext))
+                .readData(dataReadRequests)
+                .addOnSuccessListener(new OnSuccessListener<DataReadResponse>() {
+                    @Override
+                    public void onSuccess(DataReadResponse dataReadResponse) {
+                        int count = 0;
+                        Log.d("AGGREGATE_data : ","process name getHistoryClient has been successfully done");
+                        for(Bucket bucket : dataReadResponse.getBuckets()){
+                            Log.d("Bucket reading :", "Success");
+                            for(DataSet dataset : bucket.getDataSets()){
+                                Log.d("DataSet reading :", "Success");
+                                for(DataPoint dp : dataset.getDataPoints()){
+                                    Log.i("Loaded Data","Data point:");
+                                    Log.i("Loaded Data","\tType: "+dp.getDataType().getName());
+                                    Log.i("Loaded Data","\tStart: "+dp.getStartTime(TimeUnit.DAYS));
+                                    Log.i("Loaded Data","\tEnd: " + dp.getEndTime(TimeUnit.DAYS));
+                                    for (Field field : dp.getDataType().getFields()) {
+                                        result[count] = (index_dataType == 0 || index_dataType == 3)? dp.getValue(field).asInt() : dp.getValue(field).asFloat();
+                                        Log.i("Loaded Data", "\tField: " + field.getName() +" Value: " + result[count]);
+                                    }
+                                    count++;
+                                }
+                            }
+                        }
+                        setLineChart(result,friData,lineChart, tf_period,"내 정보");
+                    }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
