@@ -30,8 +30,7 @@
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center">
+                android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -62,14 +61,14 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
                         android:text=""
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
                     <TextView
                         android:id="@+id/profile_walk"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
                         android:text=""
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -112,7 +111,7 @@
     </View>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="205dp"
+        android:layout_height="225dp"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="match_parent"
@@ -129,7 +128,7 @@
                 android:background="@drawable/person" />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="90dp"
+                android:layout_height="115dp"
                 android:background="@drawable/borderline"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
@@ -140,6 +139,14 @@
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:text="2"/>
+                <TextView
+                    android:id="@+id/profile_two_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="23sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:text="" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -177,7 +184,7 @@
                 android:background="@drawable/person" />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="150dp"
                 android:background="@drawable/borderline"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
@@ -188,6 +195,14 @@
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:text="1"/>
+                <TextView
+                    android:id="@+id/profile_one_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="23sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:text="" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -224,7 +239,7 @@
                 android:background="@drawable/person" />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="95dp"
                 android:background="@drawable/borderline"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
@@ -235,6 +250,14 @@
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:text="3"/>
+                <TextView
+                    android:id="@+id/profile_three_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="23sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:text="" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -259,7 +282,7 @@
     </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="210dp">
+        android:layout_height="190dp">
         <LinearLayout
             android:id="@+id/parent_layout"
             android:layout_width="match_parent"
