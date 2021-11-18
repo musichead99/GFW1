@@ -56,4 +56,16 @@ public interface initMyApi {
     @GET("/service/ranking")
     Call<RankingResponse> getRankingResponse(@Header("Authorization") String header);
 
+    @GET("/service/healthData/{friendEmail}")
+    Call<FriendStepDataResponse> getFriendStepDataResponse(@Path("friendEmail") String email);
+
+    @GET("/service/healthData/{friendEmail}")
+    Call<FriendCaloriesDataResponse> getFriendCaloriesDataResponse(@Path("friendEmail") String email);
+
+    @GET("/service/healthData/{friendEmail}")
+    Call<FriendDistanceDataResponse> getFriendDistanceDataResponse(@Path("friendEmail") String email);
+
+    @GET("/service/healthData/{friendEmail}")
+    Call<FriendMvMinDataResponse> getFriendMvMinDataResponse(@Path("friendEmail") String email);
+
 }
