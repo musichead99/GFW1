@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="25sp"
-                android:text="운동량 차트 확인 법"
+                android:text="운동량 차트를 어떻게 확인하나요?"
                 android:textColor="@color/black"
                 android:layout_marginBottom="18dp"
                 android:layout_marginLeft="20dp" />
@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="25sp"
-                android:text="친구에게 권유 메시지 보내는 법"
+                android:text="친구에게 어떻게 메시지를 전송하나요?"
                 android:textColor="@color/black"
                 android:layout_marginBottom="18dp"
                 android:layout_marginLeft="20dp" />

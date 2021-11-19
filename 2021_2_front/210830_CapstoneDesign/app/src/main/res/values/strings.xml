@@ -13,6 +13,7 @@
     <string name="id_search">아이디 찾기</string>
     <string name="pw_search">비밀번호 찾기</string>
     <string name="state">상태</string>
+    <string name="location">위치</string>
     <string name="graph">분석</string>
     <string name="profile">프로필</string>
     <string name="setting">설정</string>
@@ -44,9 +45,18 @@
         감사합니다.
     </string>
     <string name="que1">
-
+        운동량 차트는 다음과 같은 방법으로 확인 가능합니다.\n\n
+        1. [분석]을 클릭합니다.\n
+        2. 상단에 [걸음수], [소모 칼로리], [이동거리], [이동시간] 버튼이 있습니다. 확인하고 싶은 수치를 나타내는 버튼을 클릭하면 됩니다.\n
+        3. 확인하고 싶은 수치를 클릭하면 일별로 자신의 수치를 확인할 수 있습니다.\n
+        4. 1일치 뿐만이 아닌 오른쪽 스위치를 통해 원하는 단위로 조절 가능합니다.\n
+        5. 친구 비교 버튼을 통해 내 수치 뿐만이 아닌 해당 친구 수치까지 그래프에 띄울 수 있어 비교 분석이 가능합니다.
     </string>
     <string name="que2">
-
+        친구에게 메시지 전송은 다음과 같은 방법으로 확인 가능합니다.\n\n
+        1. [프로필]을 클릭합니다.\n
+        2. 개인 프로필 아래에서 메시지를 보내고 싶은 대상의 전송 버튼을 클릭합니다.\n
+        3. 메시지의 종류는 2가지로 보내는 목적에 맞게 클릭합니다.\n
+        4. 원하는 메시지를 선택한 다음 확인 버튼을 누르면 됩니다.\n
     </string>
 </resources>
