@@ -41,13 +41,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:textColor="@color/black"
                         android:text="이름 : " />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:textColor="@color/black"
                         android:text="어제 총 걸음 수 : " />
                 </LinearLayout>

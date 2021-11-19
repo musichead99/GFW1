@@ -134,10 +134,13 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
 
                     profile_one_name.setText(result.getRanking().get(0).getName());
                     profile_one_walk.setText(String.valueOf(result.getRanking().get(0).getStep_count()));
+                    Glide.with(getActivity()).load(result.getRanking().get(0).getProfilePhoto()).into(profile_one_photo);
                     profile_two_name.setText(result.getRanking().get(1).getName());
                     profile_two_walk.setText(String.valueOf(result.getRanking().get(1).getStep_count()));
+                    Glide.with(getActivity()).load(result.getRanking().get(1).getProfilePhoto()).into(profile_two_photo);
                     profile_three_name.setText(result.getRanking().get(2).getName());
                     profile_three_walk.setText(String.valueOf(result.getRanking().get(2).getStep_count()));
+                    Glide.with(getActivity()).load(result.getRanking().get(2).getProfilePhoto()).into(profile_three_photo);
 
                     for(int i = 3; i<result.getRanking().size(); i++) {
                         LinearLayout playout = new LinearLayout(getContext());
@@ -152,6 +155,16 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
                         LinearLayout.LayoutParams mlayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         mlayout.topMargin = 20;
                         layout.setLayoutParams(mlayout);
+
+                        ImageView get_image = new ImageView(getContext());
+                        Glide.with(getActivity()).load(result.getRanking().get(i).getProfilePhoto()).into(get_image);
+                        int imgwidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,60,getResources().getDisplayMetrics());
+                        int imgheight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,60,getResources().getDisplayMetrics());
+                        LinearLayout.LayoutParams mget_image = new LinearLayout.LayoutParams(imgwidth, imgheight);
+                        mget_image.gravity = Gravity.CENTER;
+                        mget_image.rightMargin = 60;
+                        get_image.setLayoutParams(mget_image);
+                        layout.addView(get_image);
 
                         TextView get_rank = new TextView(getContext());
                         get_rank.setText(String.valueOf(result.getRanking().get(i).getRank()));
