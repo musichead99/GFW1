@@ -21,6 +21,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.capstonedesign.FriendListActivity;
 import com.example.capstonedesign.R;
 import com.example.capstonedesign.imageActivity;
 import com.example.capstonedesign.retrofit.ProfileResponse;
@@ -53,6 +54,15 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
 
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fl,container,false);
+
+        Button btn_friendlist = rootView.findViewById(R.id.btn_friendlist);
+        btn_friendlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), FriendListActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Button first_tab = rootView.findViewById(R.id.first_tab);
         first_tab.setOnClickListener(new View.OnClickListener() {

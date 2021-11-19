@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="400dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="친구 요청 목록"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="15dp"/>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_item_following"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="내 요청"/>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_item_followed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="받은 요청"/>
+
+    </com.google.android.material.tabs.TabLayout>
+    <ListView
+        android:id="@+id/follow_list"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"/>
+
+</LinearLayout>

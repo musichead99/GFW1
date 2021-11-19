@@ -46,6 +46,7 @@
             android:name=".SettingActivity"
             android:exported="true" />
         <activity android:name=".CFriendListActivity" />
+        <activity android:name=".FriendListActivity"/>
         <activity android:name=".Password" />
         <activity android:name=".Email" />
         <activity android:name=".Register" />
