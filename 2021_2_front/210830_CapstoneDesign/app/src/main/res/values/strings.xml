@@ -13,7 +13,6 @@
     <string name="id_search">아이디 찾기</string>
     <string name="pw_search">비밀번호 찾기</string>
     <string name="state">상태</string>
-    <string name="location">위치</string>
     <string name="graph">분석</string>
     <string name="profile">프로필</string>
     <string name="setting">설정</string>
@@ -23,4 +22,31 @@
     <string name="pwMessage">새로운 비밀번호를 적어주세요.</string>
     <string name="email_notion">이메일 형식으로 입력해주세요.</string>
     <string name="pw_notion">8~20자 영어, 숫자, 특수문자를 사용해주세요.</string>
+    <string name="notice1">
+        안녕하세요. 러닝 메이트입니다.\n\n
+        앱 시스템 안전성 확보를 위한 서버 증설 및 최적화 작업이 아래와 같이 예정되어 안내드립니다.\n
+        사용자 분들이 받을 수 있는 영향을 최소화하기 위해 3일 이전에 미리 공지드리오니, 예정된 점검 시간을 필히 확인하여 주시기 바랍니다.\n
+        걸음 수 측정은 11/27 03시부터 06시까지 일시 중단됩니다.\n\n
+        [점검시간]\n\n
+        - 서버 점검 시간 : 2021-11-27 03:00 ~ 06:00(약 3시간 예정)\n
+        - 걸음 수 측정 중단 시간 : 2021-11-27 03:00 ~ 06:00(약 3시간 예정)\n
+        - 점검 완료 시간은 예정보다 빠르거나 늦어질 수 있으며, 완료 시 추가 안내 드리겠습니다.\n
+        - 본 점검은 상황에 따라 연기 되거나 취소될 수 있습니다. 점검 관련하여 변동 사항 발생 시 본 공지를 통해 업데이트 드리도록 하겠습니다.\n\n
+        이번 작업을 통해 보다 안정적인 앱 사용을 지원할 수 있도록 최선을 다하겠습니다.\n\n
+        많은 양해 부탁드립니다.\n
+        감사합니다.
+    </string>
+    <string name="notice2">
+        안녕하세요. 러닝 메이트입니다.\n\n
+        앱 시스템 중 분석 차트에 오류가 생겼으며 이에 긴급 점검을 돌입하게 되어 분석 차트 서비스가 중단되었습니다. 점검이 완료되면 분석 차트 서비스를 재개할 예정이며, 본 공지를 통하여 서비스 재개를 업데이트 하겠습니다.\n\n
+        - 걸음 수와 차트 내용은 분석 차트 서비스 재개 후 순차적으로 반영될 예정입니다.\n\n
+        이용에 불편을 드려 죄송합니다.\n
+        감사합니다.
+    </string>
+    <string name="que1">
+
+    </string>
+    <string name="que2">
+
+    </string>
 </resources>
