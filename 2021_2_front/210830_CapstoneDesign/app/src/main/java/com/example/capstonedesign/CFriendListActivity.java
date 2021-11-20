@@ -47,8 +47,8 @@ public class CFriendListActivity extends AppCompatActivity {
         ArrayList<Friend> al_friends = new ArrayList<Friend>();
 
         RetrofitClient retrofitClient = RetrofitClient.getNewInstance(getApplicationContext());
-        initMyApi initMyApi = RetrofitClient.getRetrofitInterface();
-        retrofitClient.setContext(getApplicationContext());
+        initMyApi initMyApi = RetrofitClient.getNewRetrofitInterface();
+
         final MyArrayAdapter[] myArrayAdapter = new MyArrayAdapter[1];
         initMyApi.getFriendListResponse().enqueue(new Callback<FriendListResponse>() {
             @Override

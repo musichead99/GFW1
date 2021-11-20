@@ -11,8 +11,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.capstonedesign.retrofit.AddFriendRequest;
+import com.example.capstonedesign.retrofit.AddFriendResponse;
 import com.example.capstonedesign.retrofit.Friend;
 import com.example.capstonedesign.retrofit.FriendListResponse;
+import com.example.capstonedesign.retrofit.FriendStepDataResponse;
 import com.example.capstonedesign.retrofit.RetrofitClient;
 import com.example.capstonedesign.retrofit.initMyApi;
 import com.google.android.material.tabs.TabLayout;
@@ -60,8 +63,8 @@ public class FriendListActivity extends AppCompatActivity {
         ArrayList<Friend> arrayList = new ArrayList<Friend>();
 
         RetrofitClient retrofitClient = RetrofitClient.getNewInstance(getApplicationContext());
-        initMyApi initMyApi = RetrofitClient.getRetrofitInterface();
-        retrofitClient.setContext(getApplicationContext());
+        initMyApi initMyApi = RetrofitClient.getNewRetrofitInterface();
+        
         final MyArrayAdapter[] myArrayAdapter = new MyArrayAdapter[1];
         initMyApi.getFriendListResponse().enqueue(new Callback<FriendListResponse>() {
             @Override
@@ -129,7 +132,25 @@ public class FriendListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = input_email.getText().toString();
 
-                // Retrofit으로 친구 요청 전송.
+                RetrofitClient retrofitClient = RetrofitClient.getNewInstance(getApplicationContext());
+                initMyApi initMyApi = RetrofitClient.getNewRetrofitInterface();
+
+                AddFriendRequest addFriendRequest = new AddFriendRequest(email);
+
+                initMyApi.AddFriend(addFriendRequest).enqueue(new Callback<AddFriendResponse>() {
+                    @Override
+                    public void onResponse(Call<AddFriendResponse> call, Response<AddFriendResponse> response) {
+                        AddFriendResponse result = response.body();
+                        String status = result.getStatus();
+                        String message = result.getMessage();
+
+                        Log.d("AddFriendResponse_status",status);
+                        Log.d("AddFriendResponse_message",message);
+                    }
+                    @Override
+                    public void onFailure(Call<AddFriendResponse> call, Throwable t) {
+                    }
+                });
             }
         });
         dialog.show();

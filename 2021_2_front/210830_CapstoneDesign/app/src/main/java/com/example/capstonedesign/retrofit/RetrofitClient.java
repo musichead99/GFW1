@@ -19,7 +19,9 @@ public class RetrofitClient {
 
     private static Context appContext = null;
     private static RetrofitClient instance = null;
+    private static RetrofitClient newinstance = null;
     private static initMyApi initMyApi;
+    private static initMyApi newinitMyApi;
 
     //사용하고 있는 서버 BASE 주소
     private static String baseUrl = "http://125.6.37.125:5000";
@@ -138,12 +140,7 @@ public class RetrofitClient {
                 .client(client) //로그 기능 추가
                 .build();
 
-        initMyApi = retrofit.create(initMyApi.class);
-    }
-
-    public RetrofitClient setContext(Context appContext){
-        this.appContext = appContext;
-        return instance;
+        newinitMyApi = retrofit.create(initMyApi.class);
     }
 
     public static RetrofitClient getInstance() {
@@ -152,13 +149,17 @@ public class RetrofitClient {
         }
         return instance;
     }
-    public static RetrofitClient getNewInstance(Context appContext){
-        instance = new RetrofitClient(appContext);
-        return instance;
+    public static RetrofitClient getNewInstance(Context Context){
+        if(newinstance == null) newinstance = new RetrofitClient(Context);
+        return newinstance;
     }
 
     public static initMyApi getRetrofitInterface() {
         return initMyApi;
+    }
+
+    public static initMyApi getNewRetrofitInterface(){
+        return newinitMyApi;
     }
 
     public static OkHttpClient OkhttpClientBuilding(HttpLoggingInterceptor interceptor){
