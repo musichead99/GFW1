@@ -87,9 +87,7 @@ public class imageActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //getSupportFragmentManager().beginTransaction().replace(R.id.container,fl).commit();
-                Intent intent = new Intent(imageActivity.this, Home.class);
-                startActivity(intent);
+                finish();
             }
         });
 

@@ -1,6 +1,8 @@
 package com.example.capstonedesign.retrofit;
 
 import com.example.capstonedesign.PreferenceManager;
+import com.example.capstonedesign.retrofit.FCM.FcmTokenRequest;
+import com.example.capstonedesign.retrofit.FCM.FcmTokenResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -55,5 +57,23 @@ public interface initMyApi {
 
     @GET("/service/ranking")
     Call<RankingResponse> getRankingResponse(@Header("Authorization") String header);
+
+    @GET("/service/healthData/step/{friendEmail}")
+    Call<FriendStepDataResponse> getFriendStepDataResponse(@Path("friendEmail") String email);
+
+    @GET("/service/healthData/calorie/{friendEmail}")
+    Call<FriendCaloriesDataResponse> getFriendCaloriesDataResponse(@Path("friendEmail") String email);
+
+    @GET("/service/healthData/distance/{friendEmail}")
+    Call<FriendDistanceDataResponse> getFriendDistanceDataResponse(@Path("friendEmail") String email);
+
+    @GET("/service/healthData/time/{friendEmail}")
+    Call<FriendMvMinDataResponse> getFriendMvMinDataResponse(@Path("friendEmail") String email);
+
+    @POST("/user/fcmToken")
+    Call<FcmTokenResponse> FcmToken(@Body FcmTokenRequest fcmTokenRequest);
+
+    @POST("/service/friends")
+    Call<AddFriendResponse> AddFriend(@Body AddFriendRequest addFriendRequest);
 
 }

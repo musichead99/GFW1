@@ -16,7 +16,18 @@ import com.example.capstonedesign.home_fragments.FA;
 import com.example.capstonedesign.home_fragments.FC;
 import com.example.capstonedesign.home_fragments.FL;
 import com.example.capstonedesign.home_fragments.FS;
+import com.example.capstonedesign.retrofit.FCM.FcmTokenRequest;
+import com.example.capstonedesign.retrofit.FCM.FcmTokenResponse;
+import com.example.capstonedesign.retrofit.RetrofitClient;
+import com.example.capstonedesign.retrofit.initMyApi;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Home extends AppCompatActivity {
     FA fa;
@@ -31,6 +42,8 @@ public class Home extends AppCompatActivity {
 
         //ActionBar actionBar = getSupportActionBar();
         //actionBar.hide();
+
+        FcmTokenHandle();
 
         PreferenceManager.setString(getApplicationContext(),"CFriend_email",null);
         PreferenceManager.setString(getApplicationContext(),"CFriend_name",null);
@@ -64,6 +77,45 @@ public class Home extends AppCompatActivity {
                         return true;
                 }
                 return false;
+            }
+        });
+    }
+
+    private void FcmTokenHandle() {
+
+        RetrofitClient retrofitClient = RetrofitClient.getNewInstance(getApplicationContext());
+        initMyApi initMyApi = RetrofitClient.getNewRetrofitInterface();
+
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String token) {
+                Log.d("MyFCM", "Success : " + token);
+
+
+                FcmTokenRequest fcmTokenRequest = new FcmTokenRequest(token); // token이 들어가야함.
+
+                initMyApi.FcmToken(fcmTokenRequest).enqueue(new Callback<FcmTokenResponse>() {
+                    @Override
+                    public void onResponse(Call<FcmTokenResponse> call, Response<FcmTokenResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            FcmTokenResponse result = response.body();
+                            String status = result.getStatus();
+                            String message = result.getMessage();
+
+                            Log.d("FCM-Server", "Status : " + status +", Message : "+message);
+                        } else Log.d("FCM-Server", "Something's wrong 1");
+                    }
+
+                    @Override
+                    public void onFailure(Call<FcmTokenResponse> call, Throwable t) {
+                        Log.d("FCM-Server", "Something's wrong 2");
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                Log.d("MyFCM", "Something's wrong");
             }
         });
     }

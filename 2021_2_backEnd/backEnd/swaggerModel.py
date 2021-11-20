@@ -23,7 +23,7 @@ BaseProfileModel = SwaggerModel.model('Base Profile Model',{
 
 BaseProfileGetModel = SwaggerModel.inherit('Base Profile get Model', BaseProfileModel, {
     "profilePhoto" : fields.String(description="유저의 프로필 사진 정보", example=config.baseUrl+"/service/image/default_profile.jpg"),
-    "step_count" : fields.String(description="유저의 전날 걸음수", example="5000")
+    "step_count" : fields.Integer(description="유저의 전날 걸음수", example=5000)
 })
 
 BaseProfilePutModel = SwaggerModel.inherit('Base Profile put Model', BaseProfileModel, {

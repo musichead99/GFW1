@@ -1,4 +1,0 @@
-{
-    "status" : "Success or fail",
-    "FriendList" : [{ "email" : "test@gmail.com","name" : "Youngwoo Kim", "image_src" : "이미지 소스"}, ... ]
-}

@@ -45,17 +45,28 @@ import retrofit2.Response;
 public class FA_frag1 extends Fragment {
 
     public static Context appContext;
+    public static Context curContext;
     public static LineChart lineChart;
+    public static MyGoogleFit myGoogleFit;
+    public float[] friend_step;
+    public float[] myData;
+    public int dataType = MyGoogleFit.TYPE_STEP;
+
+    private LineChartSetter lineChartSetter;
+    private String friend_email;
+    private String friend_name;
+    private boolean compare = false;
+    private ToggleButton toggle_btn;
 
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fa_frag1,container,false);
 
         ImageView btn_compareFriend = rootView.findViewById(R.id.btn_compareFriend);
         appContext = rootView.getContext().getApplicationContext();
-        Context curContext = rootView.getContext();
-        ToggleButton toggle_btn = rootView.findViewById(R.id.fa_frag1_toggleButton);
+        curContext = rootView.getContext();
+        toggle_btn = rootView.findViewById(R.id.fa_frag1_toggleButton);
         boolean tf_period = toggle_btn.isChecked();
-        float[] myData = new float[30];
+        myData = new float[30];
 
         btn_compareFriend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +79,7 @@ public class FA_frag1 extends Fragment {
 
         /** LineChart의 기본 세팅을 해주는 부분 **/
         lineChart = rootView.findViewById(R.id.fa_frag1_lineChart);
-        LineChartSetter lineChartSetter = LineChartSetter.newLineChartSetter()
+        lineChartSetter = LineChartSetter.newLineChartSetter()
                 .setLineChart(lineChart)
                 .setPeriod(tf_period)
                 .setBasic()
@@ -82,14 +93,14 @@ public class FA_frag1 extends Fragment {
                         .addDataType(DataType.TYPE_STEP_COUNT_DELTA,FitnessOptions.ACCESS_READ)
                         .build();
 
-        MyGoogleFit myGoogleFit = MyGoogleFit.getInstance()
+        myGoogleFit = MyGoogleFit.getInstance()
                 .setFitnessOptions(fitnessOptions)
                 .setAppContext(appContext);
 
 
-        int dataType = MyGoogleFit.TYPE_STEP;
         myGoogleFit.subscription(dataType,curContext)
                 .getPeriodicData(dataType,curContext,tf_period,myData,lineChart);
+
 
         toggle_btn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -97,11 +108,8 @@ public class FA_frag1 extends Fragment {
                 lineChart.clear();
                 lineChartSetter.setPeriod(isChecked)
                         .setLabel();
-                if(isChecked){
-                    myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
-                }else{
-                    myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
-                }
+                if(!compare) myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
+                else myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,friend_step,lineChart);
             }
         });
         return rootView;
@@ -116,15 +124,29 @@ public class FA_frag1 extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("FA_frag1","onResume");
-        // Step 1. if(friend_email != null)
-        String friend_email = PreferenceManager.getString(appContext,"CFriend_email");
-        String friend_name = PreferenceManager.getString(appContext,"CFriend_name");
 
-        if(!friend_email.equals("")){
-            // 1. retrofit을 사용해 친구의 데이터 받아오기.
+        friend_email = PreferenceManager.getString(appContext,"CFriend_email");
+        friend_name = PreferenceManager.getString(appContext,"CFriend_name");
+
+        Log.d("friend_email",friend_email);
+        Log.d("friend_name",friend_name);
+
+        if(friend_name.equals("선택안함")){
+            Log.d("선택안함","in");
+            compare = false;
+            boolean isChecked = toggle_btn.isChecked();
+
+            lineChart.clear();
+            lineChartSetter.setPeriod(isChecked)
+                    .setLabel();
+
+            myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
+
+        }else if(!friend_email.equals("")){
+            compare = true;
+
             RetrofitClient retrofitClient = RetrofitClient.getNewInstance(appContext);
-            initMyApi initMyApi = RetrofitClient.getRetrofitInterface();
+            initMyApi initMyApi = RetrofitClient.getNewRetrofitInterface();
 
             Call<FriendStepDataResponse> call = initMyApi.getFriendStepDataResponse(friend_email);
 
@@ -132,26 +154,24 @@ public class FA_frag1 extends Fragment {
                 @Override
                 public void onResponse(Call<FriendStepDataResponse> call, Response<FriendStepDataResponse> response) {
                     FriendStepDataResponse result = response.body();
-                    int[] friend_step = result.getStep();
+                    friend_step = result.getStep();
+                    boolean isChecked = toggle_btn.isChecked();
 
                     if(friend_step == null){
                         Log.d("friend_step","null");
                     }else{
-                        for(float a : friend_step){
-                            Log.d("friend_step",String.valueOf(a));
-                        }
+                        lineChart.clear();
+                        lineChartSetter.setPeriod(isChecked)
+                                .setLabel();
+                        if(!compare) myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
+                        else myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,friend_step,lineChart);
                     }
-                    // 2. 친구의 데이터 LineChart에 띄워주기.
                 }
-
                 @Override
                 public void onFailure(Call<FriendStepDataResponse> call, Throwable t) {
 
                 }
             });
-            // 3. 마지막으로 PreferenceManager로 CFriend_email, CFriend_name null로 초기화.
-        }else{
-
         }
     }
 }
