@@ -146,7 +146,7 @@ public class FA_frag1 extends Fragment {
             compare = true;
 
             RetrofitClient retrofitClient = RetrofitClient.getNewInstance(appContext);
-            initMyApi initMyApi = RetrofitClient.getRetrofitInterface();
+            initMyApi initMyApi = RetrofitClient.getNewRetrofitInterface();
 
             Call<FriendStepDataResponse> call = initMyApi.getFriendStepDataResponse(friend_email);
 

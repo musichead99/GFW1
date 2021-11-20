@@ -1,6 +1,8 @@
 package com.example.capstonedesign.home_fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -11,11 +13,13 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.capstonedesign.FriendListActivity;
 import com.example.capstonedesign.R;
+import com.example.capstonedesign.home_fragments.Message.MessageActivity;
 import com.example.capstonedesign.imageActivity;
 import com.example.capstonedesign.retrofit.ProfileResponse;
 import com.example.capstonedesign.retrofit.Ranking;
@@ -60,6 +65,15 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), FriendListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btn_messageBox = rootView.findViewById(R.id.messagebox);
+        btn_messageBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), MessageActivity.class);
                 startActivity(intent);
             }
         });
@@ -233,6 +247,7 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
                         msendbtn.gravity = Gravity.CENTER;
                         sendbtn.setLayoutParams(msendbtn);
                         layout.addView(sendbtn);
+                        setMessageBtnListener(sendbtn,rank.get(i).getUser_friend_email());
 
                         View v = new View(getContext());
                         LinearLayout.LayoutParams mv = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
@@ -246,12 +261,10 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
                         } else {
                             playout.addView(layout);
                         }
-
                         parent_layout.addView(playout);
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<RankingResponse> call, Throwable t) {
 
@@ -266,5 +279,62 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
         //LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         //textViewNew.setLayoutParams(param);
         //tv.addView(textViewNew);
+    }
+    private void setMessageBtnListener(Button btn, String userEmail){
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context mContext = getContext();
+                PopupMenu popupMenu = new PopupMenu(mContext,v);
+
+                getActivity().getMenuInflater().inflate(R.menu.message_menu,popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch(item.getItemId()){
+                            case R.id.menu1 :
+                                showMessagingDialog(true,mContext,userEmail);
+                                break;
+                            case R.id.menu2 :
+                                showMessagingDialog(false,mContext,userEmail);
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+    }
+    public void showMessagingDialog(boolean typeOfMsg,Context mContext,String userEmail){
+        Log.d("showMessagingDialog","In");
+        String title = typeOfMsg ? "격려 메시지" : "도발 메시지";
+        String[] presetMsg = typeOfMsg ?
+                new String[]{
+                        "오늘도 열심히 걸어보자!",
+                        "지금 산책 하자!",
+                        "지금 딱! 산책하기 좋은날씨인데?"
+                } :
+                new String[]{
+                        "산책좀 해 ㄷㅈㅇ~",
+                        "ㅋㅋ ㅈ밥",
+                        "나였으면 그 시간에 산책이나 했다~"
+                };
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+        dialog.setTitle(title);
+
+        // 제목 옆에 들어갈 이이콘 설정 : dialog.setIcon();
+        dialog.setSingleChoiceItems(presetMsg, 0,null);
+        dialog.setPositiveButton("보내기", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // 해당 유저에게 메시지 보내면 됨.
+                // 보내고자 하는 유저의 Email : userEmail
+            }
+        });
+        dialog.show();
     }
 }

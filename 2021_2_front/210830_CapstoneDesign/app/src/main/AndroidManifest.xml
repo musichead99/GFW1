@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <application
         android:allowBackup="true"
@@ -15,15 +16,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CapstoneDesign"
         android:usesCleartextTraffic="true">
+        <activity android:name=".home_fragments.Message.MessageActivity"></activity>
+
         <receiver
             android:name=".DateChangeReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.DATE_CHANGED"/>
+                <action android:name="android.intent.action.DATE_CHANGED" />
             </intent-filter>
-
         </receiver>
+
+        <service android:name=".FCM.FireBaseMS">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".NaverWebview"
             android:exported="true" />
@@ -46,11 +56,12 @@
             android:name=".SettingActivity"
             android:exported="true" />
         <activity android:name=".CFriendListActivity" />
-        <activity android:name=".FriendListActivity"/>
+        <activity android:name=".FriendListActivity" />
         <activity android:name=".Password" />
         <activity android:name=".Email" />
         <activity android:name=".Register" />
-        <activity android:name=".Home"
+        <activity
+            android:name=".Home"
             android:exported="true" />
         <activity android:name=".Login" />
         <activity android:name=".Logout" />
