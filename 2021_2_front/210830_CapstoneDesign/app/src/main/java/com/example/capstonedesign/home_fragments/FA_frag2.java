@@ -17,7 +17,6 @@ import com.example.capstonedesign.CFriendListActivity;
 import com.example.capstonedesign.PreferenceManager;
 import com.example.capstonedesign.R;
 import com.example.capstonedesign.retrofit.FriendCaloriesDataResponse;
-import com.example.capstonedesign.retrofit.FriendStepDataResponse;
 import com.example.capstonedesign.retrofit.RetrofitClient;
 import com.example.capstonedesign.retrofit.initMyApi;
 import com.github.mikephil.charting.charts.LineChart;
@@ -95,7 +94,7 @@ public class FA_frag2 extends Fragment {
                         .setLabel();
 
                 if(!compare) myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
-                else myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,friend_cal,lineChart);
+                else myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,friend_cal,friend_name,lineChart);
             }
         });
         return rootView;
@@ -149,7 +148,7 @@ public class FA_frag2 extends Fragment {
                         lineChartSetter.setPeriod(isChecked)
                                 .setLabel();
                         if(!compare) myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
-                        else myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,friend_cal,lineChart);
+                        else myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,friend_cal,friend_name,lineChart);
                     }
                 }
                 @Override
