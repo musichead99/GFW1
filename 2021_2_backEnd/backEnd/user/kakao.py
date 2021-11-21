@@ -49,7 +49,6 @@ class KakaoAuthCallback(Resource):
         # 얻은 access token으로 다시 카카오에게 회원 정보 요청
         try:
             accessToken = token_request['access_token']
-            print(accessToken)
             kakaoDataRequest = requests.get(
                         "https://kapi.kakao.com/v2/user/me", headers={"Authorization" : f"Bearer {accessToken}"}
                     )
