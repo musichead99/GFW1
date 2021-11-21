@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -29,6 +30,8 @@ import com.example.capstonedesign.FriendListActivity;
 import com.example.capstonedesign.R;
 import com.example.capstonedesign.home_fragments.Message.MessageActivity;
 import com.example.capstonedesign.imageActivity;
+import com.example.capstonedesign.retrofit.FCM.FcmMessageRequest;
+import com.example.capstonedesign.retrofit.FCM.FcmMessageResponse;
 import com.example.capstonedesign.retrofit.ProfileResponse;
 import com.example.capstonedesign.retrofit.Ranking;
 import com.example.capstonedesign.retrofit.RankingResponse;
@@ -59,6 +62,8 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
 
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fl,container,false);
+
+        Log.d("FL_onCreateView","in");
 
         Button btn_friendlist = rootView.findViewById(R.id.btn_friendlist);
         btn_friendlist.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +113,7 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
 
         getProfile();
         getRanking();
+
         return rootView;
     }
     private void getProfile() {
@@ -247,7 +253,7 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
                         msendbtn.gravity = Gravity.CENTER;
                         sendbtn.setLayoutParams(msendbtn);
                         layout.addView(sendbtn);
-                        setMessageBtnListener(sendbtn,rank.get(i).getUser_friend_email());
+                        setMessageBtnListener(sendbtn,rank.get(i).getUser_friend_email(),rank.get(i).getName());
 
                         View v = new View(getContext());
                         LinearLayout.LayoutParams mv = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 2);
@@ -280,7 +286,7 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
         //textViewNew.setLayoutParams(param);
         //tv.addView(textViewNew);
     }
-    private void setMessageBtnListener(Button btn, String userEmail){
+    private void setMessageBtnListener(Button btn, String userEmail,String name){
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,10 +299,10 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
                     public boolean onMenuItemClick(MenuItem item) {
                         switch(item.getItemId()){
                             case R.id.menu1 :
-                                showMessagingDialog(true,mContext,userEmail);
+                                showMessagingDialog(true,mContext,userEmail,name);
                                 break;
                             case R.id.menu2 :
-                                showMessagingDialog(false,mContext,userEmail);
+                                showMessagingDialog(false,mContext,userEmail,name);
                                 break;
                             default:
                                 break;
@@ -308,7 +314,7 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
             }
         });
     }
-    public void showMessagingDialog(boolean typeOfMsg,Context mContext,String userEmail){
+    public void showMessagingDialog(boolean typeOfMsg,Context mContext,String userEmail,String name){
         Log.d("showMessagingDialog","In");
         String title = typeOfMsg ? "격려 메시지" : "도발 메시지";
         String[] presetMsg = typeOfMsg ?
@@ -331,10 +337,40 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
         dialog.setPositiveButton("보내기", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // 해당 유저에게 메시지 보내면 됨.
-                // 보내고자 하는 유저의 Email : userEmail
+
+                RetrofitClient retrofitClient = RetrofitClient.getNewInstance(getActivity().getApplicationContext());
+                initMyApi initMyApi = RetrofitClient.getNewRetrofitInterface();
+
+                FcmMessageRequest fcmMessageRequest = new FcmMessageRequest(userEmail,name+"님의 "+title,presetMsg[which]);
+
+                initMyApi.FcmMessage(fcmMessageRequest).enqueue(new Callback<FcmMessageResponse>() {
+                    @Override
+                    public void onResponse(Call<FcmMessageResponse> call, Response<FcmMessageResponse> response) {
+                        FcmMessageResponse result = response.body();
+                        String status = result.getStatus();
+                        String message = result.getMessage();
+
+                        Log.d("Messaging_status",status);
+                        Log.d("Messaging_message",message);
+                    }
+                    @Override
+                    public void onFailure(Call<FcmMessageResponse> call, Throwable t) {
+                    }
+                });
             }
         });
         dialog.show();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.d("FL","onAttach");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("FL","onDestroy");
     }
 }
