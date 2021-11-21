@@ -19,7 +19,6 @@ import com.google.android.gms.fitness.data.DataType;
 import java.util.Arrays;
 
 public class FA_frag2 extends Fragment {
-
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fa_frag2,container,false);
 

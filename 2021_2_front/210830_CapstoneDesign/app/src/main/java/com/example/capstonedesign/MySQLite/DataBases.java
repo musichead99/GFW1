@@ -13,6 +13,6 @@ public final class DataBases {
                 +_ID+ " integer primary key autoincrement, "
                 +IMAGE_SRC+" text not null , "
                 +MESSAGE_TITLE+" text not null , "
-                +MESSAGE_CONTENT+" text not null );";
+                +MESSAGE_CONTENT+" text );";
     }
 }

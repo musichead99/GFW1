@@ -1,8 +1,16 @@
 package com.example.capstonedesign.retrofit;
 
 import com.example.capstonedesign.PreferenceManager;
+import com.example.capstonedesign.retrofit.FCM.FcmMessageRequest;
+import com.example.capstonedesign.retrofit.FCM.FcmMessageResponse;
 import com.example.capstonedesign.retrofit.FCM.FcmTokenRequest;
 import com.example.capstonedesign.retrofit.FCM.FcmTokenResponse;
+import com.example.capstonedesign.retrofit.FriendRequestList.FriendRequestListResponse;
+import com.example.capstonedesign.retrofit.FriendRequestList.FriendRequestedListResponse;
+import com.example.capstonedesign.retrofit.ProceedFriendRequest.CancelFR_Request;
+import com.example.capstonedesign.retrofit.ProceedFriendRequest.CancelFR_Response;
+import com.example.capstonedesign.retrofit.ProceedFriendRequest.ProceedFR_Request;
+import com.example.capstonedesign.retrofit.ProceedFriendRequest.ProceedFR_Response;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -76,4 +84,18 @@ public interface initMyApi {
     @POST("/service/friends")
     Call<AddFriendResponse> AddFriend(@Body AddFriendRequest addFriendRequest);
 
+    @POST("/service/notification")
+    Call<FcmMessageResponse> FcmMessage(@Body FcmMessageRequest fcmMessageRequest);
+
+    @GET("/service/friendsRequestList") // 사용자가 받은 요청
+    Call<FriendRequestedListResponse> FriendRequestedList();
+
+    @GET("/service/friendsMyRequest") // 사용자가 한 요청
+    Call<FriendRequestListResponse> FriendRequestList();
+
+    @PUT("/service/friends")
+    Call<ProceedFR_Response> ProceedFR_Request(@Body ProceedFR_Request proceedFR_request);
+
+    @DELETE("/service/friendsMyRequest")
+    Call<CancelFR_Response> CancelFR_Request(@Body CancelFR_Request cancelFR_request);
 }

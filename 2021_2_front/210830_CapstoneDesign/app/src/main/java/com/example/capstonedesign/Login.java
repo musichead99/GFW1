@@ -84,6 +84,7 @@ public class Login extends AppCompatActivity {
                     String message = result.getMessage();
                     String token = result.getToken();
                     PreferenceManager.setString(getApplicationContext(),"token",token);
+                    Log.d("Login_token",token);
                     editor.putString("token", token);
                     editor.commit();
                     editor1.putString("userEmail", userEmail);
