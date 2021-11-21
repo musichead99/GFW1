@@ -96,7 +96,7 @@ public class FA_frag3 extends Fragment {
                         .setLabel();
 
                 if(!compare) myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
-                else myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,friend_distance,lineChart);
+                else myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,friend_distance,friend_name,lineChart);
             }
         });
         return rootView;
@@ -151,7 +151,7 @@ public class FA_frag3 extends Fragment {
                         lineChartSetter.setPeriod(isChecked)
                                 .setLabel();
                         if(!compare) myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,lineChart);
-                        else myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,friend_distance,lineChart);
+                        else myGoogleFit.getPeriodicData(dataType,curContext,isChecked,myData,friend_distance,friend_name,lineChart);
                     }
                 }
                 @Override
