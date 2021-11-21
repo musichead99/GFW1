@@ -346,12 +346,14 @@ public class FL extends Fragment { //친구수 받아오는것 구현 필요
                 initMyApi.FcmMessage(fcmMessageRequest).enqueue(new Callback<FcmMessageResponse>() {
                     @Override
                     public void onResponse(Call<FcmMessageResponse> call, Response<FcmMessageResponse> response) {
-                        FcmMessageResponse result = response.body();
-                        String status = result.getStatus();
-                        String message = result.getMessage();
+                        if(response.isSuccessful()){
+                            FcmMessageResponse result = response.body();
+                            String status = result.getStatus();
+                            String message = result.getMessage();
 
-                        Log.d("Messaging_status",status);
-                        Log.d("Messaging_message",message);
+                            Log.d("Messaging_status",status);
+                            Log.d("Messaging_message",message);
+                        }
                     }
                     @Override
                     public void onFailure(Call<FcmMessageResponse> call, Throwable t) {

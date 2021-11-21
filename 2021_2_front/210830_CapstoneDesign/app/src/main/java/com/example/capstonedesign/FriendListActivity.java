@@ -110,6 +110,7 @@ public class FriendListActivity extends AppCompatActivity {
         final FR_ListAdapter[] frListAdapter = new FR_ListAdapter[1];
 
         frListAdapter[0] = new FR_ListAdapter(getBaseContext(),arrayList);
+        frListAdapter[0].setRetrofit();
 
         listView.setAdapter(frListAdapter[0]);
 
