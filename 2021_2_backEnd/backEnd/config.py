@@ -6,4 +6,4 @@ basePath = os.getcwd()
 
 kakaoClientId = 'b7f91f6772db2d633fb992e80d06827d'
 baseUrl = 'http://180.80.221.11:5000'
-fcmServerKey = 'AAAApW2Mtew:APA91bFzpDeq2l13SgNXASSLxkh3ezZk4RyIGIxSa5uae0zjDiPuGynAtahcvL-ian73-kDg0j6Zjyr0pCj4noBf-_E4v_EZst5xqes9zf0aDNt9lxpZz0SQyFnw6n5jBLOmHYW2tKA4'
+fcmServerKey = 'AAAAoPwR-M0:APA91bGFFATwB47FDCwoETPhLgMGX-15umMXLFtLk_P4Dh10QbZj-Bofr_WEAUpQdWN7zlxoYQpOvaAj8g0xyqPxcbJzLm4mTqpm9tsT8pI5QsADjvkxx8bj1_JacNOZt_yQJExKxloS'

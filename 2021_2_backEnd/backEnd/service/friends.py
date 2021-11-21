@@ -2,10 +2,13 @@
 
 from flask import request
 from flask_restx import Resource, Namespace, fields
-from flask_jwt_extended.utils import get_jwt_identity, get_jwt
+from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_request_validator import *
+from pyfcm import FCMNotification
 import database, swaggerModel, config
+
+push_service = FCMNotification(config.fcmServerKey)
 
 Friends = Namespace(name = "Friends", description="친구관련 작업을 처리하는 API")
 parser = Friends.parser()
@@ -71,15 +74,36 @@ class AppFriend(Resource):
         query = f'''
         SELECT id as id FROM request_friend where requester="{requester}" and acceptor="{acceptor}"
         UNION ALL 
-        SELECT id as id FROM friends where user_email="{requester}" and user_friend_email"{acceptor}";
+        SELECT id as id FROM friends where user_email="{requester}" and user_friend_email="{acceptor}";
         '''
         if db.executeOne(query):
             return {"status" : "Failed", "message" : "already requested or exist"}, 400
-        
+
         query = f'''
         insert into request_friend(requester, acceptor) values ("{requester}", "{acceptor}");
         '''
         db.execute_and_commit(query)
+
+        # 푸시 메시지 부분 추가 (2021.11.21) #
+        query = f'''
+        select name, profilePhoto from users where email = "{requester}";
+        '''
+        requestMessage = db.executeOne(query)
+        requestMessage['title'] = requestMessage.pop('name')+"님이 친구 요청을 보냈습니다."
+        requestMessage['body'] = None
+        if requestMessage['profilePhoto'] is None:
+            requestMessage['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
+
+        query = f'''
+        select fcmToken from users where email = "{acceptor}";
+        '''
+        token = db.executeOne(query)['fcmToken']
+
+        if token is None:
+            return {'status' : 'Failed', 'message' : "acceptor don't have fcm token"},400
+
+        push_service.single_device_data_message(registration_id=token, data_message=requestMessage, android_channel_id='test123')
+
         return {"status" : "success", "message" : "Your request message has been delivered"}, 200
     
     # 친구요청 수락, 거절
@@ -96,7 +120,6 @@ class AppFriend(Resource):
         """친구요청을 수락하거나 거절한다."""
         acceptor = get_jwt_identity()
         data = request.json
-        print(data)
         requester = data['friendEmail']
         
         
@@ -131,7 +154,7 @@ class AppFriend(Resource):
         '''
         ## 이미 친구인 경우
         if db.executeAll(query2, data):   
-            return {"status" : "failed", "message" : "aleardy friend"}, 401
+            return {"status" : "failed", "message" : "aleardy friend"}, 400
 
         ## 친구 요청 수락
         query3 ='''
@@ -199,7 +222,7 @@ class AppFriendList(Resource):
                 i['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
 
 
-        return {"status" : "success", "FriendsList" :  result},200
+        return {"status" : "success", "FriendsList" :  result}, 200
 
 @Friends.route("/friendsRequestList")
 class AppFriendRequestList(Resource):
@@ -251,7 +274,7 @@ class AppFriendRequestList(Resource):
             if not i['profilePhoto']:
                 i['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
 
-        return {"status" : "success", "MyRequestList" :  result},200
+        return {"status" : "success", "MyRequestList" :  result}, 200
     
 
     # 나의 요청 취소
@@ -272,14 +295,14 @@ class AppFriendRequestList(Resource):
         
         # 입력이 잘못 된 경우
         query = f'''
-        SELECT * FROM request_friend where requester="{requester}" and acceptor="{acceptor}"
+        SELECT * FROM request_friend where requester="{requester}" and acceptor="{acceptor}";
         '''
         if not db.executeOne(query):
             return {"status" : "Failed", "message" : "wrong email"}, 400
 
         # 친구요청 취소
         query = f'''
-            delete FROM request_friend where requester="{requester}" and acceptor="{acceptor}"
+            delete FROM request_friend where requester="{requester}" and acceptor="{acceptor}";
         '''
         db.execute_and_commit(query, data)
         return {"status" : "success", "message" : "Friend request has been canceled"}, 200
