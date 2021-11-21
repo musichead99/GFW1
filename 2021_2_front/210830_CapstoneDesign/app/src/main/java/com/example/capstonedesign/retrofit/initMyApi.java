@@ -16,6 +16,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -96,6 +97,6 @@ public interface initMyApi {
     @PUT("/service/friends")
     Call<ProceedFR_Response> ProceedFR_Request(@Body ProceedFR_Request proceedFR_request);
 
-    @DELETE("/service/friendsMyRequest")
+    @HTTP(method = "DELETE",path = "/service/friendsMyRequest",hasBody = true)
     Call<CancelFR_Response> CancelFR_Request(@Body CancelFR_Request cancelFR_request);
 }

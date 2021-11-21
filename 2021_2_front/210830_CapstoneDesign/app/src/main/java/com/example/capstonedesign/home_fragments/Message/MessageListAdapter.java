@@ -56,7 +56,7 @@ public class MessageListAdapter extends BaseAdapter {
         String msg_title = message.getMsgTitle();
         String msg_content = message.getMsgContent();
 
-        if(msg_content == null) msg_content_view.setVisibility(View.GONE);
+        if(msg_content == null || msg_content.equals("")) msg_content_view.setVisibility(View.GONE);
 
         // Setting all the contents of views
         // profile_img.setImageURI(img_uri);

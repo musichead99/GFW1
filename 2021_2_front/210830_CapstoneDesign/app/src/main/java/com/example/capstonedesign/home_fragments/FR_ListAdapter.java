@@ -32,7 +32,7 @@ public class FR_ListAdapter extends BaseAdapter {
     Context mContext;
     ArrayList<Friend> arrayList;
     LayoutInflater mlayoutInflater;
-    boolean listType = false;
+    boolean listType = REQUESTING;
     RetrofitClient retrofitClient;
     initMyApi initMyApi;
 
@@ -96,7 +96,8 @@ public class FR_ListAdapter extends BaseAdapter {
                         @Override
                         public void onResponse(Call<CancelFR_Response> call, Response<CancelFR_Response> response) {
                             if(response.isSuccessful()){
-
+                                arrayList.remove(position);
+                                notifyDataSetChanged();
                             }
                         }
                         @Override
@@ -115,7 +116,8 @@ public class FR_ListAdapter extends BaseAdapter {
                         @Override
                         public void onResponse(Call<ProceedFR_Response> call, Response<ProceedFR_Response> response) {
                             if(response.isSuccessful()){
-
+                                arrayList.remove(position);
+                                notifyDataSetChanged();
                             }
                         }
                         @Override
@@ -132,7 +134,8 @@ public class FR_ListAdapter extends BaseAdapter {
                         @Override
                         public void onResponse(Call<ProceedFR_Response> call, Response<ProceedFR_Response> response) {
                             if(response.isSuccessful()){
-
+                                arrayList.remove(position);
+                                notifyDataSetChanged();
                             }
                         }
                         @Override
