@@ -16,7 +16,7 @@ from service.notification import Notification
 from service.image import Image
 from service.health_data import HealthData
 from service.ranking import Ranking
-from service.encourage import predict, encourage
+from service.encourage import predict, encourage, yesterday
 from service.test import Test
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -103,6 +103,7 @@ api.add_namespace(Test, '/test')
 sched = BackgroundScheduler(daemon=True)
 sched.start()
 
+sched.add_job(yesterday,'cron', week='1-53', day_of_week='0-6', hour='6')
 sched.add_job(encourage,'cron', week='1-53', day_of_week='0-6', hour='9')
 sched.add_job(predict,'cron', week='1-53', day_of_week='0-6', hour='12')
 
