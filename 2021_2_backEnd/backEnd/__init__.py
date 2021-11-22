@@ -100,12 +100,12 @@ api.add_namespace(Test, '/test')
 
 # 스케줄 일정등록, 항상 실행
 
-sched = BackgroundScheduler(daemon=True)
-sched.start()
+# sched = BackgroundScheduler(daemon=True)
+# sched.start()
 
-sched.add_job(yesterday,'cron', week='1-53', day_of_week='0-6', hour='6')
-sched.add_job(encourage,'cron', week='1-53', day_of_week='0-6', hour='9')
-sched.add_job(predict,'cron', week='1-53', day_of_week='0-6', hour='12')
+# sched.add_job(yesterday,'cron', week='1-53', day_of_week='0-6', hour='6')
+# sched.add_job(encourage,'cron', week='1-53', day_of_week='0-6', hour='9')
+# sched.add_job(predict,'cron', week='1-53', day_of_week='0-6', hour='12')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug="true")
