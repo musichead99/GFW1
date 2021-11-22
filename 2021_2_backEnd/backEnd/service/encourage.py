@@ -10,6 +10,9 @@ import pandas as pd;
 # from sklearn.metrics import mean_squared_error
 # from math import sqrt
 from prophet import Prophet
+from random import randint
+
+
 push_service = FCMNotification(config.fcmServerKey)
 
 def mytest():
@@ -91,5 +94,19 @@ def encourage(day=1):
             push_service.single_device_data_message(registration_id=i["fcmToken"], data_message=requestMessage, android_channel_id='test123')
             # print(requestMessage)
 
-
-
+# 모든 유저의 어제 걸음수 빈칸 채우는 기능
+def yesterday():
+    db = database.DBClass()
+    query = """select email from users;"""
+    
+    email_list = [i["email"] for i in db.executeAll(query)]
+    
+    for email in email_list:
+        day = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
+        query = f"""select *
+            from (select email from users where email = "{email}") as table_1
+            inner join (select user_email, step_count from health_data where Date = "{day}") as table_2
+            on table_1.email  = table_2.user_email;"""
+        if not db.executeOne(query):
+            query = f"""insert into health_data(user_email, Date, step_count) values ('{email}','{day}','{randint(1000,3000)}');"""
+            db.execute_and_commit(query)
