@@ -160,8 +160,8 @@ class AppFriend(Resource):
         query3 ='''
         insert into friends(`user_email`, `user_friend_email`) values (%s,%s);
         '''
-        db.execute_and_commit(query3, (data['requester'], data['acceptor']))
-        db.execute_and_commit(query3, (data['acceptor'], data['requester']))
+        db.execute_and_commit(query3, (requester, acceptor))
+        db.execute_and_commit(query3, (acceptor, requester))
         return {"status" : "success", "message" : "Friend request has been accepted"}, 201
     
     #친구 삭제
