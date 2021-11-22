@@ -45,9 +45,9 @@ FriendsSuccessModel2 = Friends.inherit('Friends Success model2', swaggerModel.Ba
 FriendsSuccessModel3 = Friends.inherit('Friends Success model3', swaggerModel.BaseSuccessModel,{
     "MyRequestList" : fields.String(description="나의요청목록", example=[{"email": "test2@gmail.com","name": "김연아","profilePhoto": "http://180.80.221.11:5000/service/image/default_profile.jpg"}])
 })
-FriendsGetFailedRequest = Friends.inherit('Friend get failed model', swaggerModel.BaseFailedModel, {
-    "message" : fields.String(description="에러 메시지", example="No friend")
-})
+# FriendsGetFailedRequest = Friends.inherit('Friend get failed model', swaggerModel.BaseFailedModel, {
+#     "message" : fields.String(description="에러 메시지", example="No friend")
+# })
 FriendsGetFailedRequest2 = Friends.inherit('Friend get failed model2', swaggerModel.BaseFailedModel, {
     "message" : fields.String(description="에러 메시지", example="No request")
 })
@@ -205,7 +205,7 @@ class AppFriendList(Resource):
     @jwt_required()
     @Friends.expect(parser)
     @Friends.response(200, 'Success(친구 목록을 각각의 인자당 리스트로 반환한다.)', FriendsSuccessModel)
-    @Friends.response(400, 'Failed ( 친구가 없다. )', FriendsGetFailedRequest) 
+    # @Friends.response(400, 'Failed ( 친구가 없다. )', FriendsGetFailedRequest) 
     def get(self, *args, **kwargs):
         """사용자의 친구목록을 보여준다"""
         userEmail = get_jwt_identity()
@@ -215,7 +215,7 @@ class AppFriendList(Resource):
             select email, name, profilePhoto from users, (select user_friend_email from friends where user_email = '{userEmail}') as gg where gg.user_friend_email = email;
         '''
         if not(result := db.executeAll(query)):
-            return  {"status" : "Failed", "message" : "no friends"}, 400
+            return  {"status" : "success", "FriendsList" : [] }, 200
 
         for i in result:
             if not i['profilePhoto']:
