@@ -92,7 +92,7 @@ def encourage(day=1):
         if i['predict_data'] > i['data']:
             requestMessage={"title": f"칭찬해요~ {i['name']}님", "body":f"평소보다 많이 운동하셨어요~ 시간 : {today}","profilePhoto":config.baseUrl + '/service/image/default_profile.jpg'}
             push_service.single_device_data_message(registration_id=i["fcmToken"], data_message=requestMessage, android_channel_id='test123')
-            # print(requestMessage)
+            print(requestMessage)
 
 # 모든 유저의 어제 걸음수 빈칸 채우는 기능
 def yesterday():
