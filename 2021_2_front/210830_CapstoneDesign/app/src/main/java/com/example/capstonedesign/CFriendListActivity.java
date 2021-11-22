@@ -53,18 +53,20 @@ public class CFriendListActivity extends AppCompatActivity {
         initMyApi.getFriendListResponse().enqueue(new Callback<FriendListResponse>() {
             @Override
             public void onResponse(Call<FriendListResponse> call, Response<FriendListResponse> response) {
-                FriendListResponse result = response.body();
+                if(response.isSuccessful()){
+                    FriendListResponse result = response.body();
 
-                String status_msg = result.getStatus();
-                Log.d("Getting friendsList",status_msg);
+                    String status_msg = result.getStatus();
+                    Log.d("Getting friendsList",status_msg);
 
-                List<Friend> friendsList = result.getFriendList();
-                al_friends.add(new Friend(null,"","선택안함"));
-                al_friends.addAll(friendsList);
+                    List<Friend> friendsList = result.getFriendList();
+                    al_friends.add(new Friend(null,"","선택안함"));
+                    al_friends.addAll(friendsList);
 
-                myArrayAdapter[0] = new MyArrayAdapter(thisContext,al_friends);
+                    myArrayAdapter[0] = new MyArrayAdapter(thisContext,al_friends);
 
-                listView.setAdapter(myArrayAdapter[0]);
+                    listView.setAdapter(myArrayAdapter[0]);
+                }
             }
             @Override
             public void onFailure(Call<FriendListResponse> call, Throwable t) {

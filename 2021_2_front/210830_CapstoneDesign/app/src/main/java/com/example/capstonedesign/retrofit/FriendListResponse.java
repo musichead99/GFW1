@@ -6,13 +6,13 @@ import java.util.List;
 
 public class FriendListResponse {
     @SerializedName("status")
-    private String status;
+    public String status;
 
     @SerializedName("message")
-    private String message = "No message";
+    public String message = "No message";
 
     @SerializedName("FriendsList")
-    private List<Friend> friend;
+    public List<Friend> friend;
 
     public FriendListResponse(List<Friend> friend){
         this.friend = friend;
@@ -26,9 +26,9 @@ public class FriendListResponse {
     }
 
     public String getStatus(){
-        return status;
+        return this.status;
     }
     public String getMessage(){
-        return message;
+        return this.message;
     }
 }

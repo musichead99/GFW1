@@ -26,6 +26,7 @@ public class LineChartSetter {
     }
 
     public LineChartSetter setBasic(){
+        lineChart.setNoDataText("");
         lineChart.setTouchEnabled(false);
         lineChart.setPinchZoom(false);
 

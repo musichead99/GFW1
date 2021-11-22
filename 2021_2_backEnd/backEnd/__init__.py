@@ -4,9 +4,7 @@ from flask_restx import Api
 from flask_jwt_extended import JWTManager, exceptions
 from flask_request_validator.error_formatter import demo_error_formatter
 from flask_request_validator.exceptions import InvalidRequestError 
-# from test.test import Test
 from user.register import Register
-# from user.logintest import LoginTest
 from user.mail import Email
 from user.auth import Auth
 from user.kakao import Kakao
@@ -80,9 +78,7 @@ def server_error(e):
 
 # namespace 등록
 api.add_namespace(swaggerModel.SwaggerModel)
-# api.add_namespace(Test,'/test')
 api.add_namespace(Register,'/user')
-# api.add_namespace(LoginTest,'/user')
 api.add_namespace(Email,'/user')
 api.add_namespace(Auth,'/user')
 api.add_namespace(Kakao,'/user/kakao')

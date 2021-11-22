@@ -30,7 +30,6 @@ class AppFriend(Resource):
         yesterday = datetime.datetime(2021, 11, 30)
         
         yesterday= yesterday.strftime('%Y-%m-%d')
-        print(yesterday)
 
         db = database.DBClass()
         query=f"""select table_1.user_friend_email, table_2.name, table_2.profilePhoto, table_3.step_count

@@ -24,7 +24,8 @@ public class RetrofitClient {
     private static initMyApi newinitMyApi;
 
     //사용하고 있는 서버 BASE 주소
-    private static String baseUrl = "http://125.6.37.125:5000";
+    private static String baseUrl = "http://125.6.37.125:5000";//http://180.80.221.11:5000/
+
 
     private RetrofitClient() {
         //로그를 보기 위한 Interceptor

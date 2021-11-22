@@ -7,11 +7,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.capstonedesign.MainActivity;
+import com.example.capstonedesign.MySQLite.DbOpenHelper;
 import com.example.capstonedesign.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -31,6 +33,8 @@ public class FireBaseMS extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+
+        Log.d("onMessageReceiver","in");
 
         Map<String,String> data = remoteMessage.getData();
 
@@ -53,11 +57,16 @@ public class FireBaseMS extends FirebaseMessagingService {
         }else {
             builder = new NotificationCompat.Builder(getApplicationContext());
         }
+        DbOpenHelper dbOpenHelper = new DbOpenHelper(getApplicationContext());
+        dbOpenHelper.open();
+        dbOpenHelper.create();
 
+        String profilePhoto = data.get("profilePhoto");
         String title = data.get("title");
-        //remoteMessage.getNotification().getTitle();
         String body = data.get("body");
-        //remoteMessage.getNotification().getBody();
+
+        dbOpenHelper.insertColumn(profilePhoto,title,body);
+        dbOpenHelper.close();
 
         builder.setContentTitle(title)
                 .setContentText(body)

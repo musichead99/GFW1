@@ -181,6 +181,7 @@ public class MyGoogleFit {
 
         lineChart.setData(chartData);
 
+        lineChart.animateXY(3000,3000);
         lineChart.invalidate();
     }
     public void setLineChart(float[] myData,float[] friData, LineChart lineChart,boolean tf_period,String friName){
@@ -214,6 +215,7 @@ public class MyGoogleFit {
 
         lineChart.setData(chartData);
 
+        lineChart.animateXY(3000,3000);
         lineChart.invalidate();
     }
 
@@ -356,7 +358,7 @@ public class MyGoogleFit {
                     }
                 });
     }
-    public void getPeriodicData(int dataType, Context cur_context ,boolean tf_period,float[] result,float[] friData,LineChart lineChart){
+    public void getPeriodicData(int dataType, Context cur_context ,boolean tf_period,float[] result,float[] friData,String friname,LineChart lineChart){
         // 만약 SharedPreference data로 저장해놓고
         // last update 날짜가 오늘 날짜랑 같다면 거기서 데이터 꺼내오고 아니면
         // 새로 업데이트 해주는 방식으로 하면 좋을것 같네.
@@ -397,7 +399,7 @@ public class MyGoogleFit {
                                 }
                             }
                         }
-                        setLineChart(result,friData,lineChart, tf_period,"내 정보");
+                        setLineChart(result,friData,lineChart, tf_period,friname);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
