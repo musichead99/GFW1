@@ -6,8 +6,9 @@ from flask_jwt_extended.utils import get_jwt_identity, get_jwt
 from flask_jwt_extended import jwt_required
 from flask_request_validator import *
 import database, swaggerModel
+# from prophet import Prophet
+import numpy as np
 
-# import prophet
 import datetime
 
 HealthData = Namespace(name = "HealthData", description="운동데이터를 가져오고 관리하는 API")
@@ -63,7 +64,7 @@ class AppFriend(Resource):
         '''
         db.execute_and_commit(query)
         db.close()
-        print(data)
+
         return {"status" : "success", "message" : "Your data has benn updated"}
 
 @HealthData.route("/healthData/<string:friendEmail>")
@@ -133,12 +134,7 @@ class AppFriend(Resource):
                 select step_count from health_data where user_email = "{friendEmail}" ORDER BY date limit 30;
             '''
         FriendHealthData= db.executeAll(query2)
-        print(FriendHealthData)
-        # Date_month = []
         step_count_month =[]
-        # carories_month = []
-        # distance_month = []
-        # time_month = []
         for i in FriendHealthData:
             step_count_month.append(i["step_count"])
 
