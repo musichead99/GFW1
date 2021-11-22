@@ -26,9 +26,7 @@ class AppFriend(Resource):
         """ 사용자의 친구 목록을 랭킹(걸음수)에 따라 정렬하여 반환한다."""
         userEmail = get_jwt_identity()
         yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
-        
-        yesterday = datetime.datetime(2021, 11, 30)
-        
+                
         yesterday= yesterday.strftime('%Y-%m-%d')
 
         db = database.DBClass()
@@ -49,3 +47,5 @@ class AppFriend(Resource):
             v['rank'] = i
 
         return {"status" : "success", "ranking" : result}
+
+        
