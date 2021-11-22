@@ -59,3 +59,13 @@ CREATE TABLE health_data (
   foreign key(user_email) REFERENCES users(email) on update cascade on delete cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Table structure for table `predict_health`
+DROP TABLE IF EXISTS `predict_health`;
+CREATE TABLE predict_health(
+  user_email varchar(200) not NULL,
+  Date date not null,
+  step_count int default 0,				# 단위: 걸음
+    
+  PRIMARY KEY (user_email, Date),
+  foreign key(user_email) REFERENCES users(email) on update cascade on delete cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
