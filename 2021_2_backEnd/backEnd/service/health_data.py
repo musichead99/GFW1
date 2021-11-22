@@ -7,7 +7,6 @@ from flask_jwt_extended import jwt_required
 from flask_request_validator import *
 import database, swaggerModel
 # from prophet import Prophet
-import numpy as np
 
 import datetime
 
