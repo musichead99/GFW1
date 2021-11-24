@@ -39,13 +39,13 @@ class AppFriend(Resource):
         """
 
         if not(result := db.executeAll(query)):
-            return  {"status" : "Failed", "message" : "no friends"}, 400
+            return  {"status" : "Failed", "ranking" : []}, 400
 
         for i,v in enumerate(result, 1):
             if not v['profilePhoto']:
                 v['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
             v['rank'] = i
 
-        return {"status" : "success", "ranking" : result}
+        return {"status" : "success", "ranking" : result}, 200
 
         
