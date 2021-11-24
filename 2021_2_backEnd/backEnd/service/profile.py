@@ -60,7 +60,7 @@ class userProfile(Resource):
             select step_count from health_data where user_email = (%s) and Date = (%s);
         '''
 
-        profileData['step_count'] = db.executeOne(query,(userEmail, yesterday))
+        profileData['step_count'] = db.executeOne(query,(userEmail, yesterday))['step_count']
         db.close()
 
         return {"status" : "Success", "profile" : profileData}
