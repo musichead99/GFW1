@@ -1,3 +1,6 @@
+drop database if exists backend_test;
+create database backend_test;
+
 use backend_test;
 
 -- Table structure for table `revoked_tokens`

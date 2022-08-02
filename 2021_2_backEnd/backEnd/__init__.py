@@ -16,10 +16,10 @@ from service.notification import Notification
 from service.image import Image
 from service.health_data import HealthData
 from service.ranking import Ranking
-from service.encourage import predict, encourage, yesterday
+# from service.encourage import predict, encourage, yesterday
 from service.test import Test
 
-from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler
 
 import database, swaggerModel, werkzeug.exceptions, datetime
 
