@@ -237,7 +237,9 @@ $RECYCLE.BIN/
 *.lnk
 
 *.png
+*.jpg
 
 # End of https://www.toptal.com/developers/gitignore/api/flask,python,windows
 
 httpd.wsgi
+config.py
