@@ -7,6 +7,8 @@ from pymysql import NULL
 import database, swaggerModel, config
 from datetime import date, timedelta
 
+import os
+
 Profile = Namespace(name="Profile", description="프로필 정보를 처리하는 API")
 
 parser = Profile.parser()
@@ -51,7 +53,7 @@ class userProfile(Resource):
             return {"status" : "Failed", "message" : "Email not registered"}, 400
 
         if profileData['profilePhoto'] is None:
-            profileData['profilePhoto'] = config.baseUrl + '/service/image/default_profile.jpg'
+            profileData['profilePhoto'] = os.path.join(config.baseUrl,'service', 'image', 'default_profile.jpg')
 
         if profileData['dateOfBirth'] is not None:
             profileData['dateOfBirth'] = date.isoformat(profileData['dateOfBirth'])

@@ -25,7 +25,7 @@ class NaverAuth(Resource):
     @Naver.response(200, 'Success(로그인 페이지 링크 반환)', NaverAuthGetSuccessResponse)
     def get(self):
         '''클라이언트가 접속 시 네이버 로그인 페이지 링크를 반환 한다'''
-        clientID = 'f_nWrpPQdHxaUSGVuQZY'
+        clientID = config.naverClientID
         redirectUri = config.baseUrl + '/user/Naver/callback'
         Naver_oauthurl = f"https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={clientID}&redirect_uri={redirectUri}&response_type=code"
 
@@ -42,8 +42,8 @@ class NaverAuthCallback(Resource):
 
         # 받은 인증 코드로 네이버에게 access token을 요청
         authCode = request.args.get('code')
-        clientID = 'f_nWrpPQdHxaUSGVuQZY'
-        client_secret= 'fXdLG082wS'
+        clientID = config.naverClientID
+        client_secret= config.naver_client_secret
         redirectUri = config.baseUrl + '/user/Naver/callback'
         token_request = requests.post(f"https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id={clientID}&client_secret={client_secret}&redirect_uri={redirectUri}&code={authCode}&state={authCode}")
         token_request = token_request.json()

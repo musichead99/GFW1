@@ -4,7 +4,9 @@ from flask_restx import Namespace, Resource, fields
 from flask_jwt_extended import jwt_required
 import config, swaggerModel
 
-baseimagePath = config.basePath + '\\2021_2_backEnd\\backEnd\\images'
+import os
+
+baseimagePath = os.path.join(config.basePath, 'images')
 
 Image = Namespace(name='Image', description='특정 이미지를 리턴하는 API')
 ImageGetFailedResponse = Image.inherit('Image get request model', swaggerModel.BaseFailedModel, {
@@ -29,7 +31,8 @@ class AppImage(Resource):
         '''특정 이미지 파일의 이름을 path에 인자로 받아 그 이미지를 반환한다.'''
         fname = kwargs['fileName']
 
-        imagePath = baseimagePath + '\\' + fname
+        imagePath = os.path.join(baseimagePath, fname)
+        print(imagePath)
 
         try:
             return send_file(imagePath, mimetype='image/gif')
