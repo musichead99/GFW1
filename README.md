@@ -143,9 +143,9 @@
 ```
 git clone https://github.com/musichead99/GFW1.git
 ```
-
-
 &nbsp;
+
+
 2. `Python`의 가상 환경 생성 도구인 `virtualenv`를 사용해서 가상환경을 생성한다.
 
 ```
@@ -155,9 +155,9 @@ python -m venv venv
 <p align="center"><img src="https://user-images.githubusercontent.com/76652013/183241329-80de022d-1abd-4302-b7fe-e9ba6c7ac935.png"></p>
 
 ​	이 예시에서는 프로젝트 내의 `2021_2_backEnd` 폴더에 설치했다.
-
-
 &nbsp;
+
+
 3. 터미널을 통해서 가상환경으로 진입한다. (cmd, vscode의 터미널 등)
 
 ```
@@ -169,18 +169,18 @@ activate
 ​	정상적으로 가상환경에 진입했다면 아래와 같이 프롬프트 맨 앞에 (가상환경 이름)이 보여진다.
 
 <p align="center"><img src="https://user-images.githubusercontent.com/76652013/183241376-f4ce2799-558d-458a-8a06-3c2fdfab748b.png"></p>
-
-
 &nbsp;
+
+
 4. 프로젝트 내의 `requirements.txt`파일을 이용해서 패키지들을 설치한다.
    * requirements.txt는 pip에서 파이썬 패키지들을 관리하는 방법이다.
 
 ```
 pip install -r requirements.txt
 ```
-
-
 &nbsp;
+
+
 5. 데이터베이스를 생성하고 거기에 `.sql`파일들을 사용해서 MySQL에 테이블과 더미 데이터들을 생성한다.
 
 ```
@@ -199,9 +199,9 @@ mysql -u root -p backend_test < backendDB_test.sql
 ​	정상적으로 완료하였다면 다음과 같은 테이블들을 확인할 수 있다.
 
 <p align="center"><img src="https://user-images.githubusercontent.com/76652013/183241416-e7140cfe-e930-46c3-97d2-553cb9da7a9a.png"></p>
-
-
 &nbsp;
+
+
 6. `database.py` 파일을 수정한다.
 
 ```python
@@ -227,9 +227,9 @@ class DBClass():
 ​	여기서 `user`, `passwd`를 수정해야 한다. `user`는 사용할 mysql의 계정, `passwd`는 해당 계정의 비밀번호이다. 
 
 ​	만약 다른 `backend_test`가 아닌 다른 이름으로 데이터베이스를 생성했다면 `db`를 생성한 데이터베이스의 이름으로 수정해야 한다.
-
-
 &nbsp;
+
+
 7. `config.py` 파일을 backEnd 폴더에 생성하고 아래의 내용을 작성한다.
 
 ```python
@@ -254,17 +254,17 @@ naver_client_secret=''
 ```
 
 ​	카카오 소셜 로그인, 네이버 소셜 로그인은 추가적으로 개발자 페이지에서 설정이 필요하다. 
-
-
 &nbsp;
+
+
 8. 애플리케이션을 실행한다.
 
 ```
 python __init__.py
 ```
-
-
 &nbsp;
+
+
 9. test api를 사용해서 전날의 걸음수를 채워 준다.
 
 <p align="center"><img src="https://user-images.githubusercontent.com/76652013/183241440-ed9669ef-a7c2-4b19-b74b-74ff30c8e856.png"></p>
