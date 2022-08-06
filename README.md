@@ -62,7 +62,7 @@
  `Flask`는 `Python`기반의 마이크로 웹 프레임워크이다. 또 다른 `Python`기반인 웹 프레임워크 `Django`와 달리 `Flask`는 웹 개발에 필요한 최소한의 도구들만을 지원한다. 대신 단 몇 줄의 코드만으로 웹 서버를 작성할 수 있고, 직접 여러 가지 extension들을 찾아보며 기호에 맞게 취사선택할 수 있었기 때문에 더 좋은 배움의 기회가 되었다.
 
 
-nbsp;
+&nbsp;
 #### REST API
 
 <p align="center"><img src="https://user-images.githubusercontent.com/76652013/183241268-8844c203-6367-477e-9fb9-222fa4ce0061.png" width="438px" height="245px"></p>
@@ -70,7 +70,7 @@ nbsp;
  **REST API**는 2000년 로이 필딩의 박사논문에서 소개된 소프트웨어 아키텍쳐이다. 엄밀히 말하면 REST API는 기술 스택은 아니지만 최근 GraphQL등과 같은 여러 새로운 클라이언트-서버 사이의 통신 규약들이 많이 발표되고 있기 때문에 '우리 서버는 REST API 아키텍쳐를 기반으로 만들었다'라고 명시하고 싶었기 때문에 기술 스택 문단에 작성한다. REST API는 **자원**의 정의와 **자원에 대해 주소를 지정하는 방법** 방법 전반을 일컫는다. HTTP URL을 통해 자원을 명시하고, HTTP method를 통해 해당 자원에 대한 행위를 정의한다. ex) https://baseurl/student/scores (GET) -> 전체 학생의 점수를 읽어온다.
 
 
-nbsp;
+&nbsp;
 #### MySQL
 
 <p align="center"><img src="https://user-images.githubusercontent.com/76652013/183241293-042f3b65-116a-4615-b3bb-f936b67199db.png" width="438px" height="245px"></p>
@@ -78,7 +78,7 @@ nbsp;
  **MySQL**은 가장 유명하고, 또 가장 널리 쓰이는 RDBMS(관계형 데이터베이스)이다. 프로젝트 진행 시점에서 유일하게 사용 흉내라도 낼 수 있는 DB였기 때문에 이를 사용하기로 하였다.
 
 
-nbsp;
+&nbsp;
 #### FCM
 
 <p align="center"><img src="https://user-images.githubusercontent.com/76652013/183241302-96554a43-4af7-4519-9d1b-64956cdc0924.jpg" width="438px" height="235px"></p>
@@ -98,28 +98,28 @@ nbsp;
   * API문서 작성을 위한 `Swagger` 연동을 지원한다.
 
   
-nbsp;
+&nbsp;
 * Flask-JWT-Extended
 
   * 이 프로젝트에서는 사용자 인증/인가에 JWT토큰을 사용한다.
   * 이를 위해 JWT토큰을 발급하고 토큰의 유효성 검증, 파기 등을 돕는 extension이다.
 
   
-nbsp;
+&nbsp;
 * flask-request-validator
 
   * 클라이언트로부터 전달받는 파라미터들에 대한 검증에 사용되는 extension
   * 정규식 기반으로 파라미터를 검증한다. ex) 이메일 형식 검증, 비밀번호 형식 검증 등
 
   
-nbsp;
+&nbsp;
 * PyMySQL
 
   * `Flask` 애플리케이션과 MySQL사이의 통신을 담당하는 connector를 제공한다.
   * `Flask`에서 쿼리문과 파라미터를 커넥터를 통해 전송하면 쿼리에 해당하는 데이터를 DB에서 서치해서 Python의 자료형으로 변환해준다.
 
 
-nbsp;
+&nbsp;
 * pyfcm
   * `Flask` 애플리케이션에서 FCM을 보다 쉽게 연동할 수 있도록 도와주는 extension
 
@@ -145,7 +145,7 @@ git clone https://github.com/musichead99/GFW1.git
 ```
 
 
-nbsp;
+&nbsp;
 2. `Python`의 가상 환경 생성 도구인 `virtualenv`를 사용해서 가상환경을 생성한다.
 
 ```
@@ -157,7 +157,7 @@ python -m venv venv
 ​	이 예시에서는 프로젝트 내의 `2021_2_backEnd` 폴더에 설치했다.
 
 
-nbsp;
+&nbsp;
 3. 터미널을 통해서 가상환경으로 진입한다. (cmd, vscode의 터미널 등)
 
 ```
@@ -171,7 +171,7 @@ activate
 <p align="center"><img src="https://user-images.githubusercontent.com/76652013/183241376-f4ce2799-558d-458a-8a06-3c2fdfab748b.png"></p>
 
 
-nbsp;
+&nbsp;
 4. 프로젝트 내의 `requirements.txt`파일을 이용해서 패키지들을 설치한다.
    * requirements.txt는 pip에서 파이썬 패키지들을 관리하는 방법이다.
 
@@ -180,7 +180,7 @@ pip install -r requirements.txt
 ```
 
 
-nbsp;
+&nbsp;
 5. 데이터베이스를 생성하고 거기에 `.sql`파일들을 사용해서 MySQL에 테이블과 더미 데이터들을 생성한다.
 
 ```
@@ -201,7 +201,7 @@ mysql -u root -p backend_test < backendDB_test.sql
 <p align="center"><img src="https://user-images.githubusercontent.com/76652013/183241416-e7140cfe-e930-46c3-97d2-553cb9da7a9a.png"></p>
 
 
-nbsp;
+&nbsp;
 6. `database.py` 파일을 수정한다.
 
 ```python
@@ -229,7 +229,7 @@ class DBClass():
 ​	만약 다른 `backend_test`가 아닌 다른 이름으로 데이터베이스를 생성했다면 `db`를 생성한 데이터베이스의 이름으로 수정해야 한다.
 
 
-nbsp;
+&nbsp;
 7. `config.py` 파일을 backEnd 폴더에 생성하고 아래의 내용을 작성한다.
 
 ```python
@@ -256,7 +256,7 @@ naver_client_secret=''
 ​	카카오 소셜 로그인, 네이버 소셜 로그인은 추가적으로 개발자 페이지에서 설정이 필요하다. 
 
 
-nbsp;
+&nbsp;
 8. 애플리케이션을 실행한다.
 
 ```
@@ -264,7 +264,7 @@ python __init__.py
 ```
 
 
-nbsp;
+&nbsp;
 9. test api를 사용해서 전날의 걸음수를 채워 준다.
 
 <p align="center"><img src="https://user-images.githubusercontent.com/76652013/183241440-ed9669ef-a7c2-4b19-b74b-74ff30c8e856.png"></p>
