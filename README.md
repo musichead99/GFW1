@@ -9,7 +9,7 @@
 
 ## 프로젝트 설명
 
- 본 프로젝트 GFW(RunningMate)는 Go For a Walk를 줄임으로 사용자에게 **건강정보(걸음수, 소모 칼로리, 이동 거리, 이동 시간)**를 제공하며 산책을 독려하도록 하는 안드로이드 모바일 앱 프로젝트이다. 애플리케이션은 Client-Server 구조로 제작되었는데, 백엔드는 Python의 micro web framework인 **Flask**를 사용하였고 추가적으로 **Flask-RESTX** extension을 기반으로 작성하였다. 
+ 본 프로젝트 RunningMate는 사용자에게 **건강정보(걸음수, 소모 칼로리, 이동 거리, 이동 시간)**를 제공하며 산책을 독려하도록 하는 안드로이드 모바일 앱 프로젝트이다. 애플리케이션은 Client-Server 구조로 제작되었는데, 백엔드는 Python의 micro web framework인 **Flask**를 사용하였고 추가적으로 **Flask-RESTX** extension을 기반으로 작성하였다. 
 
  서버의 API들은 `Swagger`를 통해 제공되는 API문서를 통해 확인할 수 있다. (http://127.0.0.1:5000. 단, 서버를 직접 실행시켜야 확인할 수 있다.)
 
